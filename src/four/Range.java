@@ -3,14 +3,9 @@ package four;
 public class Range {
     int min;
     int max;
-    public Range(int min, int max) {
-        this.min = min;
-        this.max = max;
-    }
     public Range(String in){
-        String[] split = in.split("-");
-        this.min = Integer.parseInt(split[0]);
-        this.max = Integer.parseInt(split[1]);
+        min = Integer.parseInt(in.split("-")[0]);
+        max = Integer.parseInt(in.split("-")[1]);
     }
     public boolean contains(int num) {
         return num >= min && num <= max;

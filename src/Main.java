@@ -2,7 +2,8 @@ import one.one;
 import two.two;
 import three.three;
 import four.four;
-import five.five;
+import five.*;
+import six.six;
 import java.io.PrintStream;
 public class Main {
     static PrintStream so = System.out;
@@ -12,5 +13,7 @@ public class Main {
         so.println("\nDay 3:\nPart 1: " + three.run1() + "\nPart 2: " + three.run2());
         so.println("\nDay 4:\nPart 1: " + four.run1() + "\nPart 2: " + four.run2());
         so.println("\nDay 5:\nPart 1: " + five.run1() + "\nPart 2: " + five.run2());
+        so.println("\nDay 6:\nPart 1: " + six.run1() + "\nPart 2: " + six.run2());
+        so.println(new Stack("abcdefg").toStringFancy());
     }
 }

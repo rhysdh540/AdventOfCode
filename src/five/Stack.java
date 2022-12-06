@@ -3,7 +3,7 @@ package five;
 import java.util.ArrayList;
 
 public class Stack {
-    private ArrayList<Character> data = new ArrayList<>();
+    private ArrayList<Character> data = new ArrayList<>(); // intellij this is not final thats the whole point of this class please ahhh
 
     public Stack(String s) {
         for (char c : s.toCharArray())
@@ -38,7 +38,7 @@ public class Stack {
     public String toStringFancy(){
         StringBuilder sb = new StringBuilder();
         for(char c : data){
-            sb.append(" [").append(c).append("] ");
+            sb.append("[").append(c).append("] ");
         }
         return sb.toString().trim();
     }

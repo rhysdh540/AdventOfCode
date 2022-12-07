@@ -6,7 +6,7 @@ import three.three;
 import four.four;
 import five.five;
 import six.six;
-import seven.seven;
+import seven.*;
 import eight.eight;
 import nine.nine;
 import ten.ten;

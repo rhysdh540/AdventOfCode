@@ -1,0 +1,64 @@
+allprojects {
+    apply plugin: 'java'
+    sourceSets.main.java {
+        srcDir 'src'
+    }
+}
+
+subprojects {
+    project.ext.year = project.name.substring(4)
+    dependencies {
+        implementation(rootProject)
+    }
+
+    tasks.register('run', JavaExec) {
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = 'Main'
+        argsString = project.ext.year
+        workingDir = rootDir
+    }
+
+    tasks.register('initDay') {
+        doLast {
+            def date = new Date()
+            def day
+            if(project.ext.year == date.year.toString()) {
+                day = date.date.toString()
+            } else {
+                def scanner = new Scanner(System.in)
+                day = scanner.nextLine()
+                scanner.close()
+            }
+            def source = project.file("src/Day${day}.java")
+            if(!source.exists()) {
+                source.parentFile.mkdirs()
+                source.createNewFile()
+                source.write("""import java.util.List;
+
+/**
+ * <a href="https://adventofcode.com/2023/day/${day}">Day ${day}</a>
+ */
+public class Day${day} implements Day.IntDay {
+    @Override
+    public int run1Int() throws Exception {
+        List<String> input = Main.getInput(${day});
+    }
+    
+    @Override
+    public int run2Int() throws Exception {
+        throw new NotImplementedException();
+    }
+}
+                """.stripIndent())
+
+                def input = project.file("input/${day}.txt")
+                input.createNewFile()
+                def url = new URL("https://adventofcode.com/${project.ext.year}/day/${day}/input")
+                def connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = 'GET'
+                connection.setRequestProperty('Cookie', "session=${System.getenv("AOC_SESSION")}")
+                input.write(connection.inputStream.text)
+            }
+        }
+    }
+}

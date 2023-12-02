@@ -1,47 +1,41 @@
-import java.util.List;
-
 /**
  * <a href="https://adventofcode.com/2023/day/2">Day 2</a>
  */
 public class Day2 implements Day.IntDay {
 	@Override
 	public int run1Int() throws Exception {
-		List<String> input = Main.getInput(2);
-		int sum = 0;
-		for(int i = 1; i < input.size() + 1; i++) {
-			int r = 0, g = 0, b = 0;
-			String line = input.get(i - 1).substring(input.get(i - 1).indexOf(':') + 2);
-			for(String pull : line.split("; ")) {
-				for(String s : pull.split(", ")) {
-					int num = Integer.parseInt(s.substring(0, s.indexOf(' ')));
-					if(s.contains("red")) r = Math.max(r, num);
-					if(s.contains("green")) g = Math.max(g, num);
-					if(s.contains("blue")) b = Math.max(b, num);
-				}
-			}
-			if(r <= 12 && g <= 13 && b <= 14) sum += i;
-		}
-		return sum;
+		return Main.getInput(2).stream()
+				.map(this::getRGB)
+				.mapToInt(rgb -> rgb[1] <= 12 && rgb[2] <= 13 && rgb[3] <= 14 ? rgb[0] : 0)
+				.sum();
 	}
 
 	@Override
 	public int run2Int() throws Exception {
-		List<String> input = Main.getInput(2);
-		System.out.println();
-		int sum = 0;
-		for(int i = 1; i < input.size() + 1; i++) {
-			int r = 0, g = 0, b = 0;
-			String line = input.get(i - 1).substring(input.get(i - 1).indexOf(':') + 2);
-			for(String pull : line.split("; ")) {
-				for(String s : pull.split(", ")) {
-					int num = Integer.parseInt(s.substring(0, s.indexOf(' ')));
-					if(s.contains("red")) r = Math.max(r, num);
-					if(s.contains("green")) g = Math.max(g, num);
-					if(s.contains("blue")) b = Math.max(b, num);
-				}
+		return Main.getInput(2).stream()
+				.map(this::getRGB)
+				.mapToInt(rgb -> rgb[1] * rgb[2] * rgb[3])
+				.sum();
+	}
+
+	/**
+	 * Gets the maximum amount of red, green, and blue cubes given a string that represents a game
+	 * @param s The string, formatted as "Game #: " followed by a list of pulls, separated by "; ".
+	 *          Each pull is formatted as "x red, y green, z blue" in a random order, where x, y, and z are integers
+	 * @return An array of integers, formatted as [game number, max red, max green, max blue]
+	 */
+	private int[] getRGB(String s) {
+		String line = s.substring(s.indexOf(':') + 2);
+		int[] rgb = new int[] { Integer.parseInt(s.substring(5, s.indexOf(':'))), 0, 0, 0 };
+
+		for(String pull : line.split("; ")) {
+			for(String str : pull.split(", ")) {
+				int num = Integer.parseInt(str.substring(0, str.indexOf(' ')));
+				if(str.contains("red") && num > rgb[1]) rgb[1] = num;
+				if(str.contains("green") && num > rgb[2]) rgb[2] = num;
+				if(str.contains("blue") && num > rgb[3]) rgb[3] = num;
 			}
-			sum += r * g * b;
 		}
-		return sum;
+		return rgb;
 	}
 }

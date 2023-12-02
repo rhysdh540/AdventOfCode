@@ -1,20 +1,14 @@
-package three;
-
+import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 import java.util.ArrayList;
 
-public class three {
-    public static int run1() {
-        Scanner sc = null;
-        try {
-            sc = new Scanner(new File("src/three/input.txt"));
-        } catch (Exception e) { System.out.println("file not found"); }
+public class Day3 implements Day<Integer, Integer> {
+    public Integer run1() throws Exception {
+        List<String> input = Main.getInput(3);
         int sum = 0;
         ArrayList<String[]> lines = new ArrayList<String[]>();
-        assert sc != null;
-        while(sc.hasNextLine()){
-            String line = sc.nextLine();
+        for(String line : input) {
             lines.add(new String[]{line.substring(0, line.length()/2), line.substring(line.length()/2)});
         }
 
@@ -23,16 +17,12 @@ public class three {
         }
         return sum;
     }
-    public static int run2() {
-        Scanner sc = null;
-        try {
-            sc = new Scanner(new File("src/three/input.txt"));
-        } catch (Exception e) { System.out.println("Error: " + e); }
+    public Integer run2() throws Exception {
+        List<String> input = Main.getInput(3);
         int sum = 0;
         ArrayList<String[]> lines = new ArrayList<String[]>();
-        assert sc != null;
-        while(sc.hasNextLine()){
-            lines.add(new String[]{sc.nextLine(), sc.nextLine(), sc.nextLine()});
+        for(int i = 0; i < input.size(); i += 3) {
+            lines.add(new String[]{input.get(i), input.get(i + 1), input.get(i + 2)});
         }
 
         for(String[] group : lines){

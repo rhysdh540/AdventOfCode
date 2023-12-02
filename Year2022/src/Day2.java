@@ -1,10 +1,6 @@
-package two;
+import java.util.List;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
-public class two {
+public class Day2 implements Day<Integer, Integer> {
     private static final int ROCK = 1;
     private static final int PAPER = 2;
     private static final int SCISSORS = 3;
@@ -13,26 +9,18 @@ public class two {
     private static final int DRAW = 3;
     private static final int WIN = 6;
 
-    public static int run1() {
-        Scanner sc = null;
-        try{
-            sc = new Scanner(new File("src/two/input.txt"));
-        } catch (FileNotFoundException e) { throw new RuntimeException(e); }
+    public Integer run1() throws Exception {
+        List<String> input = Main.getInput(2);
         int score = 0;
-        while(sc.hasNextLine()){
-            String line = sc.nextLine();
+        for(String line : input) {
             score += getScore(line);
         }
         return score;
     }
-    public static int run2(){
-        Scanner sc = null;
-        try{
-            sc = new Scanner(new File("src/two/input.txt"));
-        } catch (FileNotFoundException e) { throw new RuntimeException(e); }
+    public Integer run2() throws Exception {
+        List<String> input = Main.getInput(2);
         int score = 0;
-        while(sc.hasNextLine()){
-            String line = sc.nextLine();
+        for(String line : input) {
             score += getScore2(line);
         }
         return score;

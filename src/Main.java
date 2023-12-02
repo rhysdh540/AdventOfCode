@@ -44,4 +44,8 @@ public class Main {
 	public static List<String> getInput(int day) throws Exception {
 		return Files.readAllLines(Paths.get("Year" + year + "/input/" + day + ".txt"));
 	}
+
+	public static List<String> getInput(int day, String extra) throws Exception {
+		return Files.readAllLines(Paths.get("Year" + year + "/input/" + day + "_" + extra + ".txt"));
+	}
 }

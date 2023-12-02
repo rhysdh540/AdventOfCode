@@ -1,12 +1,12 @@
-public class Day6 implements Day<Integer, Integer> {
-    public Integer run1() throws Exception {
+public class Day6 implements Day.IntDay {
+    public int run1Int() throws Exception {
         String input = Main.getInput(6).get(0);
         for(int i = 4; i < input.length(); i++)
             if(isAllDifferent(input.substring(i-4, i)))
                 return i;
         return -1;
     }
-    public Integer run2() throws Exception {
+    public int run2Int() throws Exception {
         String input = Main.getInput(6).get(0);
         for(int i = 14; i < input.length(); i++)
             if(isAllDifferent14(input.substring(i-14, i)))

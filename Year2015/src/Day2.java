@@ -3,10 +3,9 @@ import java.util.List;
 /**
  * <a href="https://adventofcode.com/2015/day/2">Day 2</a>
  */
-@SuppressWarnings("unused")
-public class Day2 implements Day<Integer, Integer> {
+public class Day2 implements Day.IntDay {
 	@Override
-	public Integer run1() throws Exception {
+	public int run1Int() throws Exception {
 		List<String> input = Main.getInput(2);
 		int total = 0;
 		for(String s : input) {
@@ -20,7 +19,7 @@ public class Day2 implements Day<Integer, Integer> {
 	}
 
 	@Override
-	public Integer run2() throws Exception {
+	public int run2Int() throws Exception {
 		List<String> input = Main.getInput(2);
 		int total = 0;
 		for(String s : input) {

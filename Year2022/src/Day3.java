@@ -1,10 +1,8 @@
 import java.util.List;
-import java.util.Scanner;
-import java.io.File;
 import java.util.ArrayList;
 
-public class Day3 implements Day<Integer, Integer> {
-    public Integer run1() throws Exception {
+public class Day3 implements Day.IntDay {
+    public int run1Int() throws Exception {
         List<String> input = Main.getInput(3);
         int sum = 0;
         ArrayList<String[]> lines = new ArrayList<String[]>();
@@ -17,7 +15,7 @@ public class Day3 implements Day<Integer, Integer> {
         }
         return sum;
     }
-    public Integer run2() throws Exception {
+    public int run2Int() throws Exception {
         List<String> input = Main.getInput(3);
         int sum = 0;
         ArrayList<String[]> lines = new ArrayList<String[]>();

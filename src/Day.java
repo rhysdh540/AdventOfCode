@@ -5,21 +5,21 @@
  * <p>
  * The input for each day is stored in a file in the <code>input</code> folder. The file name is the day number followed by <code>.txt</code>. For example, the input for day 1 is stored in <code>input/1.txt</code>.
  */
-public interface Day<F, S> {
+public interface Day<T> {
 
 	/**
 	 * Runs the first part of the day's challenge.
 	 * @return the answer to the first part of the day's challenge
 	 * @throws Exception if an error occurs
 	 */
-	F run1() throws Exception;
+	T run1() throws Exception;
 
 	/**
 	 * Runs the second part of the day's challenge.
 	 * @return the answer to the second part of the day's challenge
 	 * @throws Exception if an error occurs
 	 */
-	S run2() throws Exception;
+	T run2() throws Exception;
 
 	/**
 	 * Gets the number of the day. Override this method if the class name does not follow the format:
@@ -53,5 +53,21 @@ public interface Day<F, S> {
 			e.printStackTrace(System.out);
 			System.out.print("\033[0m");
 		}
+	}
+
+	interface IntDay extends Day<Integer> {
+		@Override
+		default Integer run1() throws Exception {
+			return run1Int();
+		}
+
+		@Override
+		default Integer run2() throws Exception {
+			return run2Int();
+		}
+
+		int run1Int() throws Exception;
+
+		int run2Int() throws Exception;
 	}
 }

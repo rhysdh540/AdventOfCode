@@ -3,16 +3,15 @@ import java.util.List;
 /**
  * <a href="https://adventofcode.com/2023/day/1">Day 1</a>
  */
-@SuppressWarnings("unused")
-public class Day1 implements Day<Integer, Integer> {
+public class Day1 implements Day.IntDay {
 
 	@Override
-	public Integer run1() throws Exception {
+	public int run1Int() throws Exception {
 		return doTheThing(Main.getInput(1));
 	}
 
 	@Override
-	public Integer run2() throws Exception {
+	public int run2Int() throws Exception {
 		List<String> input = Main.getInput(1),
 		// technically we shoudn't include zero but it works anyway
 				nums = List.of("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine");

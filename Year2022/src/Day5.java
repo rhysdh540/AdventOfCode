@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Day5 implements Day<String, String> {
+public class Day5 implements Day<String> {
     public String run1() throws Exception {
         List<String> input = Main.getInput(5);
         List<String> cratesIn = Main.getInput(5, "crates");

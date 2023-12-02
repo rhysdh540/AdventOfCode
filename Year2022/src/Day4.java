@@ -1,11 +1,8 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.ArrayList;
 
-public class Day4 implements Day<Integer, Integer> {
-    public Integer run1() throws Exception {
+public class Day4 implements Day.IntDay {
+    public int run1Int() throws Exception {
         List<String> input = Main.getInput(4);
         ArrayList<Range[]> ranges = new ArrayList<Range[]>();
         for(String line : input) {
@@ -17,7 +14,7 @@ public class Day4 implements Day<Integer, Integer> {
             if(range[0].contains(range[1]) || range[1].contains(range[0])) count++;
         return count;
     }
-    public Integer run2() throws Exception {
+    public int run2Int() throws Exception {
         List<String> input = Main.getInput(4);
         ArrayList<Range[]> ranges = new ArrayList<Range[]>();
         for(String line : input) {

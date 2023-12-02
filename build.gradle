@@ -37,7 +37,7 @@ subprojects {
                 source.write("""import java.util.List;
 
 /**
- * <a href="https://adventofcode.com/2023/day/${day}">Day ${day}</a>
+ * <a href="https://adventofcode.com/${project.ext.year}/day/${day}">Day ${day}</a>
  */
 public class Day${day} implements Day.IntDay {
     @Override
@@ -52,13 +52,7 @@ public class Day${day} implements Day.IntDay {
 }
                 """.stripIndent())
 
-                def input = project.file("input/${day}.txt")
-                input.createNewFile()
-                def url = new URL("https://adventofcode.com/${project.ext.year}/day/${day}/input")
-                def connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = 'GET'
-                connection.setRequestProperty('Cookie', "session=${System.getenv("AOC_SESSION")}")
-                input.write(connection.inputStream.text)
+                project.file("input/${day}.txt").createNewFile()
             }
         }
     }

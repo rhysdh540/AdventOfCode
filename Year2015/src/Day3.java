@@ -1,5 +1,5 @@
 /**
- * <a href="https://adventofcode.com/2023/day/3">Day 3</a>
+ * <a href="https://adventofcode.com/2015/day/3">Day 3</a>
  */
 public class Day3 implements Day.IntDay {
     @Override

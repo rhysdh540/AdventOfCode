@@ -6,6 +6,7 @@
 for i in Year*; do
     echo "Found module $i"
     year=$(echo "$i" | sed 's/Year//')
+    mkdir -p ".idea/runConfigurations"
     cp "RunConfigTemplate.xml" ".idea/runConfigurations/Run_$year.xml"
     sed -i '' "s/{YEAR}/$year/g" ".idea/runConfigurations/Run_$year.xml"
 done

@@ -21,13 +21,13 @@ public class Main {
 			return;
 		}
 
-		System.out.println("\033[1;4mAdvent Of Code \033[36;4m" + year + "\033[0m");
+		System.out.println("\033[1;4mAdvent Of Code\033[0;36;1m " + year + "\033[0m");
 		System.out.println("https://adventofcode.com/" + year);
 
 		for(int i = 1; i <= 25; i++) {
 			try {
 				// i love the smell of reflection in the morning
-				Day<?, ?> day = (Day<?, ?>) Class.forName("Day" + i).getDeclaredConstructor().newInstance();
+				Day<?> day = (Day<?>) Class.forName("Day" + i).getDeclaredConstructor().newInstance();
 				day.printResults();
 			} catch(ClassNotFoundException e) {
 				return;

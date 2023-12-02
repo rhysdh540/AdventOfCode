@@ -5,21 +5,21 @@
  * <p>
  * The input for each day is stored in a file in the <code>input</code> folder. The file name is the day number followed by <code>.txt</code>. For example, the input for day 1 is stored in <code>input/1.txt</code>.
  */
-public interface Day {
+public interface Day<F, S> {
 
 	/**
 	 * Runs the first part of the day's challenge.
 	 * @return the answer to the first part of the day's challenge
 	 * @throws Exception if an error occurs
 	 */
-	<T> T run1() throws Exception;
+	F run1() throws Exception;
 
 	/**
 	 * Runs the second part of the day's challenge.
 	 * @return the answer to the second part of the day's challenge
 	 * @throws Exception if an error occurs
 	 */
-	<T> T run2() throws Exception;
+	S run2() throws Exception;
 
 	/**
 	 * Gets the number of the day. Override this method if the class name does not follow the format:
@@ -33,10 +33,25 @@ public interface Day {
 
 	/**
 	 * Prints the results of the day's challenges.
-	 * @throws Exception if an error occurs
 	 */
-	default void printResults() throws Exception {
-		System.out.println("Day " + getDayNumber() + ", Part 1: " + run1());
-		System.out.println("Day " + getDayNumber() + ", Part 2: " + run2());
+	default void printResults() {
+		System.out.println("\033[1mDay " + getDayNumber() + ":\033[0m");
+		System.out.print("  Part 1: ");
+		try {
+			System.out.println(run1());
+		} catch (Throwable e) {
+			System.out.println("Exception occurred!\033[91m");
+			e.printStackTrace(System.out); // print to sysout instead of syserr
+			System.out.print("\033[0m");   // to make sure things are printed in the correct order
+		}
+
+		System.out.print("  Part 2: ");
+		try {
+			System.out.println(run2());
+		} catch (Throwable e) {
+			System.out.println("Exception occurred!\033[91m");
+			e.printStackTrace(System.out);
+			System.out.print("\033[0m");
+		}
 	}
 }

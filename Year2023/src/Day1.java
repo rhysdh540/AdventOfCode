@@ -3,8 +3,8 @@ import java.util.List;
 /**
  * <a href="https://adventofcode.com/2023/day/1">Day 1</a>
  */
-@SuppressWarnings({"unused", "unchecked"})
-public class Day1 implements Day {
+@SuppressWarnings("unused")
+public class Day1 implements Day<Integer, Integer> {
 
 	@Override
 	public Integer run1() throws Exception {

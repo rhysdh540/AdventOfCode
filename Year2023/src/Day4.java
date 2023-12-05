@@ -36,15 +36,13 @@ public class Day4 implements Day.IntDay {
         String[] split = card.split("([:|])");
 
         List<Integer> winningNums = new ArrayList<>(
-                Arrays.stream(split[1].split(" "))
-                        .filter(s -> !s.isEmpty())
+                Arrays.stream(split[1].trim().split(" +"))
                         .map(Integer::parseInt)
                         .toList());
-        return (int) Arrays.stream(split[2].split(" "))
-                .filter(s -> !s.isEmpty())
+        return Math.toIntExact(Arrays.stream(split[2].trim().split(" +"))
                 .map(Integer::parseInt)
                 .filter(winningNums::contains)
-                .count();
+                .count());
     }
 }
                 

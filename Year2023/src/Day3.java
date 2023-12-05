@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Character.isDigit;
 
 /**
  * <a href="https://adventofcode.com/2023/day/3">Day 3</a>
@@ -8,7 +11,7 @@ public class Day3 implements Day.IntDay {
     public int run1Int() throws Exception {
 		List<String> input = Main.getInput(3);
         input.add(0, ".".repeat(input.get(0).length()));
-        input.add(".".repeat(input.get(0).length()));
+        input.add(input.get(0));
         char[][] map = input.stream()
                 .map(s -> "." + s + ".")
                 .map(String::toCharArray)
@@ -16,14 +19,14 @@ public class Day3 implements Day.IntDay {
 
         int sum = 0;
 
-        for(int i = 0; i < map.length; i++) {
+        for(int i = 1; i < map.length - 1; i++) {
             char[] row = map[i];
-            for(int j = 0; j < row.length; j++) {
+            for(int j = 1; j < row.length - 1; j++) {
                 char c = row[j];
-                if(Character.isDigit(c)) {
+                if(isDigit(c)) {
                     int num = c - '0';
                     int k = j + 1;
-                    while(k < row.length && Character.isDigit(row[k])) {
+                    while(k < row.length && isDigit(row[k])) {
                         num *= 10;
                         num += row[k] - '0';
                         k++;
@@ -56,7 +59,7 @@ public class Day3 implements Day.IntDay {
     public int run2Int() throws Exception {
         List<String> input = Main.getInput(3, "example");
         input.add(0, ".".repeat(input.get(0).length()));
-        input.add(".".repeat(input.get(0).length()));
+        input.add(input.get(0));
         char[][] map = input.stream()
                 .map(s -> "." + s + ".")
                 .map(String::toCharArray)
@@ -64,27 +67,40 @@ public class Day3 implements Day.IntDay {
 
         int sum = 0;
 
-        // find all * next to 2 numbers and sum the products of those two numbers
-        for(int i = 0; i < map.length; i++) {
+        for(int i = 1; i < map.length - 1; i++) {
             char[] row = map[i];
-            // send help
+
+            for(int j = 1; j < row.length - 1; j++) {
+                char c = row[j];
+                if(c == '*') {
+                    List<Integer> nums = new ArrayList<>();
+                    for(int k = j - 1; k < j + 2; k++) {
+                        int[] dx = {-1, 1};
+                        for(int l : dx) {
+                            if(isDigit(map[i][k])) {
+                                StringBuilder num = new StringBuilder();
+                                for(int m = k; m < row.length && m >= 0 && isDigit(map[i][m]); m += l) {
+                                    num.append(map[i][m]);
+                                }
+                                if(l == -1) {
+                                    num.reverse();
+                                }
+                                nums.add(Integer.parseInt(num.toString()));
+                            }
+                        }
+                    }
+                    System.out.println(nums);
+                    if(nums.size() == 2) {
+                        sum += nums.get(0) * nums.get(1);
+                    }
+                }
+            }
         }
         return sum;
     }
 
-    private int findNum(char[][] map, int i, int j, int dir) {
-        int num = 0;
-        int k = j + dir;
-        while(k < map[i].length && Character.isDigit(map[i][k])) {
-            num *= 10;
-            num += map[i][k] - '0';
-            k += dir;
-        }
-        return num;
-    }
-
     private boolean isSymbol(char c) {
-        return c != '.' && !Character.isDigit(c);
+        return c != '.' && !isDigit(c);
     }
 }
                 

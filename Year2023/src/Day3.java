@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Character.isDigit;
 
@@ -7,100 +9,102 @@ import static java.lang.Character.isDigit;
  * <a href="https://adventofcode.com/2023/day/3">Day 3</a>
  */
 public class Day3 implements Day.IntDay {
+
     @Override
     public int run1Int() throws Exception {
-		List<String> input = Main.getInput(3);
-        input.add(0, ".".repeat(input.get(0).length()));
-        input.add(input.get(0));
-        char[][] map = input.stream()
-                .map(s -> "." + s + ".")
-                .map(String::toCharArray)
-                .toArray(char[][]::new);
-
-        int sum = 0;
-
-        for(int i = 1; i < map.length - 1; i++) {
-            char[] row = map[i];
-            for(int j = 1; j < row.length - 1; j++) {
-                char c = row[j];
-                if(isDigit(c)) {
-                    int num = c - '0';
-                    int k = j + 1;
-                    while(k < row.length && isDigit(row[k])) {
-                        num *= 10;
-                        num += row[k] - '0';
-                        k++;
-                    }
-
-                    int numLength = k - j;
-
-                    boolean nextToSymbol = false;
-                    outer:
-                    for(int l = i - 1; l < i + 2; l++) {
-                        for(int m = j - 1; m < j + numLength + 1; m++) {
-                            if(isSymbol(map[l][m])) {
-                                nextToSymbol = true;
-                                break outer;
-                            }
-                        }
-                    }
-                    if(nextToSymbol) {
-                        sum += num;
-                    }
-                    j += numLength - 1;
-                }
-            }
-        }
-
-        return sum;
+        char[][] grid = getGrid();
+        return getSymbols(grid).stream()
+                .flatMap(symbol -> getNumbers(grid, symbol).stream())
+                .reduce(0, Integer::sum);
     }
-    
+
     @Override
+    @SuppressWarnings("EqualsBetweenInconvertibleTypes") // yeah yeah shut up
     public int run2Int() throws Exception {
-        List<String> input = Main.getInput(3, "example");
-        input.add(0, ".".repeat(input.get(0).length()));
-        input.add(input.get(0));
-        char[][] map = input.stream()
-                .map(s -> "." + s + ".")
-                .map(String::toCharArray)
-                .toArray(char[][]::new);
+        char[][] grid = getGrid();
+        return getSymbols(grid)
+                .stream()
+                .filter(symbol -> symbol.equals('*'))
+                .map(symbol -> getNumbers(grid, symbol))
+                .filter(numbers -> numbers.size() == 2)
+                .map(numbers -> numbers.stream().reduce(1, (a, b) -> a * b))
+                .reduce(0, Integer::sum);
+    }
 
-        int sum = 0;
+    private char[][] getGrid() throws Exception {
+        List<String> input = Main.getInput(3);
+        char[][] grid = new char[input.size()][input.get(0).length()];
+        for (int i = 0; i < input.size(); i++) {
+            grid[i] = input.get(i).toCharArray();
+        }
+        return grid;
+    }
 
-        for(int i = 1; i < map.length - 1; i++) {
-            char[] row = map[i];
-
-            for(int j = 1; j < row.length - 1; j++) {
-                char c = row[j];
-                if(c == '*') {
-                    List<Integer> nums = new ArrayList<>();
-                    for(int k = j - 1; k < j + 2; k++) {
-                        int[] dx = {-1, 1};
-                        for(int l : dx) {
-                            if(isDigit(map[i][k])) {
-                                StringBuilder num = new StringBuilder();
-                                for(int m = k; m < row.length && m >= 0 && isDigit(map[i][m]); m += l) {
-                                    num.append(map[i][m]);
-                                }
-                                if(l == -1) {
-                                    num.reverse();
-                                }
-                                nums.add(Integer.parseInt(num.toString()));
-                            }
-                        }
-                    }
-                    System.out.println(nums);
-                    if(nums.size() == 2) {
-                        sum += nums.get(0) * nums.get(1);
-                    }
+    private List<Symbol> getSymbols(char[][] grid) {
+        List<Symbol> symbols = new ArrayList<>();
+        for (int y = 0; y < grid.length; y++) {
+            char[] row = grid[y];
+            for (int x = 0; x < row.length; x++) {
+                char c = row[x];
+                if (isSymbol(c)) {
+                    symbols.add(new Symbol(c, x, y));
                 }
             }
         }
-        return sum;
+        return symbols;
+    }
+
+    private Set<Integer> getNumbers(char[][] grid, Symbol symbol) {
+        Set<Integer> numbers = new HashSet<>();
+        for (int[] surrounding : symbol.getSurrounding()) {
+            int x = surrounding[0];
+            int y = surrounding[1];
+
+            char c = grid[y][x];
+            if (isDigit(c)) {
+                // go all the way left until we hit a ., x=0, or a symbol knowing we are past the left end of the number
+                while (x >= 0 && grid[y][x] != '.' && !isSymbol(grid[y][x])) {
+                    x--;
+                }
+
+                // go back to the first digit of the number
+                x++;
+
+                StringBuilder number = new StringBuilder();
+
+                // start moving right to read the entire number, stopping at a . or if we hit the right end of the grid
+                while (x < grid[y].length && grid[y][x] != '.' && !isSymbol(grid[y][x])) {
+                    number.append(grid[y][x]);
+                    x++;
+                }
+
+                numbers.add(Integer.parseInt(number.toString()));
+            }
+        }
+        return numbers;
     }
 
     private boolean isSymbol(char c) {
-        return c != '.' && !isDigit(c);
+        return String.valueOf(c).matches("[@#$%^&*\\-=+/]");
+    }
+
+    record Symbol(char symbol, int x, int y) {
+        int[][] getSurrounding() {
+            return new int[][]{
+                    {x - 1, y - 1}, {x, y - 1}, {x + 1, y - 1},
+                    {x - 1, y}, {x + 1, y},
+                    {x - 1, y + 1}, {x, y + 1}, {x + 1, y + 1}
+            };
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof Character c)
+                return symbol == c;
+            if(obj instanceof String s)
+                return s.length() == 1 && symbol == s.charAt(0);
+            return (obj instanceof Symbol other) && symbol == other.symbol;
+        }
     }
 }
                 

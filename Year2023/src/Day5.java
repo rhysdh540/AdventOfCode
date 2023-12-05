@@ -21,7 +21,7 @@ public class Day5 implements Day<Long> {
         for(long seed : seeds) {
             long value = seed;
             for(Map map : maps) {
-                value = map.get(value);
+                value = map.getValue(value);
             }
             if(min > value)
                 min = value;
@@ -95,7 +95,7 @@ record Map(List<Entry> entries) {
         return new Map(entries);
     }
 
-    long get(long key) {
+    long getValue(long key) {
         for(Entry entry : entries) {
             long sourceLow = entry.source;
             long sourceHigh = entry.source + entry.range - 1;
@@ -121,7 +121,7 @@ record Map(List<Entry> entries) {
         return value;
     }
 
-    public PrimitiveIterator.OfLong getMaxRange() {
+    PrimitiveIterator.OfLong getMaxRange() {
         long highestDestination = entries.stream()
                 .map(entry -> entry.destination + entry.range).
                 max(Long::compareTo)

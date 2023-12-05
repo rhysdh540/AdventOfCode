@@ -17,19 +17,14 @@ subprojects {
         mainClass = 'Main'
         argsString = project.ext.year
         workingDir = rootDir
+        jvmArgs = ['-Xmx8G', '-Xms8G']
     }
 
     tasks.register('initDay') {
         doLast {
-            def date = new Date()
-            def day
-            if(project.ext.year == date.year.toString()) {
-                day = date.date.toString()
-            } else {
-                def scanner = new Scanner(System.in)
-                day = scanner.nextLine()
-                scanner.close()
-            }
+            def scanner = new Scanner(System.in)
+            def day = scanner.nextLine()
+            scanner.close()
             def source = project.file("src/Day${day}.java")
             if(!source.exists()) {
                 source.parentFile.mkdirs()

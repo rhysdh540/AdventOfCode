@@ -37,7 +37,7 @@ public class Day5 implements Day<Long> {
 
         Collections.reverse(maps); // reverse the maps so we can go backwards
 
-        //get the largest value from the last map
+        // get the largest value from the last map
         PrimitiveIterator.OfLong itr = maps.get(0).getMaxRange();
 
         // send them all backwards to find their original values
@@ -111,7 +111,8 @@ public class Day5 implements Day<Long> {
             return key;
         }
 
-        // runs a value backwards through the map
+        // runs a value backwards through the map to find the original value
+        // uses binary search for the SPEED
         long getKey(long value) {
             int low = 0;
             int high = entries.length - 1;

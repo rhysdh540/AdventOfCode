@@ -6,43 +6,42 @@ import java.util.List;
  * <a href="https://adventofcode.com/2023/day/4">Day 4</a>
  */
 public class Day4 implements Day.IntDay {
-    @Override
-    public int run1Int() throws Exception {
+	@Override
+	public int run1Int() throws Exception {
 		return Main.getInput(4).stream()
-                .mapToInt(line -> (int) Math.pow(2, getWinningNums(line) - 1))
-                .sum();
-    }
-    
-    @Override
-    public int run2Int() throws Exception {
-        List<String> input = Main.getInput(4);
-        int[] counts = new int[input.size()];
-        Arrays.fill(counts, 1);
+				.mapToInt(line -> (int) Math.pow(2, getWinningNums(line) - 1))
+				.sum();
+	}
 
-        int[] winningNums = input.stream()
-                .mapToInt(this::getWinningNums)
-                .toArray();
+	@Override
+	public int run2Int() throws Exception {
+		List<String> input = Main.getInput(4);
+		int[] counts = new int[input.size()];
+		Arrays.fill(counts, 1);
 
-        for (int i = 0; i < input.size() - 1; i++) {
-            for(int j = i + 1; j < Math.min(i + winningNums[i] + 1, winningNums.length); j++) {
-                counts[j] += counts[i];
-            }
-        }
+		int[] winningNums = input.stream()
+				.mapToInt(this::getWinningNums)
+				.toArray();
 
-        return Arrays.stream(counts).sum();
-    }
+		for (int i = 0; i < input.size() - 1; i++) {
+			for(int j = i + 1; j < Math.min(i + winningNums[i] + 1, winningNums.length); j++) {
+				counts[j] += counts[i];
+			}
+		}
 
-    private int getWinningNums(String card) {
-        String[] split = card.split("([:|])");
+		return Arrays.stream(counts).sum();
+	}
 
-        List<Integer> winningNums = new ArrayList<>(
-                Arrays.stream(split[1].trim().split(" +"))
-                        .map(Integer::parseInt)
-                        .toList());
-        return Math.toIntExact(Arrays.stream(split[2].trim().split(" +"))
-                .map(Integer::parseInt)
-                .filter(winningNums::contains)
-                .count());
-    }
+	private int getWinningNums(String card) {
+		String[] split = card.split("([:|])");
+
+		List<Integer> winningNums = new ArrayList<>(
+				Arrays.stream(split[1].trim().split(" +"))
+						.map(Integer::parseInt)
+						.toList());
+		return Math.toIntExact(Arrays.stream(split[2].trim().split(" +"))
+				.map(Integer::parseInt)
+				.filter(winningNums::contains)
+				.count());
+	}
 }
-                

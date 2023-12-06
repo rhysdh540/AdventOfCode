@@ -29,13 +29,19 @@ public class Day6 implements Day<Long> {
         for(int i = 0; i < times.length; i++) {
             long time = times[i];
             long distance = distances[i];
-            int count = 0;
-            for(int j = 1; j < time; j++) {
+            long first = 0;
+            for(long j = 1; j < time; j++) {
                 if(j * (time - j) > distance) {
-                    count++;
+                    first = j;
+                    break;
                 }
             }
-            result *= count;
+            for(long j = time - 1; j > first; j--) {
+                if(j * (time - j) > distance) {
+                    result *= (j - first + 1);
+                    break;
+                }
+            }
         }
         return result;
     }

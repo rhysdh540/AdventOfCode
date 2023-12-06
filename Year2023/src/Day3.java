@@ -1,7 +1,9 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static java.lang.Character.isDigit;
 
@@ -19,12 +21,11 @@ public class Day3 implements Day.IntDay {
     }
 
     @Override
-    @SuppressWarnings("EqualsBetweenInconvertibleTypes") // yeah yeah shut up
     public int run2Int() throws Exception {
         char[][] grid = getGrid();
         return getSymbols(grid)
                 .stream()
-                .filter(symbol -> symbol.equals('*'))
+                .filter(Symbol::isGear)
                 .map(symbol -> getNumbers(grid, symbol))
                 .filter(numbers -> numbers.size() == 2)
                 .map(numbers -> numbers.stream().reduce(1, (a, b) -> a * b))
@@ -62,30 +63,26 @@ public class Day3 implements Day.IntDay {
 
             char c = grid[y][x];
             if (isDigit(c)) {
-                // go all the way left until we hit a ., x=0, or a symbol knowing we are past the left end of the number
-                while (x >= 0 && grid[y][x] != '.' && !isSymbol(grid[y][x])) {
+                // go all the way back to the first digit of the number - 1
+                while(x >= 0 && grid[y][x] != '.' && !isSymbol(grid[y][x])) {
                     x--;
                 }
 
-                // go back to the first digit of the number
-                x++;
+                // start moving right until we hit a non-digit
+                int start = x + 1;
+                do x++;
+                while(x < grid[y].length && grid[y][x] != '.' && !isSymbol(grid[y][x]));
 
-                StringBuilder number = new StringBuilder();
-
-                // start moving right to read the entire number, stopping at a . or if we hit the right end of the grid
-                while (x < grid[y].length && grid[y][x] != '.' && !isSymbol(grid[y][x])) {
-                    number.append(grid[y][x]);
-                    x++;
-                }
-
-                numbers.add(Integer.parseInt(number.toString()));
+                String number = new String(Arrays.copyOfRange(grid[y], start, x));
+                numbers.add(Integer.parseInt(number));
             }
         }
         return numbers;
     }
 
+    private final Pattern symbolPattern = Pattern.compile("[@#$%^&*\\-=+/]");
     private boolean isSymbol(char c) {
-        return String.valueOf(c).matches("[@#$%^&*\\-=+/]");
+        return symbolPattern.matcher(c + "").matches();
     }
 
     record Symbol(char symbol, int x, int y) {
@@ -97,13 +94,8 @@ public class Day3 implements Day.IntDay {
             };
         }
 
-        @Override
-        public boolean equals(Object obj) {
-            if(obj instanceof Character c)
-                return symbol == c;
-            if(obj instanceof String s)
-                return s.length() == 1 && symbol == s.charAt(0);
-            return (obj instanceof Symbol other) && symbol == other.symbol;
+        public boolean isGear() {
+            return symbol == '*';
         }
     }
 }

@@ -28,7 +28,7 @@ public class Main {
 			try {
 				// i love the smell of reflection in the morning
 				Day<?> day = (Day<?>) Class.forName("Day" + i).getDeclaredConstructor().newInstance();
-				day.printResults();
+				day.printResults(true);
 			} catch(ClassNotFoundException e) {
 				return;
 			}

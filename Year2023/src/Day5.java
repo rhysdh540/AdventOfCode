@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.stream.Collectors;
@@ -14,20 +15,16 @@ public class Day5 implements Day<Long> {
     @Override
     public Long run1() throws Exception {
         List<List<String>> input = getParsedInput();
-        List<Long> seeds = getSeeds(input);
-        List<Map> maps = getMaps(input);
 
-        long min = Long.MAX_VALUE;
-        for(long seed : seeds) {
-            long value = seed;
-            for(Map map : maps) {
-                value = map.getValue(value);
-            }
-            if(min > value)
-                min = value;
-        }
-
-        return min;
+        return getSeeds(input).stream()
+                .mapToLong(seed -> {
+                    for(Map map : getMaps(input)) {
+                        seed = map.getValue(seed);
+                    }
+                    return seed;
+                })
+                .min()
+                .orElseThrow();
     }
     
     @Override
@@ -38,7 +35,7 @@ public class Day5 implements Day<Long> {
         Collection<List<Long>> ranges = getSeeds(input).stream()
                 .collect(Collectors.groupingBy(it -> counter[0]++ / 2)).values();
 
-        Collections.reverse(maps);
+        Collections.reverse(maps); // reverse the maps so we can go backwards
 
         //get the largest value from the last map
         PrimitiveIterator.OfLong itr = maps.get(0).getMaxRange();
@@ -85,57 +82,75 @@ public class Day5 implements Day<Long> {
     }
 
     private List<Map> getMaps(List<List<String>> input) {
-        return input.stream().skip(1).map(Map::create).collect(Collectors.toList());
-    }
-}
-
-record Map(List<Entry> entries) {
-    static Map create(List<String> lines) {
-        List<Entry> entries = lines.stream().skip(1).map(Entry::create).collect(Collectors.toList());
-        return new Map(entries);
+        return input.stream()
+                .skip(1) // skip the seeds line
+                .map(Map::create)
+                .collect(Collectors.toList());
     }
 
-    long getValue(long key) {
-        for(Entry entry : entries) {
-            long sourceLow = entry.source;
-            long sourceHigh = entry.source + entry.range - 1;
-            if(sourceLow <= key && key <= sourceHigh) {
-                long distance = key - sourceLow;
-                return entry.destination + distance;
-            }
+    record Map(Entry[] entries) {
+        static Map create(List<String> lines) {
+            return new Map(lines.stream()
+                    .skip(1) // skip the title
+                    .map(Entry::create)
+                    .sorted(Comparator.comparingLong(entry -> entry.destination)) // sort so we can binary search
+                    .toArray(Entry[]::new));
         }
 
-        return key;
-    }
-
-    long getKey(long value) {
-        for(Entry entry : entries) {
-            long destinationLow = entry.destination;
-            long destinationHigh = destinationLow + entry.range - 1;
-            if(destinationLow <= value && value <= destinationHigh) {
-                long distance = value - destinationLow;
-                return entry.source + distance;
+        // runs a value through the map
+        long getValue(long key) {
+            for(Entry entry : entries) {
+                long sourceLow = entry.source;
+                long sourceHigh = entry.source + entry.range - 1;
+                if(sourceLow <= key && key <= sourceHigh) {
+                    long distance = key - sourceLow;
+                    return entry.destination + distance;
+                }
             }
+
+            return key;
         }
 
-        return value;
-    }
+        // runs a value backwards through the map
+        long getKey(long value) {
+            int low = 0;
+            int high = entries.length - 1;
 
-    PrimitiveIterator.OfLong getMaxRange() {
-        long highestDestination = entries.stream()
-                .map(entry -> entry.destination + entry.range).
-                max(Long::compareTo)
-                .orElseThrow();
-        return LongStream.range(0, highestDestination).iterator();
-    }
+            while (low <= high) {
+                int mid = (low + high) >>> 1;
+                Entry entry = entries[mid];
+                long destinationLow = entry.destination;
+                long destinationHigh = destinationLow + entry.range - 1;
 
-    record Entry(long destination, long source, long range) {
-        static Entry create(String line) {
-            String[] parts = line.split(" ");
-            long destination = Long.parseLong(parts[0]),
-                      source = Long.parseLong(parts[1]),
-                       range = Long.parseLong(parts[2]);
-            return new Entry(destination, source, range);
+                if (destinationHigh < value) {
+                    low = mid + 1;
+                } else if (destinationLow > value) {
+                    high = mid - 1;
+                } else {
+                    return entry.source + value - destinationLow;
+                }
+            }
+
+            return value;
+        }
+
+        // finds the range with the highest destination
+        PrimitiveIterator.OfLong getMaxRange() {
+            long highest = Arrays.stream(entries)
+                    .map(entry -> entry.destination + entry.range)
+                    .max(Long::compareTo)
+                    .orElseThrow();
+            return LongStream.range(0, highest).iterator();
+        }
+
+        record Entry(long destination, long source, long range) {
+            static Entry create(String line) {
+                String[] parts = line.split(" ");
+                long destination = Long.parseLong(parts[0]),
+                        source = Long.parseLong(parts[1]),
+                        range = Long.parseLong(parts[2]);
+                return new Entry(destination, source, range);
+            }
         }
     }
 }

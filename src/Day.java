@@ -34,11 +34,18 @@ public interface Day<T> {
 	/**
 	 * Prints the results of the day's challenges.
 	 */
-	default void printResults() {
+	default void printResults(boolean forceLogTime) {
 		System.out.println("\033[1mDay " + getDayNumber() + ":\033[0m");
 		System.out.print("  Part 1: ");
 		try {
+			long start = System.nanoTime();
 			System.out.println(run1());
+			long end = System.nanoTime();
+			if(end - start >= 1_000_000_000 && forceLogTime) {
+				System.out.printf("\tTime: %,.3fs%n", (end - start) / 1_000_000_000.0);
+			} else if(forceLogTime) {
+				System.out.printf("\tTime: %,.3fms%n", (end - start) / 1_000_000.0);
+			}
 		} catch (Throwable e) {
 			System.out.println("Exception occurred!\033[91m");
 			e.printStackTrace(System.out); // print to sysout instead of syserr
@@ -47,7 +54,14 @@ public interface Day<T> {
 
 		System.out.print("  Part 2: ");
 		try {
+			long start = System.nanoTime();
 			System.out.println(run2());
+			long end = System.nanoTime();
+			if(end - start >= 1_000_000_000 && forceLogTime){
+				System.out.printf("\tTime: %,.3fs%n", (end - start) / 1_000_000_000.0);
+			} else if(forceLogTime) {
+				System.out.printf("\tTime: %,.3fms%n", (end - start) / 1_000_000.0);
+			}
 		} catch (Throwable e) {
 			System.out.println("Exception occurred!\033[91m");
 			e.printStackTrace(System.out);

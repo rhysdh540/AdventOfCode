@@ -1,1 +1,0 @@
-#if ( $RETURN_TYPE != "void" )throw new NotImplementedException();#end

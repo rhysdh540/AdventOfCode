@@ -1,11 +1,10 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.PrimitiveIterator;
-import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 /**
@@ -16,15 +15,16 @@ public class Day5 implements Day<Long> {
 	public Long run1() throws Exception {
 		List<List<String>> input = getParsedInput();
 
-		return getSeeds(input).stream()
-				.mapToLong(seed -> {
-					for(Map map : getMaps(input)) {
-						seed = map.getValue(seed);
-					}
-					return seed;
-				})
-				.min()
-				.orElseThrow();
+		long best = Integer.MAX_VALUE;
+		for(Long l : getSeeds(input)) {
+			for(Map map : getMaps(input)) {
+				l = map.getValue(l);
+			}
+			if(l < best) {
+				best = l;
+			}
+		}
+		return best;
 	}
 
 	@Override
@@ -32,8 +32,11 @@ public class Day5 implements Day<Long> {
 		List<List<String>> input = getParsedInput();
 		List<Map> maps = getMaps(input);
 		int[] counter = {0};
-		Collection<List<Long>> ranges = getSeeds(input).stream()
-				.collect(Collectors.groupingBy(it -> counter[0]++ / 2)).values();
+		java.util.Map<Integer, List<Long>> result = new HashMap<>();
+		for(long it : getSeeds(input)) {
+			result.computeIfAbsent(counter[0]++ / 2, k -> new ArrayList<>()).add(it);
+		}
+		Collection<List<Long>> ranges = result.values();
 
 		Collections.reverse(maps); // reverse the maps so we can go backwards
 
@@ -76,25 +79,43 @@ public class Day5 implements Day<Long> {
 	}
 
 	private List<Long> getSeeds(List<List<String>> input) {
-		return Arrays.stream(input.get(0).get(0).substring(7).split(" "))
-				.map(Long::parseLong)
-				.toList();
+		List<Long> list = new ArrayList<>();
+		var seeds = input.get(0).get(0).substring(7).split(" ");
+		for(String s : seeds) {
+			list.add(Utils.fastParseLong(s));
+		}
+		return list;
 	}
 
 	private List<Map> getMaps(List<List<String>> input) {
-		return input.stream()
-				.skip(1) // skip the seeds line
-				.map(Map::create)
-				.collect(Collectors.toList());
+		List<Map> list = new ArrayList<>();
+		boolean first = true;
+		for(List<String> strings : input) {
+			if(first) {
+				// skip the seeds line
+				first = false;
+				continue;
+			}
+			list.add(Map.create(strings));
+		}
+		return list;
 	}
 
 	record Map(Entry[] entries) {
 		static Map create(List<String> lines) {
-			return new Map(lines.stream()
-					.skip(1) // skip the title
-					.map(Entry::create)
-					.sorted(Comparator.comparingLong(entry -> entry.destination)) // sort so we can binary search
-					.toArray(Entry[]::new));
+			List<Entry> list = new ArrayList<>();
+			boolean first = true;
+			for(String line : lines) {
+				if(first) {
+					// skip the title
+					first = false;
+					continue;
+				}
+				list.add(Entry.create(line));
+			}
+			// sort so we can binary search
+			list.sort(Comparator.comparingLong(entry -> entry.destination));
+			return new Map(list.toArray(new Entry[0]));
 		}
 
 		// runs a value through the map
@@ -137,19 +158,23 @@ public class Day5 implements Day<Long> {
 
 		// finds the range with the highest destination
 		PrimitiveIterator.OfLong getMaxRange() {
-			long highest = Arrays.stream(entries)
-					.map(entry -> entry.destination + entry.range)
-					.max(Long::compareTo)
-					.orElseThrow();
+			long best = 0;
+			for(Entry entry : entries) {
+				long l = entry.destination + entry.range;
+				if(l > best) {
+					best = l;
+				}
+			}
+			long highest = best;
 			return LongStream.range(0, highest).iterator();
 		}
 
 		record Entry(long destination, long source, long range) {
 			static Entry create(String line) {
-				String[] parts = line.split(" ");
-				long destination = Long.parseLong(parts[0]),
-						source = Long.parseLong(parts[1]),
-						range = Long.parseLong(parts[2]);
+				String[] parts = Utils.SPACES.split(line);
+				long destination = Utils.fastParseLong(parts[0]),
+						source = Utils.fastParseLong(parts[1]),
+						range = Utils.fastParseLong(parts[2]);
 				return new Entry(destination, source, range);
 			}
 		}

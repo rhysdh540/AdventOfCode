@@ -8,10 +8,8 @@ public class Day6 implements Day<Long> {
 	@Override
 	public Long run1() throws Exception {
 		List<String> input = Main.getInput(6);
-		String[] timesStr = input.get(0).substring(5).trim().split(" +");
-		long[] times = Arrays.stream(timesStr).mapToLong(Long::parseLong).toArray();
-		String[] distStr = input.get(1).substring(9).trim().split(" +");
-		long[] distances = Arrays.stream(distStr).mapToLong(Long::parseLong).toArray();
+		long[] times = parseInput(input.get(0).substring(5).trim());
+		long[] distances = parseInput(input.get(1).substring(9).trim());
 
 		long result = 1;
 		for(int i = 0; i < times.length; i++) {
@@ -23,8 +21,8 @@ public class Day6 implements Day<Long> {
 	@Override
 	public Long run2() throws Exception {
 		List<String> input = Main.getInput(6);
-		long time = Long.parseLong(input.get(0).substring(5).replace(" ", ""));
-		long distance = Long.parseLong(input.get(1).substring(9).replace(" ", ""));
+		long time = Utils.fastParseLong(input.get(0).substring(5).replace(" ", ""));
+		long distance = Utils.fastParseLong(input.get(1).substring(9).replace(" ", ""));
 		return calculate(time, distance);
 	}
 
@@ -33,5 +31,17 @@ public class Day6 implements Day<Long> {
 		long root1 = (long) ((time + discriminant) / 2);
 		long root2 = (long) ((time - discriminant) / 2);
 		return Math.max(root1, root2) - Math.min(root1, root2);
+	}
+
+	private long[] parseInput(String input) {
+		String[] split = Utils.SPACES.split(input);
+		long[] result = new long[10];
+		int count = 0;
+		for(String s : split) {
+			long l = Long.parseLong(s);
+			if(result.length == count) result = Arrays.copyOf(result, count * 2);
+			result[count++] = l;
+		}
+		return Arrays.copyOfRange(result, 0, count);
 	}
 }

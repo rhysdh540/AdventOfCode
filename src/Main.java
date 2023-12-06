@@ -1,4 +1,3 @@
-
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -9,7 +8,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		try {
-			year = Integer.parseInt(args[0]);
+			year = Utils.fastParseInt(args[0]);
 			if(!Files.exists(Paths.get("Year" + year))) {
 				throw new FileNotFoundException();
 			}
@@ -20,6 +19,11 @@ public class Main {
 			System.err.println("Please specify a year!");
 			return;
 		}
+
+		//warmup
+//		for(int i = 0; i < 100_000; i++) {
+//			Math.sqrt(i);
+//		}
 
 		System.out.println("\033[1;4mAdvent Of Code\033[0;36;1m " + year + "\033[0m");
 		System.out.println("https://adventofcode.com/" + year);

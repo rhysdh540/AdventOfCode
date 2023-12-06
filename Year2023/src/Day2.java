@@ -4,18 +4,24 @@
 public class Day2 implements Day.IntDay {
 	@Override
 	public int run1Int() throws Exception {
-		return Main.getInput(2).stream()
-				.map(this::getRGB)
-				.mapToInt(rgb -> rgb[1] <= 12 && rgb[2] <= 13 && rgb[3] <= 14 ? rgb[0] : 0)
-				.sum();
+		int sum = 0;
+		for(String s : Main.getInput(2)) {
+			int[] rgb = getRGB(s);
+			if(rgb[1] <= 12 && rgb[2] <= 13 && rgb[3] <= 14) {
+				sum += rgb[0];
+			}
+		}
+		return sum;
 	}
 
 	@Override
 	public int run2Int() throws Exception {
-		return Main.getInput(2).stream()
-				.map(this::getRGB)
-				.mapToInt(rgb -> rgb[1] * rgb[2] * rgb[3])
-				.sum();
+		int sum = 0;
+		for(String s : Main.getInput(2)) {
+			int[] rgb = getRGB(s);
+			sum += rgb[1] * rgb[2] * rgb[3];
+		}
+		return sum;
 	}
 
 	/**
@@ -26,11 +32,11 @@ public class Day2 implements Day.IntDay {
 	 */
 	private int[] getRGB(String s) {
 		String line = s.substring(s.indexOf(':') + 2);
-		int[] rgb = new int[] { Integer.parseInt(s.substring(5, s.indexOf(':'))), 0, 0, 0 };
+		int[] rgb = new int[] { Utils.fastParseInt(s.substring(5, s.indexOf(':'))), 0, 0, 0 };
 
 		for(String pull : line.split("; ")) {
 			for(String str : pull.split(", ")) {
-				int num = Integer.parseInt(str.substring(0, str.indexOf(' ')));
+				int num = Utils.fastParseInt(str.substring(0, str.indexOf(' ')));
 				if(str.contains("red") && num > rgb[1]) rgb[1] = num;
 				if(str.contains("green") && num > rgb[2]) rgb[2] = num;
 				if(str.contains("blue") && num > rgb[3]) rgb[3] = num;

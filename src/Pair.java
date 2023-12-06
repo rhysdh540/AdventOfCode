@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-// blantantly stolen from create
+// blatantly stolen from create
 public class Pair<F, S> {
 
 	private F first;

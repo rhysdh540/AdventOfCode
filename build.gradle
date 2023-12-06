@@ -42,7 +42,7 @@ public class Day${day} implements Day.IntDay {
     
     @Override
     public int run2Int() throws Exception {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 }
                 """.stripIndent())

@@ -12,12 +12,20 @@ public class Utils {
 		return i;
 	}
 
+	public static int fastParseInt(char s) {
+		return s - '0';
+	}
+
 	public static long fastParseLong(String s) {
 		long i = 0;
 		for(int j = 0; j < s.length(); j++) {
 			i = i * 10 + (s.charAt(j) - '0');
 		}
 		return i;
+	}
+
+	public static long fastParseLong(char s) {
+		return s - '0';
 	}
 
 	public static boolean isDigit(char c) {

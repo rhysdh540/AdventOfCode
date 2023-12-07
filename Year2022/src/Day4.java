@@ -1,9 +1,8 @@
 import java.util.List;
 import java.util.ArrayList;
 
-public class Day4 implements Day.IntDay {
-    public int run1Int() throws Exception {
-        List<String> input = Main.getInput(4);
+public class Day4 extends Day.IntDay {
+    public int run1Int(List<String> input) {
         ArrayList<Range[]> ranges = new ArrayList<Range[]>();
         for(String line : input) {
             String[] split = line.split(",");
@@ -14,8 +13,7 @@ public class Day4 implements Day.IntDay {
             if(range[0].contains(range[1]) || range[1].contains(range[0])) count++;
         return count;
     }
-    public int run2Int() throws Exception {
-        List<String> input = Main.getInput(4);
+    public int run2Int(List<String> input) {
         ArrayList<Range[]> ranges = new ArrayList<Range[]>();
         for(String line : input) {
             String[] split = line.split(",");

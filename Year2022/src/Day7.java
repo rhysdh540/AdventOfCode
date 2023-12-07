@@ -3,9 +3,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Day7 implements Day.IntDay {
+public class Day7 extends Day.IntDay {
 
-    public int run1Int() throws Exception {
+    public int run1Int(List<String> input) throws Exception {
         Folder rootFolder = readInput();
         int totalSize = 0;
         ArrayList<Folder> smallFolders = rootFolder.foldersSmallerThan(100000);
@@ -15,7 +15,7 @@ public class Day7 implements Day.IntDay {
         return totalSize;
     }
 
-    public int run2Int() throws Exception {
+    public int run2Int(List<String> input) throws Exception {
         int unused = 30000000, total = 70000000;
         int maxSpace = total - unused;
         Folder rootFolder = readInput();
@@ -32,8 +32,8 @@ public class Day7 implements Day.IntDay {
         return smallest.size();
     }
 
-    private static Folder readInput() throws Exception {
-        List<String> inputData = Main.getInput(7);
+    private Folder readInput() throws Exception {
+        List<String> inputData = getInput();
 
         Folder rootFolder = new Folder(null, "/");
         Folder currentFolder = rootFolder;

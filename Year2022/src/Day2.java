@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Day2 implements Day.IntDay {
+public class Day2 extends Day.IntDay {
     private static final int ROCK = 1;
     private static final int PAPER = 2;
     private static final int SCISSORS = 3;
@@ -9,16 +9,14 @@ public class Day2 implements Day.IntDay {
     private static final int DRAW = 3;
     private static final int WIN = 6;
 
-    public int run1Int() throws Exception {
-        List<String> input = Main.getInput(2);
+    public int run1Int(List<String> input) {
         int score = 0;
         for(String line : input) {
             score += getScore(line);
         }
         return score;
     }
-    public int run2Int() throws Exception {
-        List<String> input = Main.getInput(2);
+    public int run2Int(List<String> input) {
         int score = 0;
         for(String line : input) {
             score += getScore2(line);

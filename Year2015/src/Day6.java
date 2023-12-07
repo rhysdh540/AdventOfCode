@@ -4,10 +4,10 @@ import java.util.function.BiFunction;
 /**
  * <a href="https://adventofcode.com/2015/day/6">Day 6</a>
  */
-public class Day6 implements Day.IntDay {
+public class Day6 extends Day.IntDay {
 
     @Override
-    public int run1Int() throws Exception {
+    public int run1Int(List<String> input) {
         return runCommon((command, currentValue) -> {
             if (command == null) {
                 return 1 - currentValue;
@@ -18,7 +18,7 @@ public class Day6 implements Day.IntDay {
     }
 
     @Override
-    public int run2Int() throws Exception {
+    public int run2Int(List<String> input) {
         return runCommon((command, currentValue) -> {
             if (command == null) {
                 return currentValue + 2;
@@ -28,8 +28,8 @@ public class Day6 implements Day.IntDay {
         });
     }
 
-    private int runCommon(BiFunction<String, Integer, Integer> handler) throws Exception {
-        List<String> input = Main.getInput(6);
+    private int runCommon(BiFunction<String, Integer, Integer> handler) {
+        List<String> input = getInput();
         int[][] grid = new int[1000][1000];
         for (String line : input) {
             String[] parts = line.split(" ");

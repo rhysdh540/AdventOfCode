@@ -1,10 +1,12 @@
+import java.util.List;
+
 /**
  * <a href="https://adventofcode.com/2015/day/3">Day 3</a>
  */
-public class Day3 implements Day.IntDay {
+public class Day3 extends Day.IntDay {
     @Override
-    public int run1Int() throws Exception {
-        String input = Main.getInput(3).get(0);
+    public int run1Int(List<String> a) {
+        String input = a.get(0);
         int x = 500, y = 500;
         int[][] grid = new int[1000][1000];
         grid[x][y] = 1;
@@ -27,10 +29,10 @@ public class Day3 implements Day.IntDay {
         }
         return count;
     }
-    
+
     @Override
-    public int run2Int() throws Exception {
-        String input = Main.getInput(3).get(0);
+    public int run2Int(List<String> a) {
+        String input = a.get(0);
         int x1 = 500, y1 = 500, x2 = 500, y2 = 500;
         int[][] grid = new int[1000][1000];
         grid[x1][y1] = 2;
@@ -61,4 +63,3 @@ public class Day3 implements Day.IntDay {
         return count;
     }
 }
-                

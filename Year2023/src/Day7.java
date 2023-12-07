@@ -122,11 +122,12 @@ public class Day7 extends Day.IntDay {
 				numFirst++;
 			}
 		}
-		return(numFirst == 4 || numFirst == 1) ? HandType.FOUR_OF_A_KIND : HandType.FULL_HOUSE;
+		return(numFirst == 4 || numFirst == 1) ?
+			HandType.FOUR_OF_A_KIND : HandType.FULL_HOUSE;
 	}
 
 	private HandType evaluateThreeUnique(String hand) {
-		int[] freq = new int[128]; // Assuming ASCII characters
+		int[] freq = new int[128];
 		for(char character : hand.toCharArray()) {
 			freq[character]++;
 		}
@@ -141,7 +142,7 @@ public class Day7 extends Day.IntDay {
 			else if(freq[i] == 1) countOfOne++;
 		}
 
-		if(countOfThree == 1 &&(countOfTwo == 1 || countOfOne == 2)) {
+		if(countOfThree == 1 && (countOfTwo == 1 || countOfOne == 2)) {
 			return HandType.THREE_OF_A_KIND;
 		} else if(countOfThree == 1 && countOfOne == 1) {
 			return HandType.FULL_HOUSE;

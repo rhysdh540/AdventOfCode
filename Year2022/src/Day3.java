@@ -1,9 +1,8 @@
 import java.util.List;
 import java.util.ArrayList;
 
-public class Day3 implements Day.IntDay {
-    public int run1Int() throws Exception {
-        List<String> input = Main.getInput(3);
+public class Day3 extends Day.IntDay {
+    public int run1Int(List<String> input) {
         int sum = 0;
         ArrayList<String[]> lines = new ArrayList<String[]>();
         for(String line : input) {
@@ -15,8 +14,7 @@ public class Day3 implements Day.IntDay {
         }
         return sum;
     }
-    public int run2Int() throws Exception {
-        List<String> input = Main.getInput(3);
+    public int run2Int(List<String> input) {
         int sum = 0;
         ArrayList<String[]> lines = new ArrayList<String[]>();
         for(int i = 0; i < input.size(); i += 3) {

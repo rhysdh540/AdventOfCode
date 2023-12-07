@@ -1,28 +1,29 @@
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.List;
 
 /**
  * <a href="https://adventofcode.com/2015/day/4">Day 4</a>
  */
-public class Day4 implements Day.IntDay {
+public class Day4 extends Day.IntDay {
     @Override
-    public int run1Int() throws Exception {
+    public int run1Int(List<String> input) throws Exception {
 		//noinspection ConstantValue
 		if(true) return 282749;
         return doTheThing("0".repeat(5));
     }
 
     private int doTheThing(String start) throws Exception {
-        String input = Main.getInput(4).get(0);
+        String input = getInput().get(0);
 
         MessageDigest md = MessageDigest.getInstance("MD5");
         for(int i = 0; i < Integer.MAX_VALUE; i++) {
             byte[] hash = md.digest((input + i).getBytes(StandardCharsets.UTF_8));
-            String hashStr = "";
+            StringBuilder hashStr = new StringBuilder();
             for (byte b : hash) {
-                hashStr += String.format("%02x", b);
+                hashStr.append(String.format("%02x", b));
             }
-            if (hashStr.startsWith(start)) {
+            if (hashStr.toString().startsWith(start)) {
                 return i;
             }
         }
@@ -30,7 +31,7 @@ public class Day4 implements Day.IntDay {
     }
 
     @Override
-    public int run2Int() throws Exception {
+    public int run2Int(List<String> input) throws Exception {
         //noinspection ConstantValue
         if(true) return 9962624;
         return doTheThing("0".repeat(6));

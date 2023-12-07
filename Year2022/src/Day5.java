@@ -1,9 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Day5 implements Day<String> {
-    public String run1() throws Exception {
-        List<String> input = Main.getInput(5);
+public class Day5 extends Day<String> {
+    public String run1(List<String> input) throws Exception {
         List<String> cratesIn = Main.getInput(5, "crates");
         Stack[] list = new Stack[9];
         String[] crates = cratesIn.toArray(String[]::new);
@@ -25,8 +24,7 @@ public class Day5 implements Day<String> {
             result = result + list[i].get(list[i].getHeight()-1);
         return result;
     }
-    public String run2() throws Exception {
-        List<String> input = Main.getInput(5);
+    public String run2(List<String> input) throws Exception {
         List<String> cratesIn = Main.getInput(5, "crates");
         Stack[] list = new Stack[9];
         String[] crates = cratesIn.toArray(String[]::new);

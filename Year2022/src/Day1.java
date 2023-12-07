@@ -1,9 +1,8 @@
 import java.util.List;
 import java.util.ArrayList;
 
-public class Day1 implements Day.IntDay {
-    public int run1Int() throws Exception {
-        List<String> input = Main.getInput(1);
+public class Day1 extends Day.IntDay {
+    public int run1Int(List<String> input) {
         ArrayList<Integer> calories = new ArrayList<>();
         boolean isFirst = true;
         for(String line : input) {
@@ -26,8 +25,7 @@ public class Day1 implements Day.IntDay {
         return max;
     }
 
-    public int run2Int() throws Exception {
-        List<String> input = Main.getInput(1);
+    public int run2Int(List<String> input) {
         ArrayList<Integer> calories = new ArrayList<>();
         boolean isFirst = true;
         for(String line : input) {

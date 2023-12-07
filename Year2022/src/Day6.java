@@ -1,13 +1,15 @@
-public class Day6 implements Day.IntDay {
-    public int run1Int() throws Exception {
-        String input = Main.getInput(6).get(0);
+import java.util.List;
+
+public class Day6 extends Day.IntDay {
+    public int run1Int(List<String> a) throws Exception {
+        String input = a.get(0);
         for(int i = 4; i < input.length(); i++)
             if(isAllDifferent(input.substring(i-4, i)))
                 return i;
         return -1;
     }
-    public int run2Int() throws Exception {
-        String input = Main.getInput(6).get(0);
+    public int run2Int(List<String> a) throws Exception {
+        String input = a.get(0);
         for(int i = 14; i < input.length(); i++)
             if(isAllDifferent14(input.substring(i-14, i)))
                 return i;

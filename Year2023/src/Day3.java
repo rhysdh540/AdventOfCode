@@ -40,7 +40,7 @@ public class Day3 extends Day.IntDay {
 	private char[][] getGrid() {
 		List<String> input = super.getInput();
 		char[][] grid = new char[input.size()][input.get(0).length()];
-		for (int i = 0; i < input.size(); i++) {
+		for(int i = 0; i < input.size(); i++) {
 			grid[i] = input.get(i).toCharArray();
 		}
 		return grid;
@@ -48,11 +48,11 @@ public class Day3 extends Day.IntDay {
 
 	private List<Symbol> getSymbols(char[][] grid) {
 		List<Symbol> symbols = new ArrayList<>();
-		for (int y = 0; y < grid.length; y++) {
+		for(int y = 0; y < grid.length; y++) {
 			char[] row = grid[y];
-			for (int x = 0; x < row.length; x++) {
+			for(int x = 0; x < row.length; x++) {
 				char c = row[x];
-				if (isSymbol(c)) {
+				if(isSymbol(c)) {
 					symbols.add(new Symbol(c, x, y));
 				}
 			}
@@ -62,12 +62,12 @@ public class Day3 extends Day.IntDay {
 
 	private IntHashSet getNumbers(char[][] grid, Symbol symbol) {
 		IntHashSet numbers = new IntHashSet();
-		for (int[] surrounding : symbol.getSurrounding()) {
+		for(int[] surrounding : symbol.getSurrounding()) {
 			int x = surrounding[0];
 			int y = surrounding[1];
 
 			char c = grid[y][x];
-			if (Utils.isDigit(c)) {
+			if(Utils.isDigit(c)) {
 				// go all the way back to the first digit of the number - 1
 				while(x >= 0 && grid[y][x] != '.' && !isSymbol(grid[y][x])) {
 					x--;

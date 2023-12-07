@@ -28,7 +28,7 @@ public class Day6 extends Day<Long> {
 		double discriminant = Math.sqrt(time * time - 4 * distance);
 		long root1 = (long) ((time + discriminant) / 2);
 		long root2 = (long) ((time - discriminant) / 2);
-		return Math.max(root1, root2) - Math.min(root1, root2);
+		return root1 - root2;
 	}
 
 	private long[] parseInput(String input) {

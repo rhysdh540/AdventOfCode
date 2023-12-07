@@ -1,11 +1,9 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -49,7 +47,7 @@ public class Day7 extends Day.IntDay {
 		Collections.reverse(hands);
 		int sum = 0;
 		for(int i = 0; i < hands.size(); i++) {
-			sum += hands.get(i).bid * (i + 1);
+			sum += hands.get(i).bid *(i + 1);
 		}
 		return sum;
 	}
@@ -66,59 +64,90 @@ public class Day7 extends Day.IntDay {
 	}
 
 	private HandType getHandType(String hand, boolean jokers) {
-	    if (hand.contains("J") && jokers) {
-	        String handWithoutJokers = hand.replace("J", "");
-
-			Entry<Character, Long> best = null;
-
-			Comparator<Entry<Character, Long>> comparator = Entry.comparingByValue();
-
-			Map<Character, Long> map = new HashMap<>();
-			for(Character c : handWithoutJokers.toCharArray()) {
-				map.merge(c, 1L, Long::sum);
-			}
-
-			for(Entry<Character, Long> entry : map.entrySet()) {
-				if(best == null || comparator.compare(entry, best) > 0) {
-					best = entry;
-				}
-			}
-			char mostFrequentCard = Optional.ofNullable(best)
-	                .map(Entry::getKey)
-	                .orElse((char) 0);
-	        hand = hand.replace("J", "" + mostFrequentCard);
-	    }
-
-		int numUnique = 0;
-		IntHashSet uniqueValues = new IntHashSet();
-		for(char character : hand.toCharArray()) {
-			if(uniqueValues.add(character)) {
-				numUnique++;
-			}
+		if(hand.contains("J") && jokers) {
+			hand = replaceJoker(hand);
 		}
-		return switch(numUnique) {
+
+		return switch(countUniqueCards(hand)) {
 			case 1 -> HandType.FIVE_OF_A_KIND;
-			case 2 -> {
-				int numFirst = 0;
-				for(char c : hand.toCharArray()) {
-					if(c == hand.charAt(0)) {
-						numFirst++;
-					}
-				}
-				yield numFirst == 4 || numFirst == 1
-						? HandType.FOUR_OF_A_KIND : HandType.FULL_HOUSE;
-			}
-			case 3 -> {
-				Map<Character, Integer> map = new HashMap<>();
-				for(char character : hand.toCharArray()) {
-					map.merge(character, 1, Integer::sum);
-				}
-				yield map.containsValue(3)
-						? HandType.THREE_OF_A_KIND : HandType.TWO_PAIR;
-			}
+			case 2 -> evaluateTwoUnique(hand);
+			case 3 -> evaluateThreeUnique(hand);
 			case 4 -> HandType.ONE_PAIR;
 			default -> HandType.HIGH_CARD;
 		};
+	}
+
+	private String replaceJoker(String hand) {
+		Map<Character, Long> frequencyMap = countCardFrequency(hand.replace("J", ""));
+		char mostFrequentCard = getMostFrequentCard(frequencyMap);
+		return hand.replace("J", String.valueOf(mostFrequentCard));
+	}
+
+	private int countUniqueCards(String hand) {
+		int numUnique = 0;
+		boolean[] visited = new boolean[128]; // Assuming ASCII characters
+		for(char character : hand.toCharArray()) {
+			if(!visited[character]) {
+				visited[character] = true;
+				numUnique++;
+			}
+		}
+		return numUnique;
+	}
+
+	private Map<Character, Long> countCardFrequency(String hand) {
+		Map<Character, Long> map = new HashMap<>();
+		for(char c : hand.toCharArray()) {
+			map.merge(c, 1L, Long::sum);
+		}
+		return map;
+	}
+
+	private char getMostFrequentCard(Map<Character, Long> frequencyMap) {
+		char mostFrequentCard = 0;
+		long maxFrequency = 0;
+		for(Entry<Character, Long> entry : frequencyMap.entrySet()) {
+			if(entry.getValue() > maxFrequency) {
+				mostFrequentCard = entry.getKey();
+				maxFrequency = entry.getValue();
+			}
+		}
+		return mostFrequentCard;
+	}
+
+	private HandType evaluateTwoUnique(String hand) {
+		int numFirst = 0;
+		for(char c : hand.toCharArray()) {
+			if(c == hand.charAt(0)) {
+				numFirst++;
+			}
+		}
+		return(numFirst == 4 || numFirst == 1) ? HandType.FOUR_OF_A_KIND : HandType.FULL_HOUSE;
+	}
+
+	private HandType evaluateThreeUnique(String hand) {
+		int[] freq = new int[128]; // Assuming ASCII characters
+		for(char character : hand.toCharArray()) {
+			freq[character]++;
+		}
+
+		int countOfThree = 0;
+		int countOfTwo = 0;
+		int countOfOne = 0;
+
+		for(int i = 0; i < 128; i++) {
+			if(freq[i] == 3) countOfThree++;
+			else if(freq[i] == 2) countOfTwo++;
+			else if(freq[i] == 1) countOfOne++;
+		}
+
+		if(countOfThree == 1 &&(countOfTwo == 1 || countOfOne == 2)) {
+			return HandType.THREE_OF_A_KIND;
+		} else if(countOfThree == 1 && countOfOne == 1) {
+			return HandType.FULL_HOUSE;
+		} else {
+			return HandType.TWO_PAIR;
+		}
 	}
 
 	record Hand(String cards, HandType type, int bid) {}

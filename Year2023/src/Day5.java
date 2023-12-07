@@ -31,7 +31,7 @@ public class Day5 extends Day<Long> {
 	@Override
 	public Long run2(List<String> a) {
 		//noinspection ConstantConditions
-		if(true) return 10834440L;
+		if(false) return 10834440L;
 		List<List<String>> input = getParsedInput();
 		List<Map> maps = getMaps(input);
 		int[] counter = {0};
@@ -142,15 +142,15 @@ public class Day5 extends Day<Long> {
 			int low = 0;
 			int high = entries.length - 1;
 
-			while (low <= high) {
-				int mid = (low + high) >>> 1;
+			while(low <= high) {
+				int mid =(low + high) >>> 1;
 				Entry entry = entries[mid];
 				long destinationLow = entry.destination;
 				long destinationHigh = destinationLow + entry.range - 1;
 
 				if(destinationHigh < value) {
 					low = mid + 1;
-				} else if (destinationLow > value) {
+				} else if(destinationLow > value) {
 					high = mid - 1;
 				} else {
 					return entry.source + value - destinationLow;

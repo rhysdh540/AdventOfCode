@@ -32,7 +32,7 @@ public class Day4 extends Day.IntDay {
 		}
 		winningNums = Arrays.copyOfRange(winningNums, 0, count);
 
-		for (int i = 0; i < input.size() - 1; i++) {
+		for(int i = 0; i < input.size() - 1; i++) {
 			for(int j = i + 1; j < Math.min(i + winningNums[i] + 1, winningNums.length); j++) {
 				counts[j] += counts[i];
 			}

@@ -2,12 +2,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -28,7 +26,7 @@ public class Day7 extends Day.IntDay {
 		List<Hand> hands = new ArrayList<>();
 		for(String s : getInput()) {
 			String[] parts = s.split(" ");
-			int bid = Integer.parseInt(parts[1]);
+			int bid = Utils.fastParseInt(parts[1]);
 			int firstCard = cardValueGetter.apply(parts[0].charAt(0));
 			HandType type = getHandType(parts[0], jokers);
 			hands.add(new Hand(parts[0], type, bid));
@@ -63,7 +61,7 @@ public class Day7 extends Day.IntDay {
 			case 'Q' -> 12;
 			case 'J' -> 11;
 			case 'T' -> 10;
-			default -> Integer.parseInt(card + "");
+			default -> Utils.fastParseInt(card);
 		};
 	}
 
@@ -92,8 +90,8 @@ public class Day7 extends Day.IntDay {
 	    }
 
 		int numUnique = 0;
-		Set<Character> uniqueValues = new HashSet<>();
-		for(Character character : hand.toCharArray()) {
+		IntHashSet uniqueValues = new IntHashSet();
+		for(char character : hand.toCharArray()) {
 			if(uniqueValues.add(character)) {
 				numUnique++;
 			}
@@ -102,7 +100,7 @@ public class Day7 extends Day.IntDay {
 			case 1 -> HandType.FIVE_OF_A_KIND;
 			case 2 -> {
 				int numFirst = 0;
-				for(Character c : hand.toCharArray()) {
+				for(char c : hand.toCharArray()) {
 					if(c == hand.charAt(0)) {
 						numFirst++;
 					}
@@ -132,6 +130,6 @@ public class Day7 extends Day.IntDay {
 		THREE_OF_A_KIND,
 		TWO_PAIR,
 		ONE_PAIR,
-		HIGH_CARD;
+		HIGH_CARD
 	}
 }

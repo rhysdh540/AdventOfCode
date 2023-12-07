@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -13,30 +11,30 @@ public class Day3 extends Day.IntDay {
 	@Override
 	public int run1Int(List<String> input) {
 		char[][] grid = getGrid();
-		int acc = 0;
+		int total = 0;
 		for(Symbol symbol : getSymbols(grid)) {
 			for(int i : getNumbers(grid, symbol)) {
-				acc += i;
+				total += i;
 			}
 		}
-		return acc;
+		return total;
 	}
 
 	@Override
 	public int run2Int(List<String> input) {
 		char[][] grid = getGrid();
-		int acc = 0;
+		int total = 0;
 		for(Symbol symbol : getSymbols(grid)) {
 			if(!symbol.isGear()) continue;
-			Set<Integer> numbers = getNumbers(grid, symbol);
+			IntHashSet numbers = getNumbers(grid, symbol);
 			if(numbers.size() != 2) continue;
 			int result = 1;
-			for(Integer number : numbers) {
+			for(int number : numbers) {
 				result *= number;
 			}
-			acc += result;
+			total += result;
 		}
-		return acc;
+		return total;
 	}
 
 	private char[][] getGrid() {
@@ -62,8 +60,8 @@ public class Day3 extends Day.IntDay {
 		return symbols;
 	}
 
-	private Set<Integer> getNumbers(char[][] grid, Symbol symbol) {
-		Set<Integer> numbers = new HashSet<>();
+	private IntHashSet getNumbers(char[][] grid, Symbol symbol) {
+		IntHashSet numbers = new IntHashSet();
 		for (int[] surrounding : symbol.getSurrounding()) {
 			int x = surrounding[0];
 			int y = surrounding[1];

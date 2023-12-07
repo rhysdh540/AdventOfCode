@@ -35,8 +35,8 @@ public class Day6 implements Day.IntDay {
             String[] parts = line.split(" ");
             String[] to = parts[parts.length - 1].split(","),
                     from = parts[parts.length - 3].split(",");
-            int fromX = Integer.parseInt(from[0]), fromY = Integer.parseInt(from[1]);
-            int toX = Integer.parseInt(to[0]), toY = Integer.parseInt(to[1]);
+            int fromX = Utils.fastParseInt(from[0]), fromY = Utils.fastParseInt(from[1]);
+            int toX = Utils.fastParseInt(to[0]), toY = Utils.fastParseInt(to[1]);
 
             switch (parts[0]) {
                 case "turn" -> {
@@ -64,4 +64,3 @@ public class Day6 implements Day.IntDay {
         return count;
     }
 }
-                

@@ -4,6 +4,8 @@ allprojects {
     sourceSets.main.java {
         srcDir 'src'
     }
+
+	tasks.jar.enabled = false
 }
 
 subprojects {
@@ -13,14 +15,16 @@ subprojects {
     }
 
     tasks.register('run', JavaExec) {
+		group = 'aoc'
         classpath = sourceSets.main.runtimeClasspath
         mainClass = 'Main'
         argsString = project.ext.year
         workingDir = rootDir
-        jvmArgs = ['-Xmx8G', '-Xms8G']
+        jvmArgs = '-Xmx8G -Xms8G -XX:+UnlockExperimentalVMOptions -XX:+UnlockDiagnosticVMOptions -XX:+AlwaysActAsServerClassMachine -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+UseNUMA -XX:NmethodSweepActivity=1 -XX:ReservedCodeCacheSize=400M -XX:NonNMethodCodeHeapSize=12M -XX:ProfiledCodeHeapSize=194M -XX:NonProfiledCodeHeapSize=194M -XX:-DontCompileHugeMethods -XX:MaxNodeLimit=240000 -XX:NodeLimitFudgeFactor=8000 -XX:+UseVectorCmov -XX:+PerfDisableSharedMem -XX:+UseFastUnorderedTimeStamps -XX:+UseCriticalJavaThreadPriority -XX:AllocatePrefetchStyle=3 -XX:+UseZGC -XX:AllocatePrefetchStyle=1 -XX:-ZProactive'.split(' ').toList()
     }
 
     tasks.register('initDay') {
+		group = 'aoc'
         doLast {
             def scanner = new Scanner(System.in)
             def day = scanner.nextLine()
@@ -39,7 +43,7 @@ public class Day${day} implements Day.IntDay {
     public int run1Int() throws Exception {
         List<String> input = Main.getInput(${day});
     }
-    
+
     @Override
     public int run2Int() throws Exception {
         throw new UnsupportedOperationException();

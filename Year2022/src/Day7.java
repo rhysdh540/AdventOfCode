@@ -72,9 +72,9 @@ public class Day7 implements Day.IntDay {
 
     static class Folder {
         private final String name;
-        private Folder parent;
-        private HashMap<String, Integer> fileSizes = new HashMap<>();
-        private HashMap<String, Folder> folders = new HashMap<>();
+        private final Folder parent;
+        private final HashMap<String, Integer> fileSizes = new HashMap<>();
+        private final HashMap<String, Folder> folders = new HashMap<>();
         private int size = -1;
 
         public Folder(Folder parent, String name) {

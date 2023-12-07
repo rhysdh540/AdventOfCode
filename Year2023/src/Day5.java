@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -80,7 +81,7 @@ public class Day5 implements Day<Long> {
 
 	private List<Long> getSeeds(List<List<String>> input) {
 		List<Long> list = new ArrayList<>();
-		var seeds = input.get(0).get(0).substring(7).split(" ");
+		String[] seeds = Utils.SPACES.split(input.get(0).get(0).substring(7));
 		for(String s : seeds) {
 			list.add(Utils.fastParseLong(s));
 		}
@@ -113,9 +114,10 @@ public class Day5 implements Day<Long> {
 				}
 				list.add(Entry.create(line));
 			}
-			// sort so we can binary search
-			list.sort(Comparator.comparingLong(entry -> entry.destination));
-			return new Map(list.toArray(new Entry[0]));
+			Entry[] entries = list.toArray(new Entry[0]);
+			// sort so we can binary search later
+			Arrays.sort(entries, Comparator.comparingLong(o -> o.destination)); // faster than Entry::destination for some reason
+			return new Map(entries);
 		}
 
 		// runs a value through the map
@@ -144,7 +146,7 @@ public class Day5 implements Day<Long> {
 				long destinationLow = entry.destination;
 				long destinationHigh = destinationLow + entry.range - 1;
 
-				if (destinationHigh < value) {
+				if(destinationHigh < value) {
 					low = mid + 1;
 				} else if (destinationLow > value) {
 					high = mid - 1;

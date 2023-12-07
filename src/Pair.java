@@ -38,7 +38,8 @@ public class Pair<F, S> {
 	@Override
 	public boolean equals(final Object obj) {
 		return obj == this
-				|| obj instanceof Pair<?, ?> other && Objects.equals(first, other.first) && Objects.equals(second, other.second);
+			|| obj instanceof Pair<?, ?> other
+			&& Objects.equals(first, other.first) && Objects.equals(second, other.second);
 	}
 
 	@Override

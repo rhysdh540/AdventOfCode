@@ -38,10 +38,29 @@ public class Day6 implements Day<Long> {
 		long[] result = new long[10];
 		int count = 0;
 		for(String s : split) {
-			long l = Long.parseLong(s);
+			long l = Utils.fastParseLong(s);
 			if(result.length == count) result = Arrays.copyOf(result, count * 2);
 			result[count++] = l;
 		}
 		return Arrays.copyOfRange(result, 0, count);
+	}
+
+	public static void main(String[] args) throws Exception {
+		Main.year = 2023;
+		int iter = 10000;
+		Day6 day = new Day6();
+		double p1avg = 0, p2avg = 0;
+		for(int i = 0; i < iter; i++) {
+			long p1 = System.nanoTime();
+			long part1 = day.run1();
+			p1avg += (System.nanoTime() - p1);
+			long p2 = System.nanoTime();
+			long part2 = day.run2();
+			p2avg += (System.nanoTime() - p2);
+		}
+		p1avg /= iter * 1000000;
+		p2avg /= iter * 1000000;
+		System.out.println("Part 1: " + day.run1() + " (" + p1avg + "ms)");
+		System.out.println("Part 2: " + day.run2() + " (" + p2avg + "ms)");
 	}
 }

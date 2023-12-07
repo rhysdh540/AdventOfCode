@@ -42,9 +42,9 @@ public interface Day<T> {
 			System.out.println(run1());
 			long end = System.nanoTime();
 			if(end - start >= 1_000_000_000 && forceLogTime) {
-				System.out.printf("\tTime: %,.3fs%n", (end - start) / 1_000_000_000.0);
+				System.out.printf("\tTime: \033[91m%,.3fs\033[0m%n", (end - start) / 1_000_000_000.0);
 			} else if(forceLogTime) {
-				System.out.printf("\tTime: %,.3fms%n", (end - start) / 1_000_000.0);
+				System.out.printf("\tTime: \033[96m%,.3fms\033[0m%n", (end - start) / 1_000_000.0);
 			}
 		} catch (Throwable e) {
 			System.out.println("Exception occurred!\033[91m");
@@ -58,9 +58,9 @@ public interface Day<T> {
 			System.out.println(run2());
 			long end = System.nanoTime();
 			if(end - start >= 1_000_000_000 && forceLogTime){
-				System.out.printf("\tTime: %,.3fs%n", (end - start) / 1_000_000_000.0);
+				System.out.printf("\tTime: \033[91m%,.3fs\033[0m%n", (end - start) / 1_000_000_000.0);
 			} else if(forceLogTime) {
-				System.out.printf("\tTime: %,.3fms%n", (end - start) / 1_000_000.0);
+				System.out.printf("\tTime: \033[96m%,.3fms\033[0m%n", (end - start) / 1_000_000.0);
 			}
 		} catch (Throwable e) {
 			System.out.println("Exception occurred!\033[91m");

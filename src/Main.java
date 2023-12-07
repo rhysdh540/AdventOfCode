@@ -1,6 +1,10 @@
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -20,11 +24,6 @@ public class Main {
 			return;
 		}
 
-		//warmup
-//		for(int i = 0; i < 100_000; i++) {
-//			Math.sqrt(i);
-//		}
-
 		System.out.println("\033[1;4mAdvent Of Code\033[0;36;1m " + year + "\033[0m");
 		System.out.println("https://adventofcode.com/" + year);
 
@@ -43,13 +42,29 @@ public class Main {
 	 * Gets the input for the specified day.
 	 * @param day the day number
 	 * @return A list of strings representing the input for the specified day
+	 * @throws FileNotFoundException if the input file for the specified day does not exist
 	 * @throws Exception if {@link Files#readAllLines(java.nio.file.Path) Files.readAllLines} throws an exception
 	 */
 	public static List<String> getInput(int day) throws Exception {
-		return Files.readAllLines(Paths.get("Year" + year + "/input/" + day + ".txt"));
+		return getInput("Year" + year + "/input/" + day + ".txt");
 	}
 
 	public static List<String> getInput(int day, String extra) throws Exception {
-		return Files.readAllLines(Paths.get("Year" + year + "/input/" + day + "_" + extra + ".txt"));
+		return getInput("Year" + year + "/input/" + day + "_" + extra + ".txt");
+	}
+
+	public static List<String> getInput(String path) throws Exception {
+		Path file = Path.of(path);
+		if(!Files.exists(file)) {
+			throw new FileNotFoundException("Input not found for path " + file.toFile().getAbsolutePath());
+		}
+		List<String> lines = new ArrayList<>();
+		try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				lines.add(line);
+			}
+		}
+		return lines;
 	}
 }

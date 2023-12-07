@@ -32,7 +32,7 @@ public class Main {
 				// i love the smell of reflection in the morning
 				Day<?> day = (Day<?>) Class.forName("Day" + i).getDeclaredConstructor().newInstance();
 				day.printResults(true);
-			} catch(ClassNotFoundException e) {
+			} catch(ClassNotFoundException | ClassCastException e) {
 				return;
 			}
 		}

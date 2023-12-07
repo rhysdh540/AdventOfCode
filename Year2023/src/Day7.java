@@ -1,8 +1,14 @@
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * <a href="https://adventofcode.com/2023/day/7">Day 7</a>
@@ -10,22 +16,25 @@ import java.util.stream.Collectors;
 public class Day7 extends Day.IntDay {
     @Override
     public int run1Int(List<String> input) {
-		return run(this::getCardValue, this::getHandType);
+		return run(this::getCardValue, false);
     }
 
     @Override
     public int run2Int(List<String> input) {
-		return run(this::getCardValue2, this::getHandType2);
+		return run(card -> card == 'J' ? 1 : getCardValue(card), true);
     }
 
-	private int run(Function<Character, Integer> cardValueGetter, Function<String, HandType> handTypeGetter) {
-		List<Hand> hands = getInput().stream().map(line -> {
-			String[] parts = line.split(" ");
+	private int run(Function<Character, Integer> cardValueGetter, boolean jokers) {
+		List<Hand> hands = new ArrayList<>();
+		for(String s : getInput()) {
+			String[] parts = s.split(" ");
 			int bid = Integer.parseInt(parts[1]);
 			int firstCard = cardValueGetter.apply(parts[0].charAt(0));
-			HandType type = handTypeGetter.apply(parts[0]);
-			return new Hand(parts[0], type, bid);
-		}).sorted((a, b) -> {
+			HandType type = getHandType(parts[0], jokers);
+			hands.add(new Hand(parts[0], type, bid));
+		}
+
+		hands.sort((a, b) -> {
 			if(a.type != b.type) {
 				return a.type.compareTo(b.type);
 			}
@@ -37,7 +46,8 @@ public class Day7 extends Day.IntDay {
 				}
 			}
 			return 0;
-		}).collect(Collectors.toList());
+		});
+
 		Collections.reverse(hands);
 		int sum = 0;
 		for(int i = 0; i < hands.size(); i++) {
@@ -57,83 +67,64 @@ public class Day7 extends Day.IntDay {
 		};
 	}
 
-	private int getCardValue2(char card) {
-		return card == 'J' ? 1 : getCardValue(card);
-	}
-
-	private HandType getHandType(String hand) {
-		int numUnique = (int) hand.chars().distinct().count();
-		if(numUnique == 1) {
-			return HandType.FIVE_OF_A_KIND;
-		} else if(numUnique == 2) {
-			//test between 4-of-a-kind and full house
-			int numFirst = (int) hand.chars().filter(c -> c == hand.charAt(0)).count();
-			if(numFirst == 4 || numFirst == 1) {
-				return HandType.FOUR_OF_A_KIND;
-			} else {
-				return HandType.FULL_HOUSE;
-			}
-		} else if(numUnique == 3) {
-			//test between 3-of-a-kind and two pair
-			if(hand.chars().boxed().collect(Collectors.toMap(
-				c -> (char) c.intValue(),
-				c -> 1,
-				Integer::sum
-			)).values().stream().anyMatch(c -> c == 3)) {
-				return HandType.THREE_OF_A_KIND;
-			} else {
-				return HandType.TWO_PAIR;
-			}
-		} else if(numUnique == 4) {
-			return HandType.ONE_PAIR;
-		} else {
-			return HandType.HIGH_CARD;
-		}
-	}
-
-	private HandType getHandType2(String hand) {
-	    //jokers "J" are wild and can be any card
-	    if (hand.contains("J")) {
+	private HandType getHandType(String hand, boolean jokers) {
+	    if (hand.contains("J") && jokers) {
 	        String handWithoutJokers = hand.replace("J", "");
-	        char mostFrequentCard = handWithoutJokers.chars()
-	                .mapToObj(c -> (char) c)
-	                .collect(Collectors.groupingBy(c -> c, Collectors.counting()))
-	                .entrySet().stream()
-	                .max(Map.Entry.comparingByValue())
-	                .map(Map.Entry::getKey)
+
+			Entry<Character, Long> best = null;
+
+			Comparator<Entry<Character, Long>> comparator = Entry.comparingByValue();
+
+			Map<Character, Long> map = new HashMap<>();
+			for(Character c : handWithoutJokers.toCharArray()) {
+				map.merge(c, 1L, Long::sum);
+			}
+
+			for(Entry<Character, Long> entry : map.entrySet()) {
+				if(best == null || comparator.compare(entry, best) > 0) {
+					best = entry;
+				}
+			}
+			char mostFrequentCard = Optional.ofNullable(best)
+	                .map(Entry::getKey)
 	                .orElse((char) 0);
-	        hand = hand.replace("J", String.valueOf(mostFrequentCard));
+	        hand = hand.replace("J", "" + mostFrequentCard);
 	    }
 
-	    int numUnique = (int) hand.chars().distinct().count();
-	    if(numUnique == 1) {
-	        return HandType.FIVE_OF_A_KIND;
-	    } else if(numUnique == 2) {
-			String finalHand = hand;
-			int numFirst = (int) hand.chars().filter(c -> c == finalHand.charAt(0)).count();
-	        if(numFirst == 4 || numFirst == 1) {
-	            return HandType.FOUR_OF_A_KIND;
-	        } else {
-	            return HandType.FULL_HOUSE;
-	        }
-	    } else if(numUnique == 3) {
-	        if(hand.chars().boxed().collect(Collectors.toMap(
-	            c -> (char) c.intValue(),
-	            c -> 1,
-	            Integer::sum
-	        )).values().stream().anyMatch(c -> c == 3)) {
-	            return HandType.THREE_OF_A_KIND;
-	        } else {
-	            return HandType.TWO_PAIR;
-	        }
-	    } else if(numUnique == 4) {
-	        return HandType.ONE_PAIR;
-	    } else {
-	        return HandType.HIGH_CARD;
-	    }
+		int numUnique = 0;
+		Set<Character> uniqueValues = new HashSet<>();
+		for(Character character : hand.toCharArray()) {
+			if(uniqueValues.add(character)) {
+				numUnique++;
+			}
+		}
+		return switch(numUnique) {
+			case 1 -> HandType.FIVE_OF_A_KIND;
+			case 2 -> {
+				int numFirst = 0;
+				for(Character c : hand.toCharArray()) {
+					if(c == hand.charAt(0)) {
+						numFirst++;
+					}
+				}
+				yield numFirst == 4 || numFirst == 1
+						? HandType.FOUR_OF_A_KIND : HandType.FULL_HOUSE;
+			}
+			case 3 -> {
+				Map<Character, Integer> map = new HashMap<>();
+				for(char character : hand.toCharArray()) {
+					map.merge(character, 1, Integer::sum);
+				}
+				yield map.containsValue(3)
+						? HandType.THREE_OF_A_KIND : HandType.TWO_PAIR;
+			}
+			case 4 -> HandType.ONE_PAIR;
+			default -> HandType.HIGH_CARD;
+		};
 	}
 
 	record Hand(String cards, HandType type, int bid) {}
+
 	enum HandType {
 		FIVE_OF_A_KIND,
 		FOUR_OF_A_KIND,

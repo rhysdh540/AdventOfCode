@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 /**
  * <a href="https://adventofcode.com/2023/day/3">Day 3</a>
  */
-public class Day3 implements Day.IntDay {
+public class Day3 extends Day.IntDay {
 
 	@Override
-	public int run1Int() throws Exception {
+	public int run1Int(List<String> input) {
 		char[][] grid = getGrid();
 		int acc = 0;
 		for(Symbol symbol : getSymbols(grid)) {
@@ -23,7 +23,7 @@ public class Day3 implements Day.IntDay {
 	}
 
 	@Override
-	public int run2Int() throws Exception {
+	public int run2Int(List<String> input) {
 		char[][] grid = getGrid();
 		int acc = 0;
 		for(Symbol symbol : getSymbols(grid)) {
@@ -39,8 +39,8 @@ public class Day3 implements Day.IntDay {
 		return acc;
 	}
 
-	private char[][] getGrid() throws Exception {
-		List<String> input = Main.getInput(3);
+	private char[][] getGrid() {
+		List<String> input = super.getInput();
 		char[][] grid = new char[input.size()][input.get(0).length()];
 		for (int i = 0; i < input.size(); i++) {
 			grid[i] = input.get(i).toCharArray();

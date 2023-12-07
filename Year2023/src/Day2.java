@@ -1,11 +1,13 @@
+import java.util.List;
+
 /**
  * <a href="https://adventofcode.com/2023/day/2">Day 2</a>
  */
-public class Day2 implements Day.IntDay {
+public class Day2 extends Day.IntDay {
 	@Override
-	public int run1Int() throws Exception {
+	public int run1Int(List<String> input) {
 		int sum = 0;
-		for(String s : Main.getInput(2)) {
+		for(String s : input) {
 			int[] rgb = getRGB(s);
 			if(rgb[1] <= 12 && rgb[2] <= 13 && rgb[3] <= 14) {
 				sum += rgb[0];
@@ -15,9 +17,9 @@ public class Day2 implements Day.IntDay {
 	}
 
 	@Override
-	public int run2Int() throws Exception {
+	public int run2Int(List<String> input) {
 		int sum = 0;
-		for(String s : Main.getInput(2)) {
+		for(String s : input) {
 			int[] rgb = getRGB(s);
 			sum += rgb[1] * rgb[2] * rgb[3];
 		}

@@ -4,8 +4,6 @@ allprojects {
     sourceSets.main.java {
         srcDir 'src'
     }
-
-	tasks.jar.enabled = false
 }
 
 subprojects {

@@ -4,10 +4,9 @@ import java.util.List;
 /**
  * <a href="https://adventofcode.com/2023/day/6">Day 6</a>
  */
-public class Day6 implements Day<Long> {
+public class Day6 extends Day<Long> {
 	@Override
-	public Long run1() throws Exception {
-		List<String> input = Main.getInput(6);
+	public Long run1(List<String> input) {
 		long[] times = parseInput(input.get(0).substring(5).trim());
 		long[] distances = parseInput(input.get(1).substring(9).trim());
 
@@ -19,8 +18,7 @@ public class Day6 implements Day<Long> {
 	}
 
 	@Override
-	public Long run2() throws Exception {
-		List<String> input = Main.getInput(6);
+	public Long run2(List<String> input) {
 		long time = Utils.fastParseLong(input.get(0).substring(5).replace(" ", ""));
 		long distance = Utils.fastParseLong(input.get(1).substring(9).replace(" ", ""));
 		return calculate(time, distance);
@@ -45,22 +43,22 @@ public class Day6 implements Day<Long> {
 		return Arrays.copyOfRange(result, 0, count);
 	}
 
-	public static void main(String[] args) throws Exception {
-		Main.year = 2023;
-		int iter = 10000;
-		Day6 day = new Day6();
-		double p1avg = 0, p2avg = 0;
-		for(int i = 0; i < iter; i++) {
-			long p1 = System.nanoTime();
-			long part1 = day.run1();
-			p1avg += (System.nanoTime() - p1);
-			long p2 = System.nanoTime();
-			long part2 = day.run2();
-			p2avg += (System.nanoTime() - p2);
-		}
-		p1avg /= iter * 1000000;
-		p2avg /= iter * 1000000;
-		System.out.println("Part 1: " + day.run1() + " (" + p1avg + "ms)");
-		System.out.println("Part 2: " + day.run2() + " (" + p2avg + "ms)");
-	}
+//	public static void main(String[] args) throws Exception {
+//		Main.year = 2023;
+//		int iter = 10000;
+//		Day6 day = new Day6();
+//		double p1avg = 0, p2avg = 0;
+//		for(int i = 0; i < iter; i++) {
+//			long p1 = System.nanoTime();
+//			long part1 = day.run1(day.getInput());
+//			p1avg += (System.nanoTime() - p1);
+//			long p2 = System.nanoTime();
+//			long part2 = day.run2(day.getInput());
+//			p2avg += (System.nanoTime() - p2);
+//		}
+//		p1avg /= iter * 1000000;
+//		p2avg /= iter * 1000000;
+//		System.out.println("Part 1: " + day.run1() + " (" + p1avg + "ms)");
+//		System.out.println("Part 2: " + day.run2() + " (" + p2avg + "ms)");
+//	}
 }

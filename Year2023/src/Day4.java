@@ -6,19 +6,18 @@ import java.util.regex.Pattern;
 /**
  * <a href="https://adventofcode.com/2023/day/4">Day 4</a>
  */
-public class Day4 implements Day.IntDay {
+public class Day4 extends Day.IntDay {
 	@Override
-	public int run1Int() throws Exception {
+	public int run1Int(List<String> input) {
 		int sum = 0;
-		for(String line : Main.getInput(4)) {
+		for(String line : input) {
 			sum += Utils.pow(2, getWinningNums(line) - 1);
 		}
 		return sum;
 	}
 
 	@Override
-	public int run2Int() throws Exception {
-		List<String> input = Main.getInput(4);
+	public int run2Int(List<String> input) {
 		int[] counts = new int[input.size()];
 		Arrays.fill(counts, 1);
 

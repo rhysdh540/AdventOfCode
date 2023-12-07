@@ -11,9 +11,9 @@ import java.util.stream.LongStream;
 /**
  * <a href="https://adventofcode.com/2023/day/5">Day 5</a>
  */
-public class Day5 implements Day<Long> {
+public class Day5 extends Day<Long> {
 	@Override
-	public Long run1() throws Exception {
+	public Long run1(List<String> a) {
 		List<List<String>> input = getParsedInput();
 
 		long best = Integer.MAX_VALUE;
@@ -29,7 +29,7 @@ public class Day5 implements Day<Long> {
 	}
 
 	@Override
-	public Long run2() throws Exception {
+	public Long run2(List<String> a) {
 		List<List<String>> input = getParsedInput();
 		List<Map> maps = getMaps(input);
 		int[] counter = {0};
@@ -63,10 +63,10 @@ public class Day5 implements Day<Long> {
 		throw new AssertionError("No solution found");
 	}
 
-	private List<List<String>> getParsedInput() throws Exception {
+	private List<List<String>> getParsedInput() {
 		List<List<String>> parsedInput = new ArrayList<>();
 		List<String> current = new ArrayList<>();
-		for(String line : Main.getInput(5)) {
+		for(String line : getInput()) {
 			if(line.isEmpty()) {
 				parsedInput.add(current);
 				current = new ArrayList<>();

@@ -1,3 +1,4 @@
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -5,16 +6,15 @@ import java.util.regex.Pattern;
 /**
  * <a href="https://adventofcode.com/2023/day/1">Day 1</a>
  */
-public class Day1 implements Day.IntDay {
+public class Day1 extends Day.IntDay {
 
 	@Override
-	public int run1Int() throws Exception {
-		return doTheThing(Main.getInput(1));
+	public int run1Int(List<String> input) {
+		return doTheThing(input);
 	}
 
 	@Override
-	public int run2Int() throws Exception {
-		List<String> input = Main.getInput(1);
+	public int run2Int(List<String> input) {
 		// technically we shoudn't include zero but it works anyway
 		String[] nums = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
 		for(String num : nums) {

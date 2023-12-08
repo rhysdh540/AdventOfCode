@@ -24,33 +24,37 @@ subprojects {
     tasks.register('initDay') {
 		group = 'aoc'
         doLast {
-            def scanner = new Scanner(System.in)
-            def day = scanner.nextLine()
-            scanner.close()
+            def day = null
+			for(def i = 1; i <= 25; i++) {
+				if(!project.file("src/Day${i}.java").exists()) {
+					day = i
+					break
+				}
+			}
+			if(day == null) {
+				throw new IllegalStateException("All days are already implemented!")
+			}
             def source = project.file("src/Day${day}.java")
-            if(!source.exists()) {
-                source.parentFile.mkdirs()
-                source.createNewFile()
-                source.write("""import java.util.List;
+			source.parentFile.mkdirs()
+			source.createNewFile()
+			source.write("""import java.util.List;
 
 /**
- * <a href="https://adventofcode.com/${project.ext.year}/day/${day}">Day ${day}</a>
- */
+* <a href="https://adventofcode.com/${project.ext.year}/day/${day}">Day ${day}</a>
+*/
 public class Day${day} implements Day.IntDay {
-    @Override
-    public int run1Int() throws Exception {
-        List<String> input = Main.getInput(${day});
-    }
-
-    @Override
-    public int run2Int() throws Exception {
-        throw new UnsupportedOperationException();
-    }
+@Override
+public int run1Int() throws Exception {
+	List<String> input = Main.getInput(${day});
 }
-                """.stripIndent())
 
-                project.file("input/${day}.txt").createNewFile()
-            }
+@Override
+public int run2Int() throws Exception {
+	throw new UnsupportedOperationException();
+}
+}
+			""".stripIndent())
+			project.file("input/${day}.txt").createNewFile()
         }
     }
 }

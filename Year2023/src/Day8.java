@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * <a href="https://adventofcode.com/2023/day/8">Day 8</a>
@@ -11,7 +8,7 @@ import java.util.stream.Collectors;
 public class Day8 extends Day<Long> {
     @Override
     public Long run1(List<String> input) {
-		String insns = input.remove(0);
+		char[] insns = input.remove(0).toCharArray();
 		List<Node> nodes = getParsedInput(input);
 
 		Node pointer = null;
@@ -26,24 +23,24 @@ public class Day8 extends Day<Long> {
 
 		long count = 0;
 		for(int i = 0; ; i++, count++) {
-			if(i == insns.length()) {
+			if(i == insns.length) {
 				i = 0;
 			}
 			if(pointer.name.equals("ZZZ")) {
 				return count;
 			}
-			pointer = findNextNode(nodes, pointer, insns.charAt(i));
+			pointer = findNextNode(nodes, pointer, insns[i]);
 		}
     }
 
     @Override
     public Long run2(List<String> input) {
-		String insns = input.remove(0);
+		char[] insns = input.remove(0).toCharArray();
 		List<Node> nodes = getParsedInput(input);
 
 		List<Node> pointers = new ArrayList<>();
 		for(Node n1 : nodes) {
-			if(n1.name.endsWith("A")) {
+			if(n1.name.charAt(2) == 'A') {
 				pointers.add(n1);
 			}
 		}
@@ -51,12 +48,12 @@ public class Day8 extends Day<Long> {
 		for(Node node : pointers) {
 			long count = 0;
 			for(int i = 0; ; i++, count++) {
-				if(i == insns.length()) i = 0;
-				if(node.name.endsWith("Z")) {
+				if(i == insns.length) i = 0;
+				if(node.name.charAt(2) == 'Z') {
 					periods.add(count);
 					break;
 				}
-				node = findNextNode(nodes, node, insns.charAt(i));
+				node = findNextNode(nodes, node, insns[i]);
 			}
 		}
 
@@ -95,7 +92,33 @@ public class Day8 extends Day<Long> {
 	}
 
 	private long gcd(long a, long b) {
-		return b == 0 ? a : gcd(b, a % b);
+		if(a == 0) return b;
+		if(b == 0) return a;
+
+		long k = 0;
+		while((a & 1) == 0 && (b & 1) == 0) {
+			a >>= 1;
+			b >>= 1;
+			k++;
+		}
+
+		while((a & 1) == 0) {
+			a >>= 1;
+		}
+
+		do {
+			while((b & 1) == 0) {
+				b >>= 1;
+			}
+			if(a > b) {
+				long t = a;
+				a = b;
+				b = t;
+			}
+			b -= a;
+		} while(b != 0);
+
+		return a << k;
 	}
 
 	record Node(String name, Pair<String, String> next) {}

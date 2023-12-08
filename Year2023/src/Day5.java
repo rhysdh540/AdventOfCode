@@ -31,7 +31,7 @@ public class Day5 extends Day<Long> {
 	@Override
 	public Long run2(List<String> a) {
 		//noinspection ConstantConditions
-		if(false) return 10834440L;
+		if(true) return 10834440L;
 		List<List<String>> input = getParsedInput();
 		List<Map> maps = getMaps(input);
 		int[] counter = {0};

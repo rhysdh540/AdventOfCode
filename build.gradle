@@ -43,15 +43,15 @@ subprojects {
 * <a href="https://adventofcode.com/${project.ext.year}/day/${day}">Day ${day}</a>
 */
 public class Day${day} extends Day.IntDay {
-@Override
-public int run1Int(List<String> input) throws Exception {
+	@Override
+	public int run1Int(List<String> input) {
 
-}
+	}
 
-@Override
-public int run2Int(List<String> input) throws Exception {
-	throw new UnsupportedOperationException();
-}
+	@Override
+	public int run2Int(List<String> input) {
+		throw new UnsupportedOperationException();
+	}
 }
 			""".stripIndent())
 			project.file("input/${day}.txt").createNewFile()

@@ -7,6 +7,9 @@ public final class Utils {
 	public static final Pattern SPACES = Pattern.compile(" +");
 
 	public static int fastParseInt(String s) {
+		if(s.charAt(0) == '-') {
+			return -fastParseInt(s.substring(1));
+		}
 		int i = 0;
 		for(int j = 0; j < s.length(); j++) {
 			i = i * 10 + (s.charAt(j) - '0');

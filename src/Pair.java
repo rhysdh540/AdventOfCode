@@ -15,16 +15,64 @@ public class Pair<F, S> {
 		return new Pair<>(first, second);
 	}
 
+	public F first() {
+		return first;
+	}
+
+	public F getLeft() {
+		return first;
+	}
+
+	public F getKey() {
+		return first;
+	}
+
 	public F getFirst() {
 		return first;
+	}
+
+	public S second() {
+		return second;
+	}
+
+	public S getRight() {
+		return second;
+	}
+
+	public S getValue() {
+		return second;
 	}
 
 	public S getSecond() {
 		return second;
 	}
 
+	public void first(F first) {
+		this.first = first;
+	}
+
+	public void setLeft(F first) {
+		this.first = first;
+	}
+
+	public void setKey(F first) {
+		this.first = first;
+	}
+
 	public void setFirst(F first) {
 		this.first = first;
+	}
+
+	public void second(S second) {
+		this.second = second;
+	}
+
+	public void setRight(S second) {
+		this.second = second;
+	}
+
+	public void setValue(S second) {
+		this.second = second;
 	}
 
 	public void setSecond(S second) {
@@ -44,7 +92,11 @@ public class Pair<F, S> {
 
 	@Override
 	public int hashCode() {
-		return (Objects.hashCode(first) * 31) ^ Objects.hashCode(second);
+		return Objects.hashCode(first) * 31 ^ Objects.hashCode(second);
+	}
+
+	public boolean contains(Object obj) {
+		return Objects.equals(first, obj) || Objects.equals(second, obj);
 	}
 
 	@Override

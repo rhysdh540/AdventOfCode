@@ -17,13 +17,14 @@ public class Day1 extends Day.IntDay {
 	public int run2Int(List<String> input) {
 		// technically we shoudn't include zero but it works anyway
 		String[] nums = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-		for(String num : nums) {
-			input.replaceAll(s -> {
+		input.replaceAll(s -> {
+			for(String num : nums) {
 				// pad replacements with their start and end characters so you don't mess up things like `fiveightwone`
 				String toReplace = num.charAt(0) + "" + Arrays.binarySearch(nums, num) + num.charAt(num.length() - 1);
-				return s.replace(num, toReplace);
-			});
-		}
+				s = s.replace(num, toReplace);
+			}
+			return s;
+		});
 		return doTheThing(input);
 	}
 
@@ -33,8 +34,7 @@ public class Day1 extends Day.IntDay {
 		int sum = 0;
 		for(String s : input) {
 			String string = number.matcher(s).replaceAll("");
-			int i = Utils.fastParseInt(string.charAt(0) + "" + string.charAt(string.length() - 1));
-			sum += i;
+			sum += Utils.fastParseInt(string.charAt(0) + "" + string.charAt(string.length() - 1));
 		}
 		return sum;
 	}

@@ -59,7 +59,7 @@ public class Day8 extends Day<Long> {
 
 		long lcm = periods.get(0);
 		for(int i = 1; i < periods.size(); i++) {
-			lcm = lcm(lcm, periods.get(i));
+			lcm = Utils.lcm(lcm, periods.get(i));
 		}
 		return lcm;
     }
@@ -85,40 +85,6 @@ public class Day8 extends Day<Long> {
 			list.add(new Node(parts[0], Pair.of(parts[1], parts[2])));
 		}
 		return list;
-	}
-
-	private long lcm(long a, long b) {
-		return a * b / gcd(a, b);
-	}
-
-	private long gcd(long a, long b) {
-		if(a == 0) return b;
-		if(b == 0) return a;
-
-		long k = 0;
-		while((a & 1) == 0 && (b & 1) == 0) {
-			a >>= 1;
-			b >>= 1;
-			k++;
-		}
-
-		while((a & 1) == 0) {
-			a >>= 1;
-		}
-
-		do {
-			while((b & 1) == 0) {
-				b >>= 1;
-			}
-			if(a > b) {
-				long t = a;
-				a = b;
-				b = t;
-			}
-			b -= a;
-		} while(b != 0);
-
-		return a << k;
 	}
 
 	record Node(String name, Pair<String, String> next) {}

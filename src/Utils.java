@@ -1,6 +1,9 @@
+import java.util.Collection;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-public class Utils {
+public final class Utils {
 	public static final Pattern SPACES = Pattern.compile(" +");
 
 	public static int fastParseInt(String s) {
@@ -45,6 +48,168 @@ public class Utils {
 			base *= base;
 		}
 		return result;
+	}
+
+	public static int sum(int[] arr) {
+		int sum = 0;
+		for(int i : arr) {
+			sum += i;
+		}
+		return sum;
+	}
+
+	public static long sum(long[] arr) {
+		long sum = 0;
+		for(long i : arr) {
+			sum += i;
+		}
+		return sum;
+	}
+
+	public static double sum(double[] arr) {
+		double sum = 0;
+		for(double i : arr) {
+			sum += i;
+		}
+		return sum;
+	}
+
+	public static int product(int[] arr) {
+		int product = 1;
+		for(int i : arr) {
+			product *= i;
+		}
+		return product;
+	}
+
+	public static long product(long[] arr) {
+		long product = 1;
+		for(long i : arr) {
+			product *= i;
+		}
+		return product;
+	}
+
+	public static double product(double[] arr) {
+		double product = 1;
+		for(double i : arr) {
+			product *= i;
+		}
+		return product;
+	}
+
+	public static int max(int[] arr) {
+		int max = Integer.MIN_VALUE;
+		for(int i : arr) {
+			if(i > max) {
+				max = i;
+			}
+		}
+		return max;
+	}
+
+	public static long max(long[] arr) {
+		long max = Long.MIN_VALUE;
+		for(long i : arr) {
+			if(i > max) {
+				max = i;
+			}
+		}
+		return max;
+	}
+
+	public static double max(double[] arr) {
+		double max = Double.MIN_VALUE;
+		for(double i : arr) {
+			if(i > max) {
+				max = i;
+			}
+		}
+		return max;
+	}
+
+	public static int min(int[] arr) {
+		int min = Integer.MAX_VALUE;
+		for(int i : arr) {
+			if(i < min) {
+				min = i;
+			}
+		}
+		return min;
+	}
+
+	public static long min(long[] arr) {
+		long min = Long.MAX_VALUE;
+		for(long i : arr) {
+			if(i < min) {
+				min = i;
+			}
+		}
+		return min;
+	}
+
+	public static double min(double[] arr) {
+		double min = Double.MAX_VALUE;
+		for(double i : arr) {
+			if(i < min) {
+				min = i;
+			}
+		}
+		return min;
+	}
+
+	public static long lcm(long a, long b) {
+		long gcd = gcd(a, b);
+		if(gcd == 0) return 0;
+		return a * b / gcd;
+	}
+
+	public static <A, B, C extends Iterable<A>, D extends Collection<B>>
+	D map(C c, Function<A, B> func, Supplier<D> supplier) {
+		D d = supplier.get();
+		for(A a : c) {
+			d.add(func.apply(a));
+		}
+		return d;
+	}
+
+	public static <A, B, D extends Collection<B>>
+	D map(A[] c, Function<A, B> func, Supplier<D> supplier) {
+		D d = supplier.get();
+		for(A a : c) {
+			d.add(func.apply(a));
+		}
+		return d;
+	}
+
+	public static long gcd(long a, long b) {
+		if(a == 0) return b;
+		if(b == 0) return a;
+
+		long k = 0;
+		while((a & 1) == 0 && (b & 1) == 0) {
+			a >>= 1;
+			b >>= 1;
+			k++;
+		}
+
+		while((a & 1) == 0) {
+			a >>= 1;
+		}
+
+		do {
+			while((b & 1) == 0) {
+				b >>= 1;
+			}
+			if(a > b) {
+				long t = a;
+				a = b;
+				b = t;
+			}
+			b -= a;
+		} while(b != 0);
+
+		return a << k;
 	}
 
 	public static void main(String[] args) {

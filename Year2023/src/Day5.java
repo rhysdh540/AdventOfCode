@@ -82,26 +82,14 @@ public class Day5 extends Day<Long> {
 	}
 
 	private List<Long> getSeeds(List<List<String>> input) {
-		List<Long> list = new ArrayList<>();
 		String[] seeds = Utils.SPACES.split(input.get(0).get(0).substring(7));
-		for(String s : seeds) {
-			list.add(Utils.fastParseLong(s));
-		}
-		return list;
+		return Utils.map(seeds, Utils::fastParseLong, ArrayList::new);
 	}
 
 	private List<Map> getMaps(List<List<String>> input) {
-		List<Map> list = new ArrayList<>();
-		boolean first = true;
-		for(List<String> strings : input) {
-			if(first) {
-				// skip the seeds line
-				first = false;
-				continue;
-			}
-			list.add(Map.create(strings));
-		}
-		return list;
+		input = new ArrayList<>(input);
+		input.remove(0);
+		return Utils.map(input, Map::create, ArrayList::new);
 	}
 
 	record Map(Entry[] entries) {

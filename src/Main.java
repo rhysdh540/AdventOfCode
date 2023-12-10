@@ -10,7 +10,7 @@ import java.util.List;
 public class Main {
 	public static int year;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		try {
 			year = Utils.fastParseInt(args[0]);
 			if(!Files.exists(Paths.get("Year" + year))) {
@@ -26,15 +26,29 @@ public class Main {
 
 		System.out.println("\033[1;4mAdvent Of Code\033[0;36;1m " + year + "\033[0m");
 		System.out.println("https://adventofcode.com/" + year);
+		if(args.length == 1) {
+			System.out.println("Running all days...");
+			runAll();
+		} else {
+			System.out.println("Running day " + args[1] + "...");
+			run(Utils.fastParseInt(args[1]));
+		}
+	}
 
-		for(int i = 1; i <= 25; i++) {
-			try {
-				// i love the smell of reflection in the morning
-				Day<?> day = (Day<?>) Class.forName("Day" + i).getDeclaredConstructor().newInstance();
-				day.printResults(true);
-			} catch(ClassNotFoundException | ClassCastException e) {
-				return;
-			}
+	private static void runAll() {
+		int day = 1;
+		while(run(day)) {
+			day++;
+		}
+	}
+
+	private static boolean run(int day) {
+		try {
+			Day<?> dayObj = (Day<?>) Class.forName("Day" + day).getDeclaredConstructor().newInstance();
+			dayObj.printResults(true);
+			return true;
+		} catch(Exception e) {
+			return false;
 		}
 	}
 

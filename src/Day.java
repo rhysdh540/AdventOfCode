@@ -71,9 +71,9 @@ public abstract class Day<T> {
 			System.out.println(runnable.run(input));
 			long end = System.nanoTime();
 			if(end - start >= 1_000_000_000) {
-				System.out.printf("\tTime: \033[91m%,.3fs\033[0m%n", (end - start) / 1_000_000_000.0);
+				System.out.printf("    Time: \033[91m%,.3fs\033[0m%n", (end - start) / 1_000_000_000.0);
 			} else if(forceLogTime) {
-				System.out.printf("\tTime: \033[96m%,.3fms\033[0m%n", (end - start) / 1_000_000.0);
+				System.out.printf("    Time: \033[96m%,.3fms\033[0m%n", (end - start) / 1_000_000.0);
 			}
 		} catch (Throwable e) {
 			System.out.println("Exception occurred!\033[91m");

@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
 * <a href="https://adventofcode.com/2023/day/10">Day 10</a>
@@ -14,7 +16,7 @@ public class Day10 extends Day.IntDay {
 	public int run2Int(List<String> input) {
 		Pair<PipePart[][], PipePart> pair = getGrid(input);
 		PipePart[][] grid = pair.first();
-		List<PipePart> loop = getLoop(pair);
+		Set<PipePart> loop = getLoop(pair);
 
 		for(PipePart[] row : grid) {
 			for(PipePart part : row) {
@@ -27,16 +29,11 @@ public class Day10 extends Day.IntDay {
 		int count = 0;
 		for(PipePart[] row : grid) {
 			for(PipePart part : row) {
-				if(part.type == Type.EMPTY && !hasPathToEdge(grid, part)) {
-//					grid[part.y][part.x] = new PipePart(Type.INSIDE, part.x, part.y);
+				if(!loop.contains(part) && !hasPathToEdge(grid, part)) {
 					count++;
 				}
 			}
 		}
-
-//		for(PipePart[] row : grid) {
-//			System.out.println(Arrays.stream(row).map(it -> it.type.t + "").collect(Collectors.joining()));
-//		}
 
 		return count;
 	}
@@ -59,13 +56,12 @@ public class Day10 extends Day.IntDay {
 		return Pair.of(grid, start);
 	}
 
-	private List<PipePart> getLoop(Pair<PipePart[][], PipePart> pair) {
+	private Set<PipePart> getLoop(Pair<PipePart[][], PipePart> pair) {
 		PipePart[][] grid = pair.first();
 		PipePart start = pair.second();
 		int x = start.x, y = start.y, prevX = x, prevY = y, length = 0;
 
-		List<PipePart> loop = new ArrayList<>();
-		loop.add(start);
+		Set<PipePart> loop = new HashSet<>(Set.of(start));
 
 		grid[y][x] = start = determineType(start, grid);
 
@@ -152,6 +148,18 @@ public class Day10 extends Day.IntDay {
 			}
 
 			return result;
+		}
+
+		// use custom equals and hashcode to speed up the hashset
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj instanceof PipePart other && other.x == x && other.y == y;
+		}
+
+		@Override
+		public int hashCode() {
+			return x * 31 + y;
 		}
 	}
 

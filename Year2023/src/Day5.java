@@ -43,18 +43,25 @@ public class Day5 extends Day<Long> {
 		Collections.reverse(maps); // reverse the maps so we can go backwards
 
 		// get the largest value from the last map
-		return maps.get(0).getMaxRange()
-			//no .parallel() because it's slower somehow
-			.mapToObj(l -> Pair.of(l, maps.get(0).getKey(l))) // send them all backwards to find their original values
-			.filter(pair -> ranges.stream().anyMatch(range -> {
-				long low = range.get(0);
-				long high = low + range.get(1);
-				long value = pair.second();
-				return low <= value && value < high;
-			}))
-			.findFirst()
-			.orElseThrow()
-			.getFirst();
+		long[] results = {-1};
+		maps.get(0).getMaxRange()
+			.parallel()
+			.forEach(it -> {
+				if(results[0] != -1)
+					return;
+				for(Map map : maps) {
+					it = map.getValue(it);
+				}
+				for(List<Long> range : ranges) {
+					if(range.get(0) <= it && it < range.get(0) + range.get(1)) {
+						results[0] = it;
+						return;
+					}
+				}
+			});
+		if(results[0] != -1)
+			return results[0];
+		throw new AssertionError("No solution found");
 	}
 
 	private List<List<String>> getParsedInput() {
@@ -123,7 +130,7 @@ public class Day5 extends Day<Long> {
 			int high = entries.length - 1;
 
 			while(low <= high) {
-				int mid = (low + high) >>> 1;
+				int mid =(low + high) >>> 1;
 				Entry entry = entries[mid];
 				long destinationLow = entry.destination;
 				long destinationHigh = destinationLow + entry.range - 1;
@@ -142,14 +149,15 @@ public class Day5 extends Day<Long> {
 
 		// finds the range with the highest destination
 		LongStream getMaxRange() {
-			Pair<Long, Long> highest = Pair.of(0L, 0L);
+			long best = 0;
 			for(Entry entry : entries) {
 				long l = entry.destination + entry.range;
-				if(l > highest.getSecond()) {
-					highest = Pair.of(entry.destination, l);
+				if(l > best) {
+					best = l;
 				}
 			}
-			return LongStream.range(0, highest.getSecond());
+			long highest = best;
+			return LongStream.range(0, highest);
 		}
 
 		record Entry(long destination, long source, long range) {

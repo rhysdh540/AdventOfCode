@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.PrimitiveIterator;
 import java.util.stream.LongStream;
 
 /**
@@ -44,31 +43,31 @@ public class Day5 extends Day<Long> {
 		Collections.reverse(maps); // reverse the maps so we can go backwards
 
 		// get the largest value from the last map
-		PrimitiveIterator.OfLong itr = maps.get(0).getMaxRange();
-
-		// send them all backwards to find their original values
-		while(itr.hasNext()) {
-			long next = itr.nextLong();
-			long changed = next;
-
-			for(Map map : maps) {
-				changed = map.getKey(changed);
-			}
-
-			// if any of the original values are in the ranges, we found the answer
-			for(List<Long> range : ranges) {
-				if(range.get(0) <= changed && changed < range.get(0) + range.get(1)) {
-					return next;
+		long[] results = {-1};
+		maps.get(0).getMaxRange()
+			.parallel()
+			.forEach(it -> {
+				if(results[0] != -1)
+					return;
+				for(Map map : maps) {
+					it = map.getValue(it);
 				}
-			}
-		}
+				for(List<Long> range : ranges) {
+					if(range.get(0) <= it && it < range.get(0) + range.get(1)) {
+						results[0] = it;
+						return;
+					}
+				}
+			});
+		if(results[0] != -1)
+			return results[0];
 		throw new AssertionError("No solution found");
 	}
 
 	private List<List<String>> getParsedInput() {
 		List<List<String>> parsedInput = new ArrayList<>();
 		List<String> current = new ArrayList<>();
-		for(String line : Main.getInput(5, "obscure")) {
+		for(String line : Main.getInput(5)) {
 			if(line.isEmpty()) {
 				parsedInput.add(current);
 				current = new ArrayList<>();
@@ -149,7 +148,7 @@ public class Day5 extends Day<Long> {
 		}
 
 		// finds the range with the highest destination
-		PrimitiveIterator.OfLong getMaxRange() {
+		LongStream getMaxRange() {
 			long best = 0;
 			for(Entry entry : entries) {
 				long l = entry.destination + entry.range;
@@ -158,7 +157,7 @@ public class Day5 extends Day<Long> {
 				}
 			}
 			long highest = best;
-			return LongStream.range(0, highest).iterator();
+			return LongStream.range(0, highest);
 		}
 
 		record Entry(long destination, long source, long range) {

@@ -31,7 +31,9 @@ public class Main {
 			runAll();
 		} else {
 			System.out.println("Running day " + args[1] + "...");
-			run(Utils.fastParseInt(args[1]));
+			if(!run(Utils.fastParseInt(args[1]))) {
+				System.err.println("Day " + args[1] + " does not exist!");
+			}
 		}
 	}
 

@@ -195,6 +195,15 @@ public final class Utils {
 		return d;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <A, B> B[] map(A[] c, Function<A, B> func) {
+		B[] arr = (B[]) new Object[c.length];
+		for(int i = 0; i < c.length; i++) {
+			arr[i] = func.apply(c[i]);
+		}
+		return arr;
+	}
+
 	public static long gcd(long a, long b) {
 		if(a == 0) return b;
 		if(b == 0) return a;

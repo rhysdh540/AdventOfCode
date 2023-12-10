@@ -21,6 +21,15 @@ subprojects {
         jvmArgs = '-Xmx8G -Xms8G -Xss1024m -XX:+UnlockExperimentalVMOptions -XX:+UseCriticalJavaThreadPriority -XX:+UseZGC -XX:AllocatePrefetchStyle=1 -XX:-ZProactive'.split(' ').toList()
     }
 
+	compileJava {
+		doFirst {
+			print "Compiling ${project.name}..."
+		}
+		doLast {
+			println " done!"
+		}
+	}
+
     tasks.register('initDay') {
 		group = 'aoc'
         doLast {

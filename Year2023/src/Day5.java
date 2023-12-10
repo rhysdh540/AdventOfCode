@@ -31,7 +31,7 @@ public class Day5 extends Day<Long> {
 	@Override
 	public Long run2(List<String> a) {
 		//noinspection ConstantConditions
-		if(true) return 10834440L;
+		if(false) return 10834440L;
 		List<List<String>> input = getParsedInput();
 		List<Map> maps = getMaps(input);
 		int[] counter = {0};
@@ -68,7 +68,7 @@ public class Day5 extends Day<Long> {
 	private List<List<String>> getParsedInput() {
 		List<List<String>> parsedInput = new ArrayList<>();
 		List<String> current = new ArrayList<>();
-		for(String line : getInput()) {
+		for(String line : Main.getInput(5, "obscure")) {
 			if(line.isEmpty()) {
 				parsedInput.add(current);
 				current = new ArrayList<>();

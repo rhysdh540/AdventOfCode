@@ -42,9 +42,14 @@ public class Main {
 		}
 	}
 
+	/**
+	 * run a day
+	 * @return does the specified day exist?
+	 */
 	private static boolean run(int day) {
 		try {
-			Day<?> dayObj = (Day<?>) Class.forName("Day" + day).getDeclaredConstructor().newInstance();
+			Day<?> dayObj = (Day<?>) Class.forName("Day" + day)
+				.getDeclaredConstructor().newInstance();
 			dayObj.printResults(true);
 			return true;
 		} catch(Exception e) {
@@ -57,20 +62,20 @@ public class Main {
 	 * @param day the day number
 	 * @return A list of strings representing the input for the specified day
 	 * @throws FileNotFoundException if the input file for the specified day does not exist
-	 * @throws Exception if {@link Files#readAllLines(java.nio.file.Path) Files.readAllLines} throws an exception
+	 * @throws RuntimeException if {@link Files#readAllLines(java.nio.file.Path) Files.readAllLines} throws an exception
 	 */
-	public static List<String> getInput(int day) throws Exception {
+	public static List<String> getInput(int day) {
 		return getInput("Year" + year + "/input/" + day + ".txt");
 	}
 
-	public static List<String> getInput(int day, String extra) throws Exception {
+	public static List<String> getInput(int day, String extra) {
 		return getInput("Year" + year + "/input/" + day + "_" + extra + ".txt");
 	}
 
-	public static List<String> getInput(String path) throws Exception {
+	public static List<String> getInput(String path) {
 		Path file = Path.of(path);
 		if(!Files.exists(file)) {
-			throw new FileNotFoundException("Input not found for path " + file.toFile().getAbsolutePath());
+			throw new RuntimeException(new FileNotFoundException("Input not found for path " + file.toFile().getAbsolutePath()));
 		}
 		List<String> lines = new ArrayList<>();
 		try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
@@ -78,6 +83,8 @@ public class Main {
 			while ((line = reader.readLine()) != null) {
 				lines.add(line);
 			}
+		} catch(Exception e) {
+			throw new RuntimeException(e);
 		}
 		return lines;
 	}

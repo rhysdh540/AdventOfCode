@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.stream.LongStream;
@@ -33,18 +30,21 @@ public class Day5 extends Day<Long> {
 		//noinspection ConstantConditions
 		if(false) return 10834440L;
 		List<List<String>> input = getParsedInput();
-		List<Map> maps = getMaps(input);
-		int[] counter = {0};
-		java.util.Map<Integer, List<Long>> result = new HashMap<>();
-		for(long it : getSeeds(input)) {
-			result.computeIfAbsent(counter[0]++ / 2, k -> new ArrayList<>()).add(it);
-		}
-		Collection<List<Long>> ranges = result.values();
+		Map[] maps = getMaps(input);
 
-		Collections.reverse(maps); // reverse the maps so we can go backwards
+		List<Long> seeds = getSeeds(input);
+		int size = seeds.size();
+		long[][] ranges = new long[size / 2][];
+		for (int i = 0; i < size; i += 2) {
+			long low = seeds.get(i);
+			long high = seeds.get(i + 1);
+			ranges[i / 2] = new long[]{low, high};
+		}
+
+		Utils.reverse(maps); // reverse the maps so we can go backwards
 
 		// get the largest value from the last map
-		PrimitiveIterator.OfLong itr = maps.get(0).getMaxRange();
+		PrimitiveIterator.OfLong itr = maps[0].getMaxRange();
 
 		// send them all backwards to find their original values
 		while(itr.hasNext()) {
@@ -56,11 +56,11 @@ public class Day5 extends Day<Long> {
 			}
 
 			// if any of the original values are in the ranges, we found the answer
-			for(List<Long> range : ranges) {
-				long low = range.get(0);
-				long high = low + range.get(1);
+			for(long[] range : ranges) {
+				long low = range[0];
+				long high = low + range[1];
 				if(low <= changed && changed < high) {
-					System.out.println("Found " + next + " -> " + changed + " in range " + low + " to " + high);
+//					System.out.println("Found " + next + " -> " + changed + " in range " + low + " to " + high);
 					return next;
 				}
 			}
@@ -86,13 +86,21 @@ public class Day5 extends Day<Long> {
 
 	private List<Long> getSeeds(List<List<String>> input) {
 		String[] seeds = Utils.SPACES.split(input.get(0).get(0).substring(7));
-		return Utils.map(seeds, Utils::fastParseLong, ArrayList::new);
+		List<Long> list = new ArrayList<>();
+		for(String seed : seeds) {
+			list.add(Utils.fastParseLong(seed));
+		}
+		return list;
 	}
 
-	private List<Map> getMaps(List<List<String>> input) {
+	private Map[] getMaps(List<List<String>> input) {
 		input = new ArrayList<>(input);
 		input.remove(0);
-		return Utils.map(input, Map::create, ArrayList::new);
+		Map[] maps = new Map[input.size()];
+		for(int i = 0; i < input.size(); i++) {
+			maps[i] = Map.create(input.get(i));
+		}
+		return maps;
 	}
 
 	record Map(Entry[] entries) {

@@ -1,6 +1,3 @@
-import java.util.Collection;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public final class Utils {
@@ -177,31 +174,12 @@ public final class Utils {
 		return a * b / gcd;
 	}
 
-	public static <A, B, C extends Iterable<A>, D extends Collection<B>>
-	D map(C c, Function<A, B> func, Supplier<D> supplier) {
-		D d = supplier.get();
-		for(A a : c) {
-			d.add(func.apply(a));
+	public static <T> void reverse(T[] arr) {
+		for(int i = 0, j = arr.length - 1; i < j; i++, j--) {
+			T temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
 		}
-		return d;
-	}
-
-	public static <A, B, D extends Collection<B>>
-	D map(A[] c, Function<A, B> func, Supplier<D> supplier) {
-		D d = supplier.get();
-		for(A a : c) {
-			d.add(func.apply(a));
-		}
-		return d;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <A, B> B[] map(A[] c, Function<A, B> func) {
-		B[] arr = (B[]) new Object[c.length];
-		for(int i = 0; i < c.length; i++) {
-			arr[i] = func.apply(c[i]);
-		}
-		return arr;
 	}
 
 	public static long gcd(long a, long b) {

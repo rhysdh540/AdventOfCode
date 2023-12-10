@@ -57,7 +57,10 @@ public class Day5 extends Day<Long> {
 
 			// if any of the original values are in the ranges, we found the answer
 			for(List<Long> range : ranges) {
-				if(range.get(0) <= changed && changed < range.get(0) + range.get(1)) {
+				long low = range.get(0);
+				long high = low + range.get(1);
+				if(low <= changed && changed < high) {
+					System.out.println("Found " + next + " -> " + changed + " in range " + low + " to " + high);
 					return next;
 				}
 			}
@@ -68,7 +71,7 @@ public class Day5 extends Day<Long> {
 	private List<List<String>> getParsedInput() {
 		List<List<String>> parsedInput = new ArrayList<>();
 		List<String> current = new ArrayList<>();
-		for(String line : Main.getInput(5, "obscure")) {
+		for(String line : Main.getInput(5)) {
 			if(line.isEmpty()) {
 				parsedInput.add(current);
 				current = new ArrayList<>();
@@ -170,5 +173,10 @@ public class Day5 extends Day<Long> {
 				return new Entry(destination, source, range);
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		Main.year = 2023;
+		new Day5().printResults(true);
 	}
 }

@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * <a href="https://adventofcode.com/2023/day/10">Day 10</a>
@@ -9,47 +7,41 @@ import java.util.stream.Collectors;
 public class Day10 extends Day.IntDay {
 	@Override
 	public int run1Int(List<String> input) {
-		PipePart[][] grid = new PipePart[input.size()][input.get(0).length()];
-		PipePart start = null;
-		for(int y = 0; y < input.size(); y++) {
-			String line = input.get(y);
-			for(int x = 0; x < line.length(); x++) {
-				grid[y][x] = new PipePart(Type.of(line.charAt(x)), x, y);
-				if(grid[y][x].type == Type.START) {
-					start = grid[y][x];
-				}
-			}
-		}
-
-		assert start != null;
-
-		int x = start.x, y = start.y, prevX = x, prevY = y, length = 0;
-
-		grid[y][x] = start = determineType(start, grid);
-		// follow the path
-		while(true) {
-			PipePart part = grid[y][x];
-			if(part.type == Type.EMPTY ||(part.equals(start) && length > 0)) {
-				break;
-			}
-			length++;
-			List<PipePart> adjacent = part.findAdjacent(grid);
-			PipePart next = adjacent.get(0);
-			if(next.x == prevX && next.y == prevY) {
-				next = adjacent.get(1);
-			}
-
-			prevX = x;
-			prevY = y;
-			x = next.x;
-			y = next.y;
-		}
-
-		return length / 2;
+		return getLoop(getGrid(input)).size() / 2;
 	}
 
 	@Override
 	public int run2Int(List<String> input) {
+		Pair<PipePart[][], PipePart> pair = getGrid(input);
+		PipePart[][] grid = pair.first();
+		List<PipePart> loop = getLoop(pair);
+
+		for(PipePart[] row : grid) {
+			for(PipePart part : row) {
+				if(!loop.contains(part)) {
+					grid[part.y][part.x] = new PipePart(Type.EMPTY, part.x, part.y);
+				}
+			}
+		}
+
+		int count = 0;
+		for(PipePart[] row : grid) {
+			for(PipePart part : row) {
+				if(part.type == Type.EMPTY && !hasPathToEdge(grid, part)) {
+//					grid[part.y][part.x] = new PipePart(Type.INSIDE, part.x, part.y);
+					count++;
+				}
+			}
+		}
+
+//		for(PipePart[] row : grid) {
+//			System.out.println(Arrays.stream(row).map(it -> it.type.t + "").collect(Collectors.joining()));
+//		}
+
+		return count;
+	}
+
+	private Pair<PipePart[][], PipePart> getGrid(List<String> input) {
 		PipePart[][] grid = new PipePart[input.size()][input.get(0).length()];
 		PipePart start = null;
 		for(int y = 0; y < input.size(); y++) {
@@ -63,6 +55,13 @@ public class Day10 extends Day.IntDay {
 		}
 
 		assert start != null;
+		grid[start.y][start.x] = start = determineType(start, grid);
+		return Pair.of(grid, start);
+	}
+
+	private List<PipePart> getLoop(Pair<PipePart[][], PipePart> pair) {
+		PipePart[][] grid = pair.first();
+		PipePart start = pair.second();
 		int x = start.x, y = start.y, prevX = x, prevY = y, length = 0;
 
 		List<PipePart> loop = new ArrayList<>();
@@ -70,7 +69,6 @@ public class Day10 extends Day.IntDay {
 
 		grid[y][x] = start = determineType(start, grid);
 
-		// follow the path
 		while(true) {
 			PipePart part = grid[y][x];
 			if(part.type == Type.EMPTY ||(part.equals(start) && length > 0)) {
@@ -89,40 +87,14 @@ public class Day10 extends Day.IntDay {
 			x = next.x;
 			y = next.y;
 		}
-
-		for(PipePart[] row : grid) {
-			for(PipePart part : row) {
-				if(!loop.contains(part)) {
-					grid[part.y][part.x] = new PipePart(Type.EMPTY, part.x, part.y);
-				}
-			}
-		}
-
-		int count = 0;
-		for(PipePart[] row : grid) {
-			for(PipePart part : row) {
-				if(part.type == Type.EMPTY) {
-					if(!hasPathToEdge(grid, part)) {
-						grid[part.y][part.x] = new PipePart(Type.INSIDE, part.x, part.y);
-						count++;
-					}
-				}
-			}
-		}
-
-		for(PipePart[] row : grid) {
-			System.out.println(Arrays.stream(row).map(it -> it.type.t + "").collect(Collectors.joining()));
-		}
-
-		return count;
+		return loop;
 	}
 
 	private boolean hasPathToEdge(PipePart[][] grid, PipePart part) {
-		List<Type> vertical = List.of(Type.VERTICAL, Type.NORTH_EAST, Type.NORTH_WEST);
 		int count = 0;
 		for(int x = part.x; x < grid[part.y].length; x++) {
 			PipePart other = grid[part.y][x];
-			if(vertical.contains(other.type)) {
+			if(other.type.hasNorth()) {
 				count++;
 			}
 		}
@@ -133,18 +105,10 @@ public class Day10 extends Day.IntDay {
 		List<PipePart> adjacent = start.findAdjacent(grid);
 		boolean north = false, south = false, east = false, west = false;
 		for(PipePart adj : adjacent) {
-			if(adj.y < start.y) {
-				north = true;
-			}
-			if(adj.y > start.y) {
-				south = true;
-			}
-			if(adj.x < start.x) {
-				west = true;
-			}
-			if(adj.x > start.x) {
-				east = true;
-			}
+			if(adj.y < start.y) north = true;
+			if(adj.y > start.y) south = true;
+			if(adj.x < start.x) west = true;
+			if(adj.x > start.x) east = true;
 		}
 
 		if(north && south && !east && !west) {

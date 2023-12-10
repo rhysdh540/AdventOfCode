@@ -37,6 +37,16 @@ public final class Utils {
 		return i;
 	}
 
+	public static int countMatches(String s, String m) {
+		int count = 0;
+		int index = 0;
+		while((index = s.indexOf(m, index)) != -1) {
+			count++;
+			index += m.length();
+		}
+		return count;
+	}
+
 	public static boolean isDigit(char c) {
 		return c >= '0' && c <= '9';
 	}

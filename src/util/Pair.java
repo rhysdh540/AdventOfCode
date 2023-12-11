@@ -1,12 +1,14 @@
+package util;
+
 import java.util.Objects;
 
 // blatantly stolen from create
 public class Pair<F, S> {
 
-	private F first;
-	private S second;
+	protected F first;
+	protected S second;
 
-	private Pair(F first, S second) {
+	Pair(F first, S second) {
 		this.first = first;
 		this.second = second;
 	}
@@ -48,15 +50,15 @@ public class Pair<F, S> {
 	}
 
 	public void first(F first) {
-		this.first = first;
+		setFirst(first);
 	}
 
 	public void setLeft(F first) {
-		this.first = first;
+		setFirst(first);
 	}
 
 	public void setKey(F first) {
-		this.first = first;
+		setFirst(first);
 	}
 
 	public void setFirst(F first) {
@@ -64,15 +66,15 @@ public class Pair<F, S> {
 	}
 
 	public void second(S second) {
-		this.second = second;
+		setSecond(second);
 	}
 
 	public void setRight(S second) {
-		this.second = second;
+		setSecond(second);
 	}
 
 	public void setValue(S second) {
-		this.second = second;
+		setSecond(second);
 	}
 
 	public void setSecond(S second) {

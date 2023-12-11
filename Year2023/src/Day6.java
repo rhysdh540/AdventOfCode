@@ -25,6 +25,8 @@ public class Day6 extends Day<Long> {
 	}
 
 	private long calculate(long time, long distance) {
+		// x^2 - time * x + distance = 0
+		// where x is the distance traveled
 		double discriminant = Math.sqrt(time * time - 4 * distance);
 		long root1 = (long) ((time + discriminant) / 2);
 		long root2 = (long) ((time - discriminant) / 2);

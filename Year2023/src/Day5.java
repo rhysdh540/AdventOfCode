@@ -28,7 +28,6 @@ public class Day5 extends Day<Long> {
 	@Override
 	public Long run2(List<String> a) {
 		//noinspection ConstantConditions
-		if(false) return 10834440L;
 		List<List<String>> input = getParsedInput();
 		Map[] maps = getMaps(input);
 
@@ -173,10 +172,5 @@ public class Day5 extends Day<Long> {
 				return new Entry(destination, source, range);
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-		Main.year = 2023;
-		new Day5().printResults(true);
 	}
 }

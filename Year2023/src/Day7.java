@@ -122,7 +122,7 @@ public class Day7 extends Day.IntDay {
 				numFirst++;
 			}
 		}
-		return(numFirst == 4 || numFirst == 1) ?
+		return (numFirst == 4 || numFirst == 1) ?
 			HandType.FOUR_OF_A_KIND : HandType.FULL_HOUSE;
 	}
 

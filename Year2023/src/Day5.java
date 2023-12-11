@@ -60,7 +60,6 @@ public class Day5 extends Day<Long> {
 				long low = range[0];
 				long high = low + range[1];
 				if(low <= changed && changed < high) {
-//					System.out.println("Found " + next + " -> " + changed + " in range " + low + " to " + high);
 					return next;
 				}
 			}
@@ -105,17 +104,10 @@ public class Day5 extends Day<Long> {
 
 	record Map(Entry[] entries) {
 		static Map create(List<String> lines) {
-			List<Entry> list = new ArrayList<>();
-			boolean first = true;
-			for(String line : lines) {
-				if(first) {
-					// skip the title
-					first = false;
-					continue;
-				}
-				list.add(Entry.create(line));
+			Entry[] entries = new Entry[lines.size() - 1];
+			for(int i = 1; i < lines.size(); i++) {
+				entries[i - 1] = Entry.create(lines.get(i));
 			}
-			Entry[] entries = list.toArray(new Entry[0]);
 			// sort so we can binary search later
 			Arrays.sort(entries, Comparator.comparingLong(o -> o.destination)); // faster than Entry::destination for some reason
 			return new Map(entries);
@@ -142,7 +134,7 @@ public class Day5 extends Day<Long> {
 			int high = entries.length - 1;
 
 			while(low <= high) {
-				int mid =(low + high) >>> 1;
+				int mid = (low + high) >>> 1;
 				Entry entry = entries[mid];
 				long destinationLow = entry.destination;
 				long destinationHigh = destinationLow + entry.range - 1;
@@ -174,7 +166,7 @@ public class Day5 extends Day<Long> {
 
 		record Entry(long destination, long source, long range) {
 			static Entry create(String line) {
-				String[] parts = Utils.SPACES.split(line);
+				String[] parts = line.split(" ");
 				long destination = Utils.fastParseLong(parts[0]),
 						source = Utils.fastParseLong(parts[1]),
 						range = Utils.fastParseLong(parts[2]);

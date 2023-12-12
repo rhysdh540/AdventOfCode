@@ -1,3 +1,4 @@
+import aoc.Day;
 import util.Utils;
 
 import java.util.List;

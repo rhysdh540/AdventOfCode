@@ -1,3 +1,4 @@
+import aoc.Day.IntDay;
 import util.Couple;
 import util.Utils;
 
@@ -6,7 +7,7 @@ import java.util.List;
 /**
 * <a href="https://adventofcode.com/2023/day/9">Day 9</a>
 */
-public class Day9 extends Day.IntDay {
+public class Day9 extends IntDay {
 	@Override
 	public int run1Int(List<String> input) {
 		int sum = 0;

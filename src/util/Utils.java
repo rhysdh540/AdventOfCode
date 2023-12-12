@@ -1,5 +1,7 @@
 package util;
 
+import aoc.Day;
+
 import java.util.regex.Pattern;
 
 public final class Utils {
@@ -222,27 +224,22 @@ public final class Utils {
 		return a << k;
 	}
 
-	public static void main(String[] args) {
-		final int iter = 100_000_000;
-		long t1 = 0, t2 = 0;
-		for(int i = 0; i < iter; i++) {
-			int base = (int)(Math.random() * 10);
-			int exp = (int)(Math.random() * 9);
+	public static void benchmark(Day<?> day) throws Exception {
+		System.out.println("Benchmarking " + day.getClass().getSimpleName() + "...");
+		warmup();
+		int iterations = 100;
+		double p1 = 0, p2 = 0;
+		for(int i = 0; i < iterations; i++) {
 			long start = System.nanoTime();
-			int result = pow(base, exp);
-			long end = System.nanoTime();
-			long start2 = System.nanoTime();
-			int result2 = (int) Math.pow(base, exp);
-			long end2 = System.nanoTime();
-			if(result != result2) {
-				System.out.println("Error: " + base + "^" + exp + " = " + result + " != " + result2);
-			}
-			t1 += end - start;
-			t2 += end2 - start2;
+			day.run1();
+			p1 += System.nanoTime() - start;
+			start = System.nanoTime();
+			day.run2();
+			p2 += System.nanoTime() - start;
 		}
-		double avg1 = (double) t1 / iter;
-		double avg2 = (double) t2 / iter;
-		System.out.println("pow: " + avg1 + " ns");
-		System.out.println("Math.pow: " + avg2 + " ns");
+		p1 /= iterations * 1_000_000;
+		p2 /= iterations * 1_000_000;
+		System.out.println("Part 1: " + day.run1() + ", took " + p1 + "ms");
+		System.out.println("Part 2: " + day.run2() + ", took " + p2 + "ms");
 	}
 }

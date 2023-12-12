@@ -1,3 +1,4 @@
+import aoc.Day.IntDay;
 import util.Pair;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Set;
 /**
 * <a href="https://adventofcode.com/2023/day/10">Day 10</a>
 */
-public class Day10 extends Day.IntDay {
+public class Day10 extends IntDay {
 	@Override
 	public int run1Int(List<String> input) {
 		return getLoop(getGrid(input)).size() / 2;

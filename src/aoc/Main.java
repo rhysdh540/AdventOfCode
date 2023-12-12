@@ -1,3 +1,5 @@
+package aoc;
+
 import util.Utils;
 
 import java.io.BufferedReader;

@@ -1,3 +1,5 @@
+import aoc.Day.LongDay;
+import aoc.Main;
 import util.Utils;
 
 import java.util.ArrayList;
@@ -10,9 +12,9 @@ import java.util.stream.LongStream;
 /**
  * <a href="https://adventofcode.com/2023/day/5">Day 5</a>
  */
-public class Day5 extends Day<Long> {
+public class Day5 extends LongDay {
 	@Override
-	public Long run1(List<String> a) {
+	public long run1Long(List<String> a) {
 		List<List<String>> input = getParsedInput();
 
 		long best = Integer.MAX_VALUE;
@@ -28,7 +30,7 @@ public class Day5 extends Day<Long> {
 	}
 
 	@Override
-	public Long run2(List<String> a) {
+	public long run2Long(List<String> a) {
 		//noinspection ConstantConditions
 		List<List<String>> input = getParsedInput();
 		Map[] maps = getMaps(input);

@@ -1,3 +1,4 @@
+import aoc.Day.IntDay;
 import util.Utils;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * <a href="https://adventofcode.com/2023/day/4">Day 4</a>
  */
-public class Day4 extends Day.IntDay {
+public class Day4 extends IntDay {
 	@Override
 	public int run1Int(List<String> input) {
 		int sum = 0;

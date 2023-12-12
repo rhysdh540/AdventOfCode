@@ -1,3 +1,4 @@
+import aoc.Day.IntDay;
 import util.Utils;
 
 import java.util.Arrays;
@@ -7,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * <a href="https://adventofcode.com/2023/day/1">Day 1</a>
  */
-public class Day1 extends Day.IntDay {
+public class Day1 extends IntDay {
 	final Pattern number = Pattern.compile("[^0-9]");
 
 	@Override

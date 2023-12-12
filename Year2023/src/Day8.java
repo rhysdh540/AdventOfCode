@@ -1,3 +1,4 @@
+import aoc.Day.LongDay;
 import util.Pair;
 import util.Utils;
 
@@ -8,9 +9,9 @@ import java.util.regex.Pattern;
 /**
  * <a href="https://adventofcode.com/2023/day/8">Day 8</a>
  */
-public class Day8 extends Day<Long> {
+public class Day8 extends LongDay {
     @Override
-    public Long run1(List<String> input) {
+    public long run1Long(List<String> input) {
 		char[] insns = input.remove(0).toCharArray();
 		List<Node> nodes = getParsedInput(input);
 
@@ -37,7 +38,7 @@ public class Day8 extends Day<Long> {
     }
 
     @Override
-    public Long run2(List<String> input) {
+    public long run2Long(List<String> input) {
 		char[] insns = input.remove(0).toCharArray();
 		List<Node> nodes = getParsedInput(input);
 

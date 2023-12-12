@@ -1,3 +1,5 @@
+package aoc;
+
 import util.Utils;
 
 import java.util.ArrayList;
@@ -111,5 +113,21 @@ public abstract class Day<T> {
 		public abstract int run1Int(List<String> input) throws Exception;
 
 		public abstract int run2Int(List<String> input) throws Exception;
+	}
+
+	public static abstract class LongDay extends Day<Long> {
+		@Override
+		public Long run1(List<String> input) throws Exception {
+			return run1Long(input);
+		}
+
+		@Override
+		public Long run2(List<String> input) throws Exception {
+			return run2Long(input);
+		}
+
+		public abstract long run1Long(List<String> input) throws Exception;
+
+		public abstract long run2Long(List<String> input) throws Exception;
 	}
 }

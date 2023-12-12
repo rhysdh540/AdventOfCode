@@ -1,3 +1,5 @@
+import aoc.Day;
+
 import java.util.List;
 
 public class Day2 extends Day.IntDay {

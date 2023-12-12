@@ -1,3 +1,4 @@
+import aoc.Day.IntDay;
 import util.Utils;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.function.Function;
 /**
  * <a href="https://adventofcode.com/2023/day/7">Day 7</a>
  */
-public class Day7 extends Day.IntDay {
+public class Day7 extends IntDay {
     @Override
     public int run1Int(List<String> input) {
 		return run(this::getCardValue, false);

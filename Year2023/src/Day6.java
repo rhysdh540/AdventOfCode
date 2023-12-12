@@ -1,3 +1,4 @@
+import aoc.Day.LongDay;
 import util.Utils;
 
 import java.util.Arrays;
@@ -6,9 +7,9 @@ import java.util.List;
 /**
  * <a href="https://adventofcode.com/2023/day/6">Day 6</a>
  */
-public class Day6 extends Day<Long> {
+public class Day6 extends LongDay {
 	@Override
-	public Long run1(List<String> input) {
+	public long run1Long(List<String> input) {
 		long[] times = parseInput(input.get(0).substring(5).trim());
 		long[] distances = parseInput(input.get(1).substring(9).trim());
 
@@ -20,7 +21,7 @@ public class Day6 extends Day<Long> {
 	}
 
 	@Override
-	public Long run2(List<String> input) {
+	public long run2Long(List<String> input) {
 		long time = Utils.fastParseLong(input.get(0).substring(5).replace(" ", ""));
 		long distance = Utils.fastParseLong(input.get(1).substring(9).replace(" ", ""));
 		return calculate(time, distance);

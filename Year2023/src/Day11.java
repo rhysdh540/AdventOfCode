@@ -1,13 +1,15 @@
+import aoc.Day.LongDay;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
 * <a href="https://adventofcode.com/2023/day/11">Day 11</a>
 */
-public class Day11 extends Day<Long> {
+public class Day11 extends LongDay {
 
 	@Override
-	public Long run1(List<String> input) {
+	public long run1Long(List<String> input) {
 		// expand rows
 		for(int i = 0; i < input.size(); i++) {
 			if(!input.get(i).contains("#")) {
@@ -40,11 +42,11 @@ public class Day11 extends Day<Long> {
 	}
 
 	@Override
-	public Long run2(List<String> input) {
+	public long run2Long(List<String> input) {
 		// f(x) = mx + b
 		// x1 = 1, x2 = 2
-		long y1 = run(new ArrayList<>(input)); // f(1)
-		long y2 = run1(input); // f(2)
+		long y2 = run1Long(new ArrayList<>(input)); // f(x1)
+		long y1 = run(input); // f(x2)
 
 		// calculate f(1,000,000)
 		long m = (y2 - y1); // m = (y2 - y1) / (x2 - x1), but x2 - x1 = 1 so we can ignore it

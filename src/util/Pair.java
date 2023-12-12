@@ -109,4 +109,30 @@ public class Pair<F, S> {
 	public Pair<S, F> swapped() {
 		return Pair.of(second, first);
 	}
+
+	public static class ImmutablePair<F, S> extends Pair<F, S> {
+
+		ImmutablePair(F first, S second) {
+			super(first, second);
+		}
+
+		public static <F, S> ImmutablePair<F, S> of(F first, S second) {
+			return new ImmutablePair<>(first, second);
+		}
+
+		@Override
+		public void setFirst(F first) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setSecond(S second) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public ImmutablePair<F, S> copy() {
+			return new ImmutablePair<>(first, second);
+		}
+	}
 }

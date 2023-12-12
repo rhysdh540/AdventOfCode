@@ -42,10 +42,7 @@ public class Main {
 	}
 
 	private static void runAll() {
-		int day = 1;
-		while(run(day)) {
-			day++;
-		}
+		for(int day = 1; run(day); day++);
 	}
 
 	/**

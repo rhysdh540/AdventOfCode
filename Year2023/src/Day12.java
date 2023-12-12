@@ -14,7 +14,7 @@ public class Day12 extends LongDay {
 	@Override
 	public long run1Long(List<String> input) {
 		List<Pair<String, List<Integer>>> parsed = parseInput(input);
-		long sum = 0L;
+		long sum = 0;
 		for(var record : parsed) {
 			sum += arrange(record);
 		}
@@ -24,7 +24,7 @@ public class Day12 extends LongDay {
 	@Override
 	public long run2Long(List<String> input) {
 		List<Pair<String, List<Integer>>> parsed = parseInput(input);
-		long sum = 0L;
+		long sum = 0;
 		for(var record : parsed) {
 			sum += arrange(repeat(record));
 		}
@@ -38,7 +38,7 @@ public class Day12 extends LongDay {
 
 	private List<Integer> repeat(List<Integer> nums) {
 		List<Integer> list = new ArrayList<>();
-		for (int i = 0; i < 5; i++) {
+		for(int i = 0; i < 5; i++) {
 			list.addAll(nums);
 		}
 		return list;
@@ -66,7 +66,7 @@ public class Day12 extends LongDay {
 		if(cache.containsKey(input)) {
 			return cache.get(input);
 		}
-		if (index == record.first().length()) {
+		if(index == record.first().length()) {
 			return numsRemaining <= 0 && numsIndex == record.getRight().size() - 1 ? 1 : 0;
 		}
 
@@ -84,10 +84,10 @@ public class Day12 extends LongDay {
 	}
 
 	private long arrangeWithChar(Pair<String, List<Integer>> record, char c, int index, int numsIndex, int numsRemaining) {
-		if (c == '#') {
-			if (numsRemaining == 0) { // no more # left
+		if(c == '#') {
+			if(numsRemaining == 0) { // no more # left
 				return 0;
-			} else if (numsRemaining < 0) {
+			} else if(numsRemaining < 0) {
 				if(numsIndex == record.second().size() - 1) {
 					return 0;
 				} else {
@@ -107,10 +107,10 @@ public class Day12 extends LongDay {
 
 	private List<Pair<String, List<Integer>>> parseInput(List<String> input) {
 		List<Pair<String, List<Integer>>> parsed = new ArrayList<>();
-		for (String line : input) {
-			String[] split = line.split(" ");
+		for(String line : input) {
+			String[] split = Utils.split(line, ' ');
 			List<Integer> values = new ArrayList<>();
-			for (String num : split[1].split(",")) {
+			for(String num : Utils.split(split[1], ',')) {
 				values.add(Utils.fastParseInt(num));
 			}
 			parsed.add(Pair.of(split[0], values));

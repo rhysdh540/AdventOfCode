@@ -224,10 +224,33 @@ public final class Utils {
 		return a << k;
 	}
 
-	public static void benchmark(Day<?> day) throws Exception {
+	public static String[] split(String s, char c) {
+		int count = 1;
+		for(int i = 0; i < s.length(); i++) {
+			if(s.charAt(i) == c) {
+				count++;
+			}
+		}
+		String[] split = new String[count];
+		int index = 0;
+		int lastIndex = 0;
+		for(int i = 0; i < s.length(); i++) {
+			if(s.charAt(i) == c) {
+				split[index++] = s.substring(lastIndex, i);
+				lastIndex = i + 1;
+			}
+		}
+		split[index] = s.substring(lastIndex);
+		return split;
+	}
+
+	public static String substring(String s, int start, int end) {
+		return s.substring(start, Math.min(end, s.length()));
+	}
+
+	public static void benchmark(Day<?> day, int iterations) throws Exception {
 		System.out.println("Benchmarking " + day.getClass().getSimpleName() + "...");
 		warmup();
-		int iterations = 100;
 		double p1 = 0, p2 = 0;
 		for(int i = 0; i < iterations; i++) {
 			long start = System.nanoTime();

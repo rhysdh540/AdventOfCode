@@ -107,11 +107,13 @@ public class IntHashSet implements Iterable<Integer> {
 	@Override
 	public PrimitiveIterator.OfInt iterator() {
 		return new PrimitiveIterator.OfInt() {
-			int n = 0;
+			private int n = 0;
+
 			@Override
 			public boolean hasNext() {
 				return n < pos;
 			}
+
 			@Override
 			public int nextInt() {
 				return entries[n++];

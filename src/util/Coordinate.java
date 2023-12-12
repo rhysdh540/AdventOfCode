@@ -1,6 +1,8 @@
 package util;
 
-public class Coordinate extends Couple<Integer> {
+import util.Couple.ImmutableCouple;
+
+public class Coordinate extends ImmutableCouple<Integer> {
 	public Coordinate(int first, int second) {
 		super(first, second);
 	}
@@ -19,13 +21,5 @@ public class Coordinate extends Couple<Integer> {
 
 	public int getY() {
 		return second;
-	}
-
-	public void x(int x) {
-		setFirst(x);
-	}
-
-	public void y(int y) {
-		setSecond(y);
 	}
 }

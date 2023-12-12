@@ -160,4 +160,25 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 			return null;
 		}
 	}
+
+	public static class ImmutableCouple<T> extends Couple<T> {
+
+		ImmutableCouple(T first, T second) {
+			super(first, second);
+		}
+
+		public static <T> ImmutableCouple<T> create(T first, T second) {
+			return new ImmutableCouple<>(first, second);
+		}
+
+		@Override
+		public void setFirst(T first) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setSecond(T second) {
+			throw new UnsupportedOperationException();
+		}
+	}
 }

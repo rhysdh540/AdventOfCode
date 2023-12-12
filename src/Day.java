@@ -48,7 +48,7 @@ public abstract class Day<T> {
 	 * @return the number of the day
 	 */
 	private int makeDayNumber() {
-		return Utils.fastParseInt(getClass().getSimpleName().substring(3));
+		return Utils.parseInt(getClass().getSimpleName().substring(3));
 	}
 
 	/**
@@ -70,8 +70,9 @@ public abstract class Day<T> {
 		try {
 			List<String> input = getInput();
 			long start = System.nanoTime();
-			System.out.println(runnable.run(input));
+			T result = runnable.run(input);
 			long end = System.nanoTime();
+			System.out.println(result);
 			if(end - start >= 1_000_000_000) {
 				System.out.printf("    Time: \033[91m%,.3fs\033[0m%n", (end - start) / 1_000_000_000.0);
 			} else if(forceLogTime) {

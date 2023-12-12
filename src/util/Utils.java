@@ -16,6 +16,14 @@ public final class Utils {
 		return i;
 	}
 
+	public static void warmup() {
+		for(int i = 0; i < 100_000_000; i++) {
+			doNothing();
+		}
+	}
+
+	private static void doNothing() {}
+
 	public static int parseInt(String s) {
 		int i = fastParseInt(s);
 		if(!String.valueOf(i).equals(s)) {

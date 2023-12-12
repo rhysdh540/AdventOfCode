@@ -1,4 +1,4 @@
-import util.Pair;
+import util.Couple;
 import util.Utils;
 
 import java.util.List;
@@ -34,14 +34,14 @@ public class Day9 extends Day.IntDay {
 				numbers[i] = Utils.fastParseInt(split[i]);
 			}
 
-			Pair<Integer, Integer> pair = calculateDifferences(numbers);
+			Couple<Integer> pair = calculateDifferences(numbers);
 			int next = numbers[numbers.length - 1] + pair.second();
 			int prev = numbers[0] - pair.first();
 
 			return new Sequence(numbers, next, prev);
 		}
 
-		private static Pair<Integer, Integer> calculateDifferences(int[] nums) {
+		private static Couple<Integer> calculateDifferences(int[] nums) {
 			int[] differences = new int[nums.length - 1];
 			for (int i = 0; i < nums.length - 1; i++) {
 				differences[i] = nums[i + 1] - nums[i];
@@ -55,15 +55,15 @@ public class Day9 extends Day.IntDay {
 				}
 			}
 			if(all0) {
-				return Pair.of(0, 0);
+				return Couple.create(0, 0);
 			}
 
-			Pair<Integer, Integer> pair = calculateDifferences(differences);
+			Couple<Integer> pair = calculateDifferences(differences);
 
 			int back = differences[0] - pair.first();
 			int front = differences[differences.length - 1] + pair.second();
 
-			return Pair.of(back, front);
+			return Couple.create(back, front);
 		}
 	}
 }

@@ -8,21 +8,15 @@ public class Day11 extends Day<Long> {
 
 	@Override
 	public Long run1(List<String> input) {
-		// number of rows/columns to expand by
-		int expansionRate = 1;
-
 		// expand rows
 		for(int i = 0; i < input.size(); i++) {
 			if(!input.get(i).contains("#")) {
-				for(int j = 0; j < expansionRate; j++) {
-					input.add(i, input.get(i));
-				}
-				i += expansionRate;
+				input.add(i, input.get(i));
+				i++;
 			}
 		}
 
 		// expand columns
-		String expand = ".".repeat(expansionRate);
 		for(int i = 0; i < input.get(0).length(); i++) {
 			boolean allEmpty = true;
 			for(String s : input) {
@@ -32,12 +26,13 @@ public class Day11 extends Day<Long> {
 				}
 			}
 			if(allEmpty) {
-				for(int j = 0; j < expansionRate; j++) {
-					for(int k = 0; k < input.size(); k++) {
-						input.set(k, input.get(k).substring(0, i) + expand + input.get(k).substring(i));
-					}
+				StringBuilder sb;
+				for(int k = 0; k < input.size(); k++) {
+					sb = new StringBuilder(input.get(k))
+						.insert(i, '.');
+					input.set(k, sb.toString());
 				}
-				i += expansionRate;
+				i++;
 			}
 		}
 
@@ -46,8 +41,8 @@ public class Day11 extends Day<Long> {
 
 	@Override
 	public Long run2(List<String> input) {
-		//f(x) = mx + b
-//		int x1 = 1, x2 = 2;
+		// f(x) = mx + b
+		// x1 = 1, x2 = 2
 		long y1 = run(new ArrayList<>(input)); // f(1)
 		long y2 = run1(input); // f(2)
 

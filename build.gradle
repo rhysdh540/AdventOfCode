@@ -46,12 +46,14 @@ subprojects {
             def source = project.file("src/Day${day}.java")
 			source.parentFile.mkdirs()
 			source.createNewFile()
-			source.write("""import java.util.List;
+			source.write("""import aoc.Day.IntDay;
+
+import java.util.List;
 
 /**
 * <a href="https://adventofcode.com/${project.ext.year}/day/${day}">Day ${day}</a>
 */
-public class Day${day} extends Day.IntDay {
+public class Day${day} extends IntDay {
 	@Override
 	public int run1Int(List<String> input) {
 

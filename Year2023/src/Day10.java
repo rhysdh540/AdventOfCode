@@ -46,7 +46,8 @@ public class Day10 extends IntDay {
 		PipePart start = null;
 		for(int y = 0; y < input.size(); y++) {
 			String line = input.get(y);
-			for(int x = 0; x < line.length(); x++) {
+			int len = line.length();
+			for(int x = 0; x < len; x++) {
 				grid[y][x] = new PipePart(Type.of(line.charAt(x)), x, y);
 				if(grid[y][x].type == Type.START) {
 					start = grid[y][x];
@@ -70,7 +71,7 @@ public class Day10 extends IntDay {
 
 		while(true) {
 			PipePart part = grid[y][x];
-			if(part.type == Type.EMPTY ||(part.equals(start) && length > 0)) {
+			if(part.type == Type.EMPTY || (part.equals(start) && length > 0)) {
 				break;
 			}
 			length++;
@@ -198,8 +199,10 @@ public class Day10 extends IntDay {
 			return this == HORIZONTAL || this == NORTH_WEST || this == SOUTH_WEST || this == START;
 		}
 
+		private static final Type[] VALUES = values();
+
 		static Type of(char t) {
-			for(Type type : values()) {
+			for(Type type : VALUES) {
 				if(type.t == t) {
 					return type;
 				}

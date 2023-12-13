@@ -3,7 +3,9 @@ import util.Pair;
 import util.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -33,7 +35,7 @@ public class Day8 extends LongDay {
 			if(pointer.name.equals("ZZZ")) {
 				return count;
 			}
-			pointer = findNextNode(nodes, pointer, insns[i]);
+			pointer = findNextNode(pointer, insns[i]);
 		}
     }
 
@@ -42,12 +44,14 @@ public class Day8 extends LongDay {
 		char[] insns = input.remove(0).toCharArray();
 		List<Node> nodes = getParsedInput(input);
 
-		List<Node> pointers = new ArrayList<>();
-		for(Node n1 : nodes) {
-			if(n1.name.charAt(2) == 'A') {
-				pointers.add(n1);
+		List<Node> pointersList = new ArrayList<>();
+		for(Node n : nodes) {
+			if(n.name.charAt(2) == 'A') {
+				pointersList.add(n);
 			}
 		}
+		Node[] pointers = pointersList.toArray(new Node[0]);
+
 		List<Long> periods = new ArrayList<>();
 		for(Node node : pointers) {
 			long count = 0;
@@ -57,7 +61,7 @@ public class Day8 extends LongDay {
 					periods.add(count);
 					break;
 				}
-				node = findNextNode(nodes, node, insns[i]);
+				node = findNextNode(node, insns[i]);
 			}
 		}
 
@@ -68,14 +72,15 @@ public class Day8 extends LongDay {
 		return lcm;
     }
 
-	private Node findNextNode(List<Node> nodes, Node node, char insn) {
+	private Map<String, Node> nodeMap = new HashMap<>();
+
+	private Node findNextNode(Node node, char insn) {
 		String target = insn == 'L' ? node.next.getFirst() : node.next.getSecond();
-		for(Node n : nodes) {
-			if(n.name.equals(target)) {
-				return n;
-			}
+		Node targetNode = nodeMap.get(target);
+		if(targetNode == null) {
+			throw new AssertionError();
 		}
-		throw new AssertionError();
+		return targetNode;
 	}
 
 	private final Pattern uselessStuff = Pattern.compile("[=(,)]");
@@ -86,7 +91,9 @@ public class Day8 extends LongDay {
 			s = uselessStuff.matcher(s).replaceAll("");
 			if(s.isEmpty()) continue;
 			String[] parts = Utils.SPACES.split(s);
-			list.add(new Node(parts[0], Pair.of(parts[1], parts[2])));
+			Node node = new Node(parts[0], Pair.of(parts[1], parts[2]));
+			list.add(node);
+			nodeMap.put(node.name, node);
 		}
 		return list;
 	}

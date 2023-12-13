@@ -131,15 +131,18 @@ public class Day7 extends IntDay {
 
 	private HandType evaluateThreeUnique(String hand) {
 		int[] freq = new int[128];
+		int max = 0;
 		for(char character : hand.toCharArray()) {
 			freq[character]++;
+			max = Math.max(max, character);
 		}
+		max++;
 
 		int countOfThree = 0;
 		int countOfTwo = 0;
 		int countOfOne = 0;
 
-		for(int i = 0; i < 128; i++) {
+		for(int i = 0; i < max; i++) {
 			if(freq[i] == 3) countOfThree++;
 			else if(freq[i] == 2) countOfTwo++;
 			else if(freq[i] == 1) countOfOne++;

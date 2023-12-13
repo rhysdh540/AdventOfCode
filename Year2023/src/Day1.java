@@ -1,8 +1,11 @@
 import aoc.Day.IntDay;
+import aoc.Main;
 import util.Utils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 /**
@@ -23,13 +26,17 @@ public class Day1 extends IntDay {
 
 	@Override
 	public int run2Int(List<String> input) throws Exception {
-		// technically we shoudn't include zero but it works anyway
-		String[] nums = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+		Map<String, String> nums = Map.of(
+			"one", "o1e",
+			"two", "t2o",     "three", "t3e",
+			"four", "f4r",    "five", "f5e",
+			"six", "s6x",     "seven", "s7n",
+			"eight", "e8t",   "nine", "n9e"
+		);
 		input.replaceAll(s -> {
-			for(String num : nums) {
+			for(Entry<String, String> num : nums.entrySet()) {
 				// pad replacements with their start and end characters so you don't mess up things like `fiveightwone`
-				String toReplace = num.charAt(0) + "" + Arrays.binarySearch(nums, num) + num.charAt(num.length() - 1);
-				s = s.replace(num, toReplace);
+				s = s.replace(num.getKey(), num.getValue());
 			}
 			return s;
 		});

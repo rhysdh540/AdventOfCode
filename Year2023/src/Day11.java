@@ -49,7 +49,7 @@ public class Day11 extends LongDay {
 		long y1 = run(input); // f(x2)
 
 		// calculate f(1,000,000)
-		long m = (y2 - y1); // m = (y2 - y1) / (x2 - x1), but x2 - x1 = 1 so we can ignore it
+		long m = y2 - y1; // m = (y2 - y1) / (x2 - x1), but x2 - x1 = 1 so we can ignore it
 		long b = y1 - m; // again should be y1 - m * x1 but x1 = 1
 		return m * 1_000_000 + b;
 	}

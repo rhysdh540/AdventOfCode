@@ -244,6 +244,160 @@ public final class Utils {
 		return split;
 	}
 
+	public static <T> T[][] rotateClockwise(T[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				T top = grid[i][j];
+				grid[i][j] = grid[n - j - 1][i]; // right to top
+				grid[n - j - 1][i] = grid[n - i - 1][n - j - 1]; // bottom to right
+				grid[n - i - 1][n - j - 1] = grid[j][n - i - 1]; // left to bottom
+				grid[j][n - i - 1] = top; // top to left
+			}
+		}
+		return grid;
+	}
+
+	public static char[][] rotateClockwise(char[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				char top = grid[i][j];
+				grid[i][j] = grid[n - j - 1][i];
+				grid[n - j - 1][i] = grid[n - i - 1][n - j - 1];
+				grid[n - i - 1][n - j - 1] = grid[j][n - i - 1];
+				grid[j][n - i - 1] = top;
+			}
+		}
+		return grid;
+	}
+
+	public static int[][] rotateClockwise(int[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				int top = grid[i][j];
+				grid[i][j] = grid[n - j - 1][i];
+				grid[n - j - 1][i] = grid[n - i - 1][n - j - 1];
+				grid[n - i - 1][n - j - 1] = grid[j][n - i - 1];
+				grid[j][n - i - 1] = top;
+			}
+		}
+		return grid;
+	}
+
+	public static long[][] rotateClockwise(long[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				long top = grid[i][j];
+				grid[i][j] = grid[n - j - 1][i];
+				grid[n - j - 1][i] = grid[n - i - 1][n - j - 1];
+				grid[n - i - 1][n - j - 1] = grid[j][n - i - 1];
+				grid[j][n - i - 1] = top;
+			}
+		}
+		return grid;
+	}
+
+	public static double[][] rotateClockwise(double[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				double top = grid[i][j];
+				grid[i][j] = grid[n - j - 1][i];
+				grid[n - j - 1][i] = grid[n - i - 1][n - j - 1];
+				grid[n - i - 1][n - j - 1] = grid[j][n - i - 1];
+				grid[j][n - i - 1] = top;
+			}
+		}
+		return grid;
+	}
+
+	public static <T> T[][] rotateCounterClockwise(T[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				T top = grid[i][j];
+				grid[i][j] = grid[j][n - i - 1]; // left to top
+				grid[j][n - i - 1] = grid[n - i - 1][n - j - 1]; // bottom to left
+				grid[n - i - 1][n - j - 1] = grid[n - j - 1][i]; // right to bottom
+				grid[n - j - 1][i] = top; // top to right
+			}
+		}
+		return grid;
+	}
+
+	public static String[] rotateClockwise(String[] grid) {
+		int width = grid.length;
+		int length = grid[0].length();
+		String[] rotatedGrid = new String[length];
+		for(int i = 0; i < length; i++) {
+			StringBuilder sb = new StringBuilder(width);
+			for(String s : grid) {
+				sb.append(s.charAt(i));
+			}
+			rotatedGrid[i] = sb.toString();
+		}
+		return rotatedGrid;
+	}
+
+	public static char[][] rotateCounterClockwise(char[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				char top = grid[i][j];
+				grid[i][j] = grid[j][n - i - 1];
+				grid[j][n - i - 1] = grid[n - i - 1][n - j - 1];
+				grid[n - i - 1][n - j - 1] = grid[n - j - 1][i];
+				grid[n - j - 1][i] = top;
+			}
+		}
+		return grid;
+	}
+
+	public static int[][] rotateCounterClockwise(int[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				int top = grid[i][j];
+				grid[i][j] = grid[j][n - i - 1];
+				grid[j][n - i - 1] = grid[n - i - 1][n - j - 1];
+				grid[n - i - 1][n - j - 1] = grid[n - j - 1][i];
+				grid[n - j - 1][i] = top;
+			}
+		}
+		return grid;
+	}
+
+	public static long[][] rotateCounterClockwise(long[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				long top = grid[i][j];
+				grid[i][j] = grid[j][n - i - 1];
+				grid[j][n - i - 1] = grid[n - i - 1][n - j - 1];
+				grid[n - i - 1][n - j - 1] = grid[n - j - 1][i];
+				grid[n - j - 1][i] = top;
+			}
+		}
+		return grid;
+	}
+
+	public static double[][] rotateCounterClockwise(double[][] grid) {
+		int n = grid.length;
+		for(int i = 0; i < n / 2; i++) {
+			for(int j = i; j < n - i - 1; j++) {
+				double top = grid[i][j];
+				grid[i][j] = grid[j][n - i - 1];
+				grid[j][n - i - 1] = grid[n - i - 1][n - j - 1];
+				grid[n - i - 1][n - j - 1] = grid[n - j - 1][i];
+				grid[n - j - 1][i] = top;
+			}
+		}
+		return grid;
+	}
+
 	public static String substring(String s, int start, int end) {
 		return s.substring(start, Math.min(end, s.length()));
 	}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static util.Utils.rotateClockwise;
+
 /**
 * <a href="https://adventofcode.com/2023/day/13">Day 13</a>
 */
@@ -16,7 +18,7 @@ public class Day13 extends IntDay {
 		for(String[] grid : parsedInput) {
 			int found = findReflection(grid, false) * 100;
 			if(found == 0) {
-				found = findReflection(rotate(grid), false);
+				found = findReflection(rotateClockwise(grid), false);
 			}
 			sum += found;
 		}
@@ -30,7 +32,7 @@ public class Day13 extends IntDay {
 		for(String[] grid : parsedInput) {
 			int found = findReflection(grid, true) * 100;
 			if(found == 0) {
-				found = findReflection(rotate(grid), true);
+				found = findReflection(rotateClockwise(grid), true);
 			}
 			sum += found;
 		}
@@ -97,19 +99,5 @@ public class Day13 extends IntDay {
 			}
 		}
 		return diff;
-	}
-
-	private String[] rotate(String[] grid) {
-		int width = grid.length;
-		int length = grid[0].length();
-		String[] rotatedGrid = new String[length];
-		for(int i = 0; i < length; i++) {
-			StringBuilder sb = new StringBuilder(width);
-			for(String s : grid) {
-				sb.append(s.charAt(i));
-			}
-			rotatedGrid[i] = sb.toString();
-		}
-		return rotatedGrid;
 	}
 }

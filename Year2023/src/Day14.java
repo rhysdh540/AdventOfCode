@@ -4,14 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static util.Utils.rotateClockwise;
+
 /**
 * <a href="https://adventofcode.com/2023/day/14">Day 14</a>
 */
 public class Day14 extends IntDay {
+
 	@Override
 	public int run1Int(List<String> input) {
-		return countRocks(moveRocks(parseInput(input)));
+		return countWeight(moveRocksNorth(parseInput(input)));
 	}
+
+	final int billion = 1_000_000_000;
 
 	@Override
 	public int run2Int(List<String> input) {
@@ -19,21 +24,21 @@ public class Day14 extends IntDay {
 
 		Map<String, Integer> cache = new HashMap<>();
 		int cycle = 0;
-		while(cycle < 1_000_000_000) {
+		while(cycle < billion) {
 			for(int r = 0; r < 4; r++) {
-				grid = rotate(moveRocks(grid));
+				grid = rotateClockwise(moveRocksNorth(grid));
 			}
 
-			String key = deepToString(grid);
+			String key = arrayToString(grid);
 			if(cache.containsKey(key)) {
 				int cycleLength = cycle - cache.get(key);
-				int remainingCycles = (1_000_000_000 - cycle) % cycleLength;
-				cycle = 1_000_000_000 - remainingCycles;
+				int remainingCycles = (billion - cycle) % cycleLength;
+				cycle = billion - remainingCycles;
 			}
 			cache.put(key, cycle++);
 		}
 
-		return countRocks(grid);
+		return countWeight(grid);
 	}
 
 	private char[][] parseInput(List<String> input) {
@@ -44,8 +49,9 @@ public class Day14 extends IntDay {
 		return grid;
 	}
 
-	private String deepToString(char[][] grid) {
-		StringBuilder sb = new StringBuilder();
+	private String arrayToString(char[][] grid) {
+		int n = grid.length;
+		StringBuilder sb = new StringBuilder(n * n);
 		for(char[] row : grid) {
 			for(char c : row) {
 				sb.append(c);
@@ -54,7 +60,7 @@ public class Day14 extends IntDay {
 		return sb.toString();
 	}
 
-	private int countRocks(char[][] grid) {
+	private int countWeight(char[][] grid) {
 		int count = 0;
 		for(int i = 0; i < grid.length; i++) {
 			char[] row = grid[i];
@@ -68,21 +74,7 @@ public class Day14 extends IntDay {
 		return count;
 	}
 
-	private char[][] rotate(char[][] grid) {
-		int n = grid.length;
-		for(int i = 0; i < n / 2; i++) {
-			for(int j = i; j < n - i - 1; j++) {
-				char temp = grid[i][j];
-				grid[i][j] = grid[n - j - 1][i];
-				grid[n - j - 1][i] = grid[n - i - 1][n - j - 1];
-				grid[n - i - 1][n - j - 1] = grid[j][n - i - 1];
-				grid[j][n - i - 1] = temp;
-			}
-		}
-		return grid;
-	}
-
-	public char[][] moveRocks(char[][] grid) {
+	public char[][] moveRocksNorth(char[][] grid) {
 		for(int i = 0; i < grid.length; i++) {
 			char[] row = grid[i];
 			for(int j = 0; j < row.length; j++) {

@@ -1,6 +1,4 @@
 import aoc.Day.IntDay;
-import aoc.Main;
-import util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,8 +14,11 @@ public class Day13 extends IntDay {
 
 		int sum = 0;
 		for(String[] grid : parsedInput) {
-			sum += findReflection(grid, false) * 100;
-			sum += findReflection(rotate(grid), false);
+			int found = findReflection(grid, false) * 100;
+			if(found == 0) {
+				found = findReflection(rotate(grid), false);
+			}
+			sum += found;
 		}
 		return sum;
 	}
@@ -27,8 +28,11 @@ public class Day13 extends IntDay {
 		List<String[]> parsedInput = parseInput(input);
 		int sum = 0;
 		for(String[] grid : parsedInput) {
-			sum += findReflection(grid, true) * 100;
-			sum += findReflection(rotate(grid), true);
+			int found = findReflection(grid, true) * 100;
+			if(found == 0) {
+				found = findReflection(rotate(grid), true);
+			}
+			sum += found;
 		}
 		return sum;
 	}
@@ -107,10 +111,5 @@ public class Day13 extends IntDay {
 			rotatedGrid[i] = sb.toString();
 		}
 		return rotatedGrid;
-	}
-
-	public static void main(String[] args) throws Exception {
-		Main.year = 2023;
-		Utils.benchmark(new Day13(), 1000);
 	}
 }

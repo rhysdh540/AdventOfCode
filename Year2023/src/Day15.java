@@ -1,7 +1,6 @@
 import aoc.Day.IntDay;
 import util.Utils;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ public class Day15 extends IntDay {
 
 		@SuppressWarnings("unchecked")
 		LinkedHashMap<String, Integer>[] boxes = new LinkedHashMap[256];
-		Arrays.setAll(boxes, i -> new LinkedHashMap<>());
+		for(int i = 0; i < 256; i++) boxes[i] = new LinkedHashMap<>();
 
 		for(String insn : insns) {
 			boolean remove = insn.contains("-");

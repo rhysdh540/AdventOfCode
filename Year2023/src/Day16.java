@@ -1,4 +1,5 @@
 import aoc.Day.IntDay;
+import aoc.Main;
 import util.Pair;
 
 import java.util.ArrayList;
@@ -15,27 +16,24 @@ public class Day16 extends IntDay {
 
 	@Override
 	public int run2Int(List<String> input) {
+//		input = Main.getInput(16, "example");
 		Pair<Character, Boolean>[][] grid = makeGrid(input);
 
 		int max = Integer.MIN_VALUE;
 
 		int len = input.size(), wid = input.get(0).length();
 		for (int i = 0; i < len; i++) {
-			int temp = shoot(grid, new Beam(i, 0, 0, 1));
-			System.out.println(temp + " vs " + max);
-			max = Math.max(max, temp);
-			temp = shoot(grid, new Beam(i, wid - 1, 0, -1));
-			System.out.println(temp + " vs " + max);
-			max = Math.max(max, temp);
+			setFalse(grid);
+			max = Math.max(max, shoot(grid, new Beam(i, 0, 0, 1)));
+			setFalse(grid);
+			max = Math.max(max, shoot(grid, new Beam(i, wid - 1, 0, -1)));
 		}
 
 		for (int i = 0; i < wid; i++) {
-			int temp = shoot(grid, new Beam(0, i, 1, 0));
-			System.out.println(temp + " vs " + max);
-			max = Math.max(max, temp);
-			temp = shoot(grid, new Beam(len - 1, i, -1, 0));
-			System.out.println(temp + " vs " + max);
-			max = Math.max(max, temp);
+			setFalse(grid);
+			max = Math.max(max, shoot(grid, new Beam(0, i, 1, 0)));
+			setFalse(grid);
+			max = Math.max(max, shoot(grid, new Beam(len - 1, i, -1, 0)));
 		}
 
 		return max;
@@ -52,6 +50,14 @@ public class Day16 extends IntDay {
 			}
 		}
 		return grid;
+	}
+
+	private void setFalse(Pair<Character, Boolean>[][] grid) {
+		for (Pair<Character, Boolean>[] row : grid) {
+			for (Pair<Character, Boolean> pair : row) {
+				pair.second(false);
+			}
+		}
 	}
 
 	private int shoot(Pair<Character, Boolean>[][] grid, Beam start) {
@@ -97,8 +103,8 @@ public class Day16 extends IntDay {
 							beam.dc = -1;
 						}
 					}
-					case '.' -> {}
-					default -> throw new IllegalStateException("Unexpected value: " + pair.first());
+//					case '.' -> {}
+//					default -> throw new IllegalStateException("Unexpected value: " + pair.first());
 				}
 
 				if(!pair.second()) {

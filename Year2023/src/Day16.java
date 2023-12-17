@@ -1,9 +1,10 @@
 import aoc.Day.IntDay;
-import aoc.Main;
-import util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 /**
 * <a href="https://adventofcode.com/2023/day/16">Day 16</a>
@@ -16,55 +17,70 @@ public class Day16 extends IntDay {
 
 	@Override
 	public int run2Int(List<String> input) {
-//		input = Main.getInput(16, "example");
-		Pair<Character, Boolean>[][] grid = makeGrid(input);
-
-		int max = Integer.MIN_VALUE;
+		char[][] grid = makeGrid(input);
 
 		int len = input.size(), wid = input.get(0).length();
-		for (int i = 0; i < len; i++) {
-			setFalse(grid);
-			max = Math.max(max, shoot(grid, new Beam(i, 0, 0, 1)));
-			setFalse(grid);
-			max = Math.max(max, shoot(grid, new Beam(i, wid - 1, 0, -1)));
-		}
 
-		for (int i = 0; i < wid; i++) {
-			setFalse(grid);
-			max = Math.max(max, shoot(grid, new Beam(0, i, 1, 0)));
-			setFalse(grid);
-			max = Math.max(max, shoot(grid, new Beam(len - 1, i, -1, 0)));
-		}
+		List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-		return max;
+		IntStream.range(0, len).forEach(i -> {
+			futures.add(CompletableFuture.runAsync(() -> {
+				int run = shoot(grid, new Beam(i, 0, 0, 1));
+				if(run > max.get()) {
+					max.set(run);
+					System.out.println(run);
+				}
+			}));
+			futures.add(CompletableFuture.runAsync(() -> {
+				int run = shoot(grid, new Beam(i, wid - 1, 0, -1));
+				if(run > max.get()) {
+					max.set(run);
+					System.out.println(run);
+				}
+			}));
+		});
+
+		IntStream.range(0, wid).forEach(i -> {
+			futures.add(CompletableFuture.runAsync(() -> {
+				int run = shoot(grid, new Beam(0, i, 1, 0));
+				if(run > max.get()) {
+					max.set(run);
+					System.out.println(run);
+				}
+			}));
+			futures.add(CompletableFuture.runAsync(() -> {
+				int run = shoot(grid, new Beam(len - 1, i, -1, 0));
+				if(run > max.get()) {
+					max.set(run);
+					System.out.println(run);
+				}
+			}));
+		});
+
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+		return max.get();
 	}
 
-	private Pair<Character, Boolean>[][] makeGrid(List<String> input) {
+	final AtomicInteger max = new AtomicInteger(-1);
+	final AtomicInteger count = new AtomicInteger(0);
+
+	private char[][] makeGrid(List<String> input) {
 		int len = input.size(), wid = input.get(0).length();
-		@SuppressWarnings("unchecked")
-		Pair<Character, Boolean>[][] grid = new Pair[len][wid];
-		for (int i = 0; i < len; i++) {
-			String line = input.get(i);
-			for (int j = 0; j < wid; j++) {
-				grid[i][j] = Pair.of(line.charAt(j), false);
-			}
+		char[][] grid = new char[len][wid];
+		for(int i = 0; i < len; i++) {
+			grid[i] = input.get(i).toCharArray();
 		}
 		return grid;
 	}
 
-	private void setFalse(Pair<Character, Boolean>[][] grid) {
-		for (Pair<Character, Boolean>[] row : grid) {
-			for (Pair<Character, Boolean> pair : row) {
-				pair.second(false);
-			}
-		}
-	}
-
-	private int shoot(Pair<Character, Boolean>[][] grid, Beam start) {
+	private int shoot(char[][] grid, Beam start) {
 		List<Beam> beams = new ArrayList<>();
 		beams.add(start);
 		int prevCount = -1;
 		int count = 0;
+
+		boolean[][] visited = new boolean[grid.length][grid[0].length];
 
 		int timesSame = 0;
 
@@ -76,9 +92,9 @@ public class Day16 extends IntDay {
 					continue;
 				}
 
-				Pair<Character, Boolean> pair = grid[beam.r][beam.c];
+				char c = grid[beam.r][beam.c];
 
-				switch(pair.first()) {
+				switch(c) {
 					case '/' -> {
 						int temp = beam.dr;
 						beam.dr = -beam.dc;
@@ -103,12 +119,10 @@ public class Day16 extends IntDay {
 							beam.dc = -1;
 						}
 					}
-//					case '.' -> {}
-//					default -> throw new IllegalStateException("Unexpected value: " + pair.first());
 				}
 
-				if(!pair.second()) {
-					pair.second(true);
+				if(!visited[beam.r][beam.c]) {
+					visited[beam.r][beam.c] = true;
 					count++;
 				}
 				beam.r += beam.dr;

@@ -31,9 +31,19 @@ public class Main {
 		System.out.println("\033[1;4mAdvent Of Code\033[0;36;1m " + year + "\033[0m");
 		System.out.println("https://adventofcode.com/" + year);
 		if(args.length == 1) {
-			System.out.println("Running all days...");
-			runAll();
+			System.out.println("Running latest day...");
+			int day = 1;
+			while(doesDayExist(day)) {
+				day++;
+			}
+			day--;
+			run(day);
 		} else {
+			if(args[0].equals("all")) {
+				System.out.println("Running all days...");
+				runAll();
+				return;
+			}
 			System.out.println("Running day " + args[1] + "...");
 			if(!run(Utils.fastParseInt(args[1]))) {
 				System.err.println("Day " + args[1] + " does not exist!");
@@ -41,6 +51,7 @@ public class Main {
 		}
 	}
 
+	@SuppressWarnings("StatementWithEmptyBody")
 	private static void runAll() {
 		for(int day = 1; run(day); day++);
 	}
@@ -54,6 +65,15 @@ public class Main {
 			Day<?> dayObj = (Day<?>) Class.forName("Day" + day)
 				.getDeclaredConstructor().newInstance();
 			dayObj.printResults(true);
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
+	}
+
+	private static boolean doesDayExist(int day) {
+		try {
+			Class.forName("Day" + day);
 			return true;
 		} catch(Exception e) {
 			return false;

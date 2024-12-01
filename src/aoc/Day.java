@@ -91,7 +91,7 @@ public abstract class Day<T> {
 		try {
 			input = Main.getInput(dayNumber);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw Utils.unchecked(e);
 		}
 	}
 

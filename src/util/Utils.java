@@ -8,14 +8,12 @@ public final class Utils {
 	public static final Pattern SPACES = Pattern.compile(" +");
 
 	public static int fastParseInt(String s) {
-		if(s.charAt(0) == '-') {
-			return -fastParseInt(s.substring(1));
-		}
-		int i = 0;
+		boolean negative = s.charAt(0) == '-';
+		int i = negative ? 1 : 0;
 		for(int j = 0; j < s.length(); j++) {
 			i = i * 10 + (s.charAt(j) - '0');
 		}
-		return i;
+		return negative ? -i : i;
 	}
 
 	public static void warmup() {
@@ -54,6 +52,11 @@ public final class Utils {
 			index += m.length();
 		}
 		return count;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Throwable> RuntimeException unchecked(Throwable t) throws T {
+		throw (T) t;
 	}
 
 	public static boolean isDigit(char c) {

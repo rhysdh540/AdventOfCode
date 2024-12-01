@@ -4,7 +4,7 @@ import util.Utils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +16,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-			year = Utils.fastParseInt(args[0]);
+			year = Utils.parseInt(args[0]);
 			if(!Files.exists(Paths.get("Year" + year))) {
 				throw new FileNotFoundException();
 			}
@@ -45,7 +45,7 @@ public class Main {
 				return;
 			}
 			System.out.println("Running day " + args[1] + "...");
-			if(!run(Utils.fastParseInt(args[1]))) {
+			if(!run(Utils.parseInt(args[1]))) {
 				System.err.println("Day " + args[1] + " does not exist!");
 			}
 		}
@@ -87,6 +87,7 @@ public class Main {
 	 * @throws FileNotFoundException if the input file for the specified day does not exist
 	 * @throws RuntimeException if {@link Files#readAllLines(java.nio.file.Path) Files.readAllLines} throws an exception
 	 */
+	@SuppressWarnings("JavadocDeclaration")
 	public static List<String> getInput(int day) {
 		return getInput("Year" + year + "/input/" + day + ".txt");
 	}
@@ -98,16 +99,16 @@ public class Main {
 	public static List<String> getInput(String path) {
 		Path file = Path.of(path);
 		if(!Files.exists(file)) {
-			throw new RuntimeException(new FileNotFoundException("Input not found for path " + file.toFile().getAbsolutePath()));
+			throw Utils.unchecked(new FileNotFoundException("Input not found for path " + file.toAbsolutePath()));
 		}
 		List<String> lines = new ArrayList<>();
-		try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+		try (BufferedReader reader = Files.newBufferedReader(file)) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				lines.add(line);
 			}
-		} catch(Exception e) {
-			throw new RuntimeException(e);
+		} catch(IOException e) {
+			throw Utils.unchecked(e);
 		}
 		return lines;
 	}

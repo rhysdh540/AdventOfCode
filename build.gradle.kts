@@ -7,6 +7,12 @@ allprojects {
     sourceSets["main"].java {
         srcDir("src")
     }
+
+	java {
+		toolchain {
+			languageVersion.set(JavaLanguageVersion.of(21))
+		}
+	}
 }
 
 subprojects {
@@ -67,11 +73,11 @@ public class Day${day} extends IntDay {
 		throw new UnsupportedOperationException();
 	}
 }
-			""".stripIndent())
-			project.file("input/${day}.txt").createNewFile()
+			""".trimIndent())
+			project.file("input/${day}.txt").apply {
+				parentFile.mkdirs()
+				createNewFile()
+			}
         }
     }
 }
-
-val Project.sourceSets
-	get() = extensions.getByType(SourceSetContainer::class.java)

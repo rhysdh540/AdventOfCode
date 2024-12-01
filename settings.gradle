@@ -1,5 +1,0 @@
-include(rootDir.list().findAll {
-    it.startsWith('Year')
-})
-
-rootProject.name = 'Advent Of Code'

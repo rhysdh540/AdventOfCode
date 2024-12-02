@@ -2,6 +2,7 @@ const std = @import("std");
 const allocator = std.heap.c_allocator;
 const stdout = std.io.getStdOut().writer();
 const stderr = std.io.getStdErr().writer();
+const string = []const u8;
 
 pub fn main() !void {
     const args = try std.process.argsAlloc(allocator);
@@ -64,7 +65,7 @@ pub fn main() !void {
     defer file.close();
 
     const contents = try file.readToEndAlloc(allocator, 1 << 31);
-    const json = try std.json.parseFromSlice([]const Language, allocator, contents, .{});
+    const json = try std.json.parseFromSlice([]Language, allocator, contents, .{});
     const languages = json.value;
 
     if(languages.len == 0) {
@@ -100,17 +101,17 @@ pub fn main() !void {
 }
 
 const Language = struct {
-    name: []const u8,
-    template: []const u8,
-    run: []const u8,
+    name: string,
+    template: string,
+    run: string,
 
-    fn getCommand(self: Language, year: u16, day: u9) ![]const []const u8 {
+    fn getCommand(self: Language, year: u16, day: u9) ![]const string {
         const yearStr = try stringify(year);
         const dayStr = try stringify(day);
         var command = try replace(self.run, "{{year}}", yearStr);
         command = try replace(command, "{{day}}", dayStr);
 
-        var list = std.ArrayList([]const u8).init(allocator);
+        var list = std.ArrayList(string).init(allocator);
         var itr = std.mem.split(u8, command, " ");
         while (itr.next()) |part| {
             try list.append(part);
@@ -120,18 +121,18 @@ const Language = struct {
     }
 };
 
-fn stringify(it: anytype) ![]const u8 {
+fn stringify(it: anytype) !string {
     return try std.fmt.allocPrint(allocator, "{any}", .{it});
 }
 
-fn replace(input: []const u8, target: []const u8, replacement: []const u8) ![]const u8 {
+fn replace(input: string, target: string, replacement: string) !string {
     const size = std.mem.replacementSize(u8, input, target, replacement);
     const result = try allocator.alloc(u8, size);
     _ = std.mem.replace(u8, input, target, replacement, result);
     return result;
 }
 
-fn runCommand(args: []const []const u8) !void {
+fn runCommand(args: []const string) !void {
     const process = try std.process.Child.run(.{
         .allocator = allocator,
         .argv = args,

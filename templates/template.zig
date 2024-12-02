@@ -3,19 +3,20 @@ const std = @import("std");
 const ArrayList = std.ArrayList;
 const stdout = std.io.getStdOut().writer();
 const allocator = std.heap.c_allocator;
+const string = []const u8;
 
 const day: u16 = 1;
 
-pub fn part1(input: []const u8) !usize {
+pub fn part1(input: string) !usize {
 
 }
 
-pub fn part2(input: []const u8) !usize {
+pub fn part2(input: string) !usize {
     _ = input;
     return 0;
 }
 
-inline fn parseInt(input: []const u8) !usize {
+inline fn parseInt(input: string) !usize {
     return try std.fmt.parseInt(usize, input, 10);
 }
 

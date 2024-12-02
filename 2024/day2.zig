@@ -3,20 +3,18 @@ const std = @import("std");
 const ArrayList = std.ArrayList;
 const stdout = std.io.getStdOut().writer();
 const allocator = std.heap.c_allocator;
+const string = []const u8;
 
-pub fn main() !void {
-    const input = try getInput(2);
-    try stdout.print("Part 1: {d}\nPart 2: {d}\n", .{try part1(input), try part2(input)});
-}
+const day: u16 = 2;
 
-pub fn part1(input: []const u8) !usize {
+pub fn part1(input: string) !usize {
     var lines = std.mem.splitSequence(u8, input, "\n");
 
     var safeReports: usize = 0;
     while (lines.next()) |report| {
         const split = try splitIntoList(u8, report, " ");
         defer split.deinit();
-        if(try isValid(split)) {
+        if(try isValid(split.items)) {
             safeReports += 1;
         }
     }
@@ -24,7 +22,7 @@ pub fn part1(input: []const u8) !usize {
     return safeReports;
 }
 
-pub fn part2(input: []const u8) !usize {
+pub fn part2(input: string) !usize {
     var lines = std.mem.splitSequence(u8, input, "\n");
 
     var safeReports: usize = 0;
@@ -32,31 +30,32 @@ pub fn part2(input: []const u8) !usize {
         const split = try splitIntoList(u8, report, " ");
         defer split.deinit();
 
-        if(try isValid(split)) {
-            safeReports += 1;
-            continue;
-        }
-
+        var valid = false;
         for(0..split.items.len) |index| {
-            var copy = ArrayList([]const u8).init(allocator);
+            var copy = try ArrayList(string).initCapacity(allocator, split.items.len - 1);
             defer copy.deinit();
             try copy.appendSlice(split.items[0..index]);
             try copy.appendSlice(split.items[index+1..]);
 
-            if(try isValid(copy)) {
-                safeReports += 1;
+            if(try isValid(copy.items)) {
+                valid = true;
                 break;
             }
+        }
+
+        if(valid or try isValid(split.items)) {
+            safeReports += 1;
+            continue;
         }
     }
 
     return safeReports;
 }
 
-fn isValid(sequence: ArrayList([]const u8)) !bool {
+fn isValid(sequence: []const string) !bool {
     var descending: ?bool = null;
     var prevMaybe: ?usize = null;
-    for(sequence.items) |num| {
+    for(sequence) |num| {
         const current = try parseInt(num);
         if(prevMaybe == null) {
             prevMaybe = current;
@@ -84,12 +83,12 @@ fn isValid(sequence: ArrayList([]const u8)) !bool {
     return true;
 }
 
-inline fn parseInt(input: []const u8) !usize {
+inline fn parseInt(input: string) !usize {
     return try std.fmt.parseInt(usize, input, 10);
 }
 
-fn splitIntoList(comptime T: type, input: []const T, separator: []const T) !std.ArrayList([]const T) {
-    var list = std.ArrayList([]const T).init(allocator);
+fn splitIntoList(comptime T: type, input: []const T, separator: []const T) !ArrayList([]const T) {
+    var list = ArrayList([]const T).init(allocator);
     var split = std.mem.splitSequence(T, input, separator);
     while (split.next()) |token| {
         try list.append(token);
@@ -97,9 +96,22 @@ fn splitIntoList(comptime T: type, input: []const T, separator: []const T) !std.
     return list;
 }
 
-fn getInput(day: u16) ![]const u8 {
+pub fn main() !void {
     const path = try std.fmt.allocPrint(allocator, "inputs/2024/{}.txt", .{day});
     const file = try std.fs.cwd().openFile(path, .{ .mode = .read_only });
     defer file.close();
-    return try file.readToEndAlloc(allocator, (2 << 30) - 1);
+    const input = try file.readToEndAlloc(allocator, (1 << 31) - 1);
+
+    var start = std.time.nanoTimestamp();
+    const part1Result = try part1(input);
+    var end = std.time.nanoTimestamp();
+    try stdout.print("--- Part 1: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
+    try stdout.print("{any}\n", .{part1Result});
+
+    start = std.time.nanoTimestamp();
+    const part2Result = try part2(input);
+    end = std.time.nanoTimestamp();
+    try stdout.print("--- Part 2: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
+    try stdout.print("{any}\n", .{part2Result});
+    try stdout.print("-------------------\n", .{});
 }

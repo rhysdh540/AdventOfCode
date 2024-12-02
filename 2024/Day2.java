@@ -4,13 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Day2 {
-	public static void main(String[] args) throws Throwable {
-		String path = String.format("inputs/2024/%s.txt", Day2.class.getSimpleName().substring(3));
-		String input = Files.readString(Paths.get(path));
-		System.out.println("Part 1: " + part1(input));
-		System.out.println("Part 2: " + part2(input));
-	}
-
 	public static Object part1(String input) throws Throwable {
 		int validReports = 0;
 		for(String report : input.split("\n")) {
@@ -81,5 +74,24 @@ public class Day2 {
 		}
 
 		return true;
+	}
+
+	public static void main(String[] args) throws Throwable {
+		// avoid directly refereincing the class name
+		String path = String.format("inputs/2024/%s.txt", new Object(){}.getClass().getEnclosingClass().getSimpleName().substring(3));
+		String input = Files.readString(Paths.get(path));
+
+		long start = System.nanoTime();
+		Object result = part1(input);
+		long end = System.nanoTime();
+		System.out.printf("--- Part 1: %.2fms ---%n", (end - start) / 1e6);
+		System.out.println(result);
+
+		start = System.nanoTime();
+		result = part2(input);
+		end = System.nanoTime();
+		System.out.printf("--- Part 2: %.2fms ---%n", (end - start) / 1e6);
+		System.out.println(result);
+		System.out.println("-------------------");
 	}
 }

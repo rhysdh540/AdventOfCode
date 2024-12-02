@@ -1,0 +1,12 @@
+[
+  {
+    "name": "java",
+    "template": "Template.java",
+    "run": "java {{year}}/Day{{day}}.java"
+  },
+  {
+    "name": "zig",
+    "template": "template.zig",
+    "run": "zig run {{year}}/day{{day}}.zig -O ReleaseFast"
+  }
+]

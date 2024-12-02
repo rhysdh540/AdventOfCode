@@ -4,10 +4,7 @@ const ArrayList = std.ArrayList;
 const stdout = std.io.getStdOut().writer();
 const allocator = std.heap.c_allocator;
 
-pub fn main() !void {
-    const input = try getInput(1);
-    try stdout.print("Part 1: {d}\nPart 2: {d}\n", .{try part1(input), try part2(input)});
-}
+const day: u16 = 1;
 
 pub fn part1(input: []const u8) !usize {
     var lines = std.mem.splitSequence(u8, input, "\n");
@@ -80,9 +77,22 @@ inline fn parseInt(input: []const u8) !usize {
     return try std.fmt.parseInt(usize, input, 10);
 }
 
-fn getInput(day: u16) ![]const u8 {
-    const path = try std.fmt.allocPrint(std.heap.page_allocator, "inputs/2024/{}.txt", .{day});
+pub fn main() !void {
+    const path = try std.fmt.allocPrint(allocator, "inputs/2024/{}.txt", .{day});
     const file = try std.fs.cwd().openFile(path, .{ .mode = .read_only });
     defer file.close();
-    return try file.readToEndAlloc(std.heap.page_allocator, (2 << 30) - 1);
+    const input = try file.readToEndAlloc(allocator, (1 << 31) - 1);
+
+    var start = std.time.nanoTimestamp();
+    const part1Result = try part1(input);
+    var end = std.time.nanoTimestamp();
+    try stdout.print("--- Part 1: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
+    try stdout.print("{any}\n", .{part1Result});
+
+    start = std.time.nanoTimestamp();
+    const part2Result = try part2(input);
+    end = std.time.nanoTimestamp();
+    try stdout.print("--- Part 2: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
+    try stdout.print("{any}\n", .{part2Result});
+    try stdout.print("-------------------\n", .{});
 }

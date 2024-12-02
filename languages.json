@@ -8,5 +8,10 @@
     "name": "zig",
     "template": "template.zig",
     "run": "zig run {{year}}/day{{day}}.zig -O ReleaseFast"
+  },
+  {
+    "name": "typescript",
+    "template": "no",
+    "run": "bun {{year}}/{{day}}.ts"
   }
 ]

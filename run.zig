@@ -57,12 +57,36 @@ pub fn main() !void {
     }
     //endregion
 
-    const file = try std.fs.cwd().openFile("languages.json", .{});
+    const file = std.fs.cwd().openFile("languages.json", .{}) catch |err| {
+        try stderr.print("Failed to open languages.json: {any}\n", .{err});
+        return;
+    };
     defer file.close();
 
     const contents = try file.readToEndAlloc(allocator, 1 << 31);
     const json = try std.json.parseFromSlice([]const Language, allocator, contents, .{});
     const languages = json.value;
+
+    if(languages.len == 0) {
+        try stderr.print("No languages found in languages.json\n", .{});
+        return;
+    }
+
+    for(languages) |lang| {
+        if(std.mem.eql(u8, lang.name, "all")) {
+            try stderr.print("Language name 'all' is reserved\n", .{});
+            return;
+        }
+    }
+
+    if(std.mem.eql(u8, args[1], "all")) {
+        for(languages) |lang| {
+            try stdout.print("{s}\n", .{lang.name});
+            const command = try lang.getCommand(year, @intCast(dayMonth));
+            try runCommand(command);
+        }
+        return;
+    }
 
     for(languages) |lang| {
         if(std.mem.eql(u8, lang.name, args[1])) {

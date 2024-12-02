@@ -1,11 +1,11 @@
-const lib = @import("lib.zig");
 const std = @import("std");
 
 const ArrayList = std.ArrayList;
 const stdout = std.io.getStdOut().writer();
+const allocator = std.heap.c_allocator;
 
 pub fn main() !void {
-    const input = try lib.getInput(2);
+    const input = try getInput(2);
     try stdout.print("Part 1: {d}\nPart 2: {d}\n", .{try part1(input), try part2(input)});
 }
 
@@ -14,7 +14,7 @@ pub fn part1(input: []const u8) !usize {
 
     var safeReports: usize = 0;
     while (lines.next()) |report| {
-        const split = try lib.splitIntoList(u8, report, " ");
+        const split = try splitIntoList(u8, report, " ");
         defer split.deinit();
         if(try isValid(split)) {
             safeReports += 1;
@@ -29,7 +29,7 @@ pub fn part2(input: []const u8) !usize {
 
     var safeReports: usize = 0;
     while (lines.next()) |report| {
-        const split = try lib.splitIntoList(u8, report, " ");
+        const split = try splitIntoList(u8, report, " ");
         defer split.deinit();
 
         if(try isValid(split)) {
@@ -38,7 +38,7 @@ pub fn part2(input: []const u8) !usize {
         }
 
         for(0..split.items.len) |index| {
-            var copy = ArrayList([]const u8).init(lib.allocator);
+            var copy = ArrayList([]const u8).init(allocator);
             defer copy.deinit();
             try copy.appendSlice(split.items[0..index]);
             try copy.appendSlice(split.items[index+1..]);
@@ -57,7 +57,7 @@ fn isValid(sequence: ArrayList([]const u8)) !bool {
     var descending: ?bool = null;
     var prevMaybe: ?usize = null;
     for(sequence.items) |num| {
-        const current = try lib.parseInt(num);
+        const current = try parseInt(num);
         if(prevMaybe == null) {
             prevMaybe = current;
             continue;
@@ -82,4 +82,24 @@ fn isValid(sequence: ArrayList([]const u8)) !bool {
     }
 
     return true;
+}
+
+inline fn parseInt(input: []const u8) !usize {
+    return try std.fmt.parseInt(usize, input, 10);
+}
+
+fn splitIntoList(comptime T: type, input: []const T, separator: []const T) !std.ArrayList([]const T) {
+    var list = std.ArrayList([]const T).init(allocator);
+    var split = std.mem.splitSequence(T, input, separator);
+    while (split.next()) |token| {
+        try list.append(token);
+    }
+    return list;
+}
+
+fn getInput(day: u16) ![]const u8 {
+    const path = try std.fmt.allocPrint(allocator, "inputs/2024/{}.txt", .{day});
+    const file = try std.fs.cwd().openFile(path, .{ .mode = .read_only });
+    defer file.close();
+    return try file.readToEndAlloc(allocator, (2 << 30) - 1);
 }

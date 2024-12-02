@@ -11,4 +11,13 @@ pub inline fn parseInt(input: []const u8) !usize {
     return try std.fmt.parseInt(usize, input, 10);
 }
 
+pub fn splitIntoList(comptime T: type, input: []const T, separator: []const T) !std.ArrayList([]const T) {
+    var list = std.ArrayList([]const T).init(allocator);
+    var split = std.mem.splitSequence(T, input, separator);
+    while (split.next()) |token| {
+        try list.append(token);
+    }
+    return list;
+}
+
 pub const allocator = std.heap.c_allocator;

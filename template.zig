@@ -14,5 +14,6 @@ pub fn part1(input: []const u8) !usize {
 }
 
 pub fn part2(input: []const u8) !usize {
-
+    _ = input;
+    return 0;
 }

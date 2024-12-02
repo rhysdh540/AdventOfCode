@@ -36,5 +36,5 @@ pub fn main() !void {
     const end2 = std.time.milliTimestamp();
     try stdout.print("--- Part 2: {d}ms ---\n", .{end2 - start});
     try stdout.print("{any}\n", .{part2Result});
-    try stdout.print("-------------------\n", .{});
+    try stdout.print("----------------------\n", .{});
 }

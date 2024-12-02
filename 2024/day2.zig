@@ -113,5 +113,5 @@ pub fn main() !void {
     end = std.time.nanoTimestamp();
     try stdout.print("--- Part 2: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
     try stdout.print("{any}\n", .{part2Result});
-    try stdout.print("-------------------\n", .{});
+    try stdout.print("----------------------\n", .{});
 }

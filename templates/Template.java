@@ -26,6 +26,6 @@ public class Template {
 		end = System.nanoTime();
 		System.out.printf("--- Part 2: %.2fms ---%n", (end - start) / 1e6);
 		System.out.println(result);
-		System.out.println("-------------------");
+		System.out.println("----------------------");
 	}
 }

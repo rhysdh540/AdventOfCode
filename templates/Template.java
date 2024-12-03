@@ -1,7 +1,7 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class Template {
+public class Day{{day}} {
 	public static Object part1(String input) throws Throwable {
 
 	}
@@ -11,9 +11,7 @@ public class Template {
 	}
 
 	public static void main(String[] args) throws Throwable {
-		// avoid directly refereincing the class name
-		String path = String.format("inputs/2024/%s.txt", new Object(){}.getClass().getEnclosingClass().getSimpleName().substring(3));
-		String input = Files.readString(Paths.get(path));
+		String input = Files.readString(Paths.get("inputs/{{year}}/{{day}}.txt"));
 
 		long start = System.nanoTime();
 		Object result = part1(input);

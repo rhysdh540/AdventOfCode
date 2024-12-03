@@ -5,7 +5,7 @@ const stdout = std.io.getStdOut().writer();
 const allocator = std.heap.c_allocator;
 const string = []const u8;
 
-const day: u16 = 1;
+const day: u16 = {{day}};
 
 pub fn part1(input: string) !usize {
 

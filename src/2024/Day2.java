@@ -77,9 +77,7 @@ public class Day2 {
 	}
 
 	public static void main(String[] args) throws Throwable {
-		// avoid directly refereincing the class name
-		String path = String.format("inputs/2024/%s.txt", new Object(){}.getClass().getEnclosingClass().getSimpleName().substring(3));
-		String input = Files.readString(Paths.get(path));
+		String input = Files.readString(Paths.get("inputs/2024/4.txt"));
 
 		long start = System.nanoTime();
 		Object result = part1(input);

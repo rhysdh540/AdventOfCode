@@ -32,12 +32,11 @@ pub fn part2(input: string) !usize {
 
         var valid = false;
         for(0..split.items.len) |index| {
-            var copy = try ArrayList(string).initCapacity(allocator, split.items.len - 1);
-            defer copy.deinit();
-            try copy.appendSlice(split.items[0..index]);
-            try copy.appendSlice(split.items[index+1..]);
+            const copy = try allocator.alloc(string, split.items.len - 1);
+            @memcpy(copy[0..index], split.items[0..index]);
+            @memcpy(copy[index..], split.items[index+1..]);
 
-            if(try isValid(copy.items)) {
+            if(try isValid(copy)) {
                 valid = true;
                 break;
             }

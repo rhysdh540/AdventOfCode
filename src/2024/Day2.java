@@ -8,13 +8,18 @@ import java.util.List;
 public class Day2 {
 	public static Object part1(String input) throws Throwable {
 		int validReports = 0;
-		for(String report : input.split("\n")) {
+		for(String reportString : input.split("\n")) {
 			List<Integer> list = new ArrayList<>();
-			for(String s : report.split(" ")) {
+			for(String s : reportString.split(" ")) {
 				list.add(Integer.parseInt(s));
 			}
 
-			if(isValid(list)) {
+			int[] report = new int[list.size()];
+			for(int i = 0; i < list.size(); i++) {
+				report[i] = list.get(i);
+			}
+
+			if(isValid(report)) {
 				validReports++;
 			}
 		}
@@ -24,21 +29,26 @@ public class Day2 {
 
 	public static Object part2(String input) throws Throwable {
 		int validReports = 0;
-		for(String report : input.split("\n")) {
+		for(String reportString : input.split("\n")) {
 			List<Integer> list = new ArrayList<>();
-			for(String s : report.split(" ")) {
+			for(String s : reportString.split(" ")) {
 				list.add(Integer.parseInt(s));
 			}
 
-			if(isValid(list)) {
+			int[] report = new int[list.size()];
+			for(int i = 0; i < list.size(); i++) {
+				report[i] = list.get(i);
+			}
+
+			if(isValid(report)) {
 				validReports++;
 				continue;
 			}
 
 			for(int i = 0; i < list.size(); i++) {
-				List<Integer> copy = new ArrayList<>(list);
-				//noinspection RedundantCast
-				copy.remove((int) i);
+				int[] copy = new int[report.length - 1];
+				System.arraycopy(report, 0, copy, 0, i);
+				System.arraycopy(report, i + 1, copy, i, report.length - i - 1);
 				if(isValid(copy)) {
 					validReports++;
 					break;
@@ -49,7 +59,7 @@ public class Day2 {
 		return validReports;
 	}
 
-	static boolean isValid(List<Integer> report) {
+	static boolean isValid(int[] report) {
 		Boolean descending = null;
 		Integer prev = null;
 

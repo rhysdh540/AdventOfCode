@@ -10,14 +10,13 @@ fi
 subcommand=$1
 shift
 
+# shellcheck disable=SC2068
 case $subcommand in
     run)
-        # shellcheck disable=SC2068
-        java build-system/Run.java $@
+        java build-system/src/Run.java $@
         ;;
     init)
-        # shellcheck disable=SC2068
-        java build-system/Init.java $@
+        java build-system/src/Init.java $@
         ;;
     *)
         echo "Unknown subcommand: $subcommand"

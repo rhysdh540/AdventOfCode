@@ -1,5 +1,7 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
 
 public class Day{{day}} {
 	public static Object part1(String input) throws Throwable {

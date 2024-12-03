@@ -21,22 +21,17 @@ fn run(input: string, doEnabled: bool) usize {
     var enabled: bool = true;
     var i: usize = 0;
     o: while(i < input.len) {
-        if(doEnabled and i + 3 < input.len and input[i] == 'd' and input[i + 1] == 'o') {
-            // either do() or don't()
-            if(i + 4 < input.len and input[i + 2] == '(' and input[i + 3] == ')') {
-                // do()
+        if(doEnabled) {
+            if(i + 4 < input.len and streql(input[i..i + 4], "do()")) {
                 enabled = true;
                 i += 4;
-            } else if(i + 6 < input.len and input[i + 2] == 'n' and input[i + 3] == '\'' and input[i + 4] == 't' and input[i + 5] == '(' and input[i + 6] == ')') {
-                // don't()
+            } else if(i + 6 < input.len and streql(input[i..i + 7], "don't()")) {
                 enabled = false;
                 i += 7;
-            } else {
-                i += 1;
             }
         }
 
-        if(enabled and i + 3 < input.len and input[i] == 'm' and input[i + 1] == 'u' and input[i + 2] == 'l' and input[i + 3] == '(') {
+        if(enabled and i + 3 < input.len and streql(input[i..i + 4], "mul(")) {
             i += 4; // "mul("
 
             var num1: usize = 0;
@@ -74,8 +69,13 @@ fn run(input: string, doEnabled: bool) usize {
     return sum;
 }
 
-inline fn parseInt(input: string) !usize {
-    return try std.fmt.parseInt(usize, input, 10);
+inline fn parseInt(self: string) !usize {
+    return try std.fmt.parseInt(usize, self, 10);
+}
+
+inline fn streql(a: []const u8, b: []const u8) bool {
+    if(a.len != b.len) return false;
+    return std.mem.eql(u8, a, b);
 }
 
 pub fn main() !void {
@@ -84,16 +84,16 @@ pub fn main() !void {
     defer file.close();
     const input = try file.readToEndAlloc(allocator, (1 << 31) - 1);
 
-    var start = std.time.milliTimestamp();
+    var start = std.time.nanoTimestamp();
     const part1Result = try part1(input);
-    const end = std.time.milliTimestamp();
-    try stdout.print("--- Part 1: {d}ms ---\n", .{end - start});
+    var end = std.time.nanoTimestamp();
+    try stdout.print("--- Part 1: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
     try stdout.print("{any}\n", .{part1Result});
 
-    start = std.time.milliTimestamp();
+    start = std.time.nanoTimestamp();
     const part2Result = try part2(input);
-    const end2 = std.time.milliTimestamp();
-    try stdout.print("--- Part 2: {d}ms ---\n", .{end2 - start});
+    end = std.time.nanoTimestamp();
+    try stdout.print("--- Part 2: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
     try stdout.print("{any}\n", .{part2Result});
     try stdout.print("----------------------\n", .{});
 }

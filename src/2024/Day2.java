@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -78,7 +80,10 @@ public class Day2 {
 
 	public static void main(String[] args) throws Throwable {
 		String input = Files.readString(Paths.get("inputs/2024/2.txt"));
+		var o = System.out;
+		System.setOut(new PrintStream(new ByteArrayOutputStream()));
 		part1(input);part2(input);
+		System.setOut(o);
 
 		long start = System.nanoTime();
 		Object result = part1(input);

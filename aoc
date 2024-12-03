@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Run the Advent of Code solution for the given day
+
+if [ -z "$1" ]; then
+    echo "Usage: aoc <subcommand> [args]"
+    exit 1
+fi
+
+subcommand=$1
+shift
+
+case $subcommand in
+    run)
+        # shellcheck disable=SC2068
+        java build-system/Run.java $@
+        ;;
+    init)
+        # shellcheck disable=SC2068
+        java build-system/Init.java $@
+        ;;
+    *)
+        echo "Unknown subcommand: $subcommand"
+        exit 1
+        ;;
+esac

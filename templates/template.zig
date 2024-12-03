@@ -26,16 +26,16 @@ pub fn main() !void {
     defer file.close();
     const input = try file.readToEndAlloc(allocator, (1 << 31) - 1);
 
-    var start = std.time.milliTimestamp();
+    var start = std.time.nanoTimestamp();
     const part1Result = try part1(input);
-    const end = std.time.milliTimestamp();
-    try stdout.print("--- Part 1: {d}ms ---\n", .{end - start});
+    var end = std.time.nanoTimestamp();
+    try stdout.print("--- Part 1: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
     try stdout.print("{any}\n", .{part1Result});
 
-    start = std.time.milliTimestamp();
+    start = std.time.nanoTimestamp();
     const part2Result = try part2(input);
-    const end2 = std.time.milliTimestamp();
-    try stdout.print("--- Part 2: {d}ms ---\n", .{end2 - start});
+    end = std.time.nanoTimestamp();
+    try stdout.print("--- Part 2: {d:.2}ms ---\n", .{(@as(f128, @floatFromInt(end - start)) / 1_000_000.0)});
     try stdout.print("{any}\n", .{part2Result});
     try stdout.print("----------------------\n", .{});
 }

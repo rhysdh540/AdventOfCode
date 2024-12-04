@@ -73,7 +73,7 @@ inline fn parseInt(self: string) !usize {
     return try std.fmt.parseInt(usize, self, 10);
 }
 
-inline fn streql(a: []const u8, b: []const u8) bool {
+inline fn streql(a: string, b: string) bool {
     if(a.len != b.len) return false;
     return std.mem.eql(u8, a, b);
 }

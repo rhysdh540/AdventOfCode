@@ -12,9 +12,8 @@ pub fn part1(input: string) !usize {
 
     var safeReports: usize = 0;
     while (lines.next()) |report| {
-        const split = try splitIntoList(u8, report, " ");
-        defer split.deinit();
-        if(try isValid(split.items)) {
+        const split = try splitIntoArray(u8, report, " ");
+        if(try isValid(split)) {
             safeReports += 1;
         }
     }
@@ -27,14 +26,13 @@ pub fn part2(input: string) !usize {
 
     var safeReports: usize = 0;
     while (lines.next()) |report| {
-        const split = try splitIntoList(u8, report, " ");
-        defer split.deinit();
+        const split = try splitIntoArray(u8, report, " ");
 
         var valid = false;
-        for(0..split.items.len) |index| {
-            const copy = try allocator.alloc(string, split.items.len - 1);
-            @memcpy(copy[0..index], split.items[0..index]);
-            @memcpy(copy[index..], split.items[index+1..]);
+        for(0..split.len) |index| {
+            const copy = try allocator.alloc(string, split.len - 1);
+            @memcpy(copy[0..index], split[0..index]);
+            @memcpy(copy[index..], split[index+1..]);
 
             if(try isValid(copy)) {
                 valid = true;
@@ -42,7 +40,7 @@ pub fn part2(input: string) !usize {
             }
         }
 
-        if(valid or try isValid(split.items)) {
+        if(valid or try isValid(split)) {
             safeReports += 1;
             continue;
         }
@@ -86,13 +84,18 @@ inline fn parseInt(input: string) !usize {
     return try std.fmt.parseInt(usize, input, 10);
 }
 
-fn splitIntoList(comptime T: type, input: []const T, separator: []const T) !ArrayList([]const T) {
-    var list = ArrayList([]const T).init(allocator);
-    var split = std.mem.splitSequence(T, input, separator);
-    while (split.next()) |token| {
-        try list.append(token);
+fn splitIntoArray(comptime T: type, input: []const T, separator: []const T) ![]const []const T {
+    const count = std.mem.count(T, input, separator) + 1;
+    const split = try allocator.alloc([]const T, count);
+
+    var itr = std.mem.split(T, input, separator);
+    var i: usize = 0;
+    while(itr.next()) |token| {
+        split[i] = token;
+        i += 1;
     }
-    return list;
+
+    return split;
 }
 
 pub fn main() !void {

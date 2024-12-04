@@ -1,7 +1,11 @@
 import javax.tools.ToolProvider;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Calendar;
 
 public enum Languages {
 	JAVA("Template.java") {
@@ -77,18 +81,38 @@ public enum Languages {
 
 			Path src = getSrcFile(year, day);
 			if(Files.exists(src)) {
-				throw new IOException("File already exists: " + src);
+				System.out.println("File already exists: " + src);
+			} else {
+				Files.writeString(src, template);
+				System.out.println("File created: " + src);
 			}
-
-			Files.writeString(src, template);
-
-			System.out.println("File created: " + src);
 
 			Path input = getInputFile(year, day);
 			if(!Files.exists(input)) {
 				Files.createDirectories(input.getParent());
 				Files.createFile(input);
 				System.out.println("Input file created: " + input);
+			}
+
+			if(Files.size(input) == 0) {
+				System.out.println("Input file is empty: " + input);
+
+				// if the day is in the future, we don't have access to the input
+				// so return early
+				if(year > Calendar.getInstance().get(Calendar.YEAR) || day > Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+					System.out.printf("Skipping input download because the input for %d/%d is not available yet%n", year, day);
+					return;
+				}
+
+				String token = Token.get();
+				System.out.println("Filling...");
+
+				URL url = URI.create("https://adventofcode.com/%d/day/%d/input".formatted(year, day)).toURL();
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setRequestProperty("Cookie", "session=" + token);
+				conn.connect();
+
+				Files.writeString(input, new String(conn.getInputStream().readAllBytes()));
 			}
 		} catch (Exception e) {
 			throw unchecked(e);

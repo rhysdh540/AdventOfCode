@@ -25,24 +25,22 @@ pub fn part1(input: string) !usize {
 
     var count: usize = 0;
 
-    for(0..rows) |x| {
-        for(0..cols) |y| {
-            for(directions) |dir| {
-                var found = true;
+    for(0..rows) |row| {
+        for(0..cols) |col| {
+            o: for(directions) |dir| {
+                var x: i32 = @intCast(row);
+                var y: i32 = @intCast(col);
                 for(0..4) |i| {
-                    const nx = @as(isize, @intCast(x)) + @as(isize, @intCast(i)) * dir[0];
-                    const ny = @as(isize, @intCast(y)) + @as(isize, @intCast(i)) * dir[1];
-
-                    if(nx < 0 or nx >= rows or ny < 0 or ny >= cols
-                        or grid[@intCast(nx)][@intCast(ny)] != "XMAS"[i]) {
-                        found = false;
-                        break;
+                    if(x < 0 or x >= rows or y < 0 or y >= cols
+                        or grid[@intCast(x)][@intCast(y)] != "XMAS"[i]) {
+                        continue :o;
                     }
+
+                    x += dir[0];
+                    y += dir[1];
                 }
 
-                if(found) {
-                    count += 1;
-                }
+                count += 1;
             }
         }
     }

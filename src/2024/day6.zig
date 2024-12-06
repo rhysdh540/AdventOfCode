@@ -8,10 +8,7 @@ const string = []const u8;
 const day: u16 = 6;
 
 pub fn part1(input: string) !usize {
-    const parsed = try parseInput(input);
-
-    const visited = try getVisitedPoints(parsed.grid, parsed.start);
-    return visited.table.count();
+    return (try getVisitedPoints(try parseInput(input))).table.count();
 }
 
 pub fn part2(input: string) !usize {
@@ -19,12 +16,10 @@ pub fn part2(input: string) !usize {
     const grid = parsed.grid;
     const start = parsed.start;
 
-    const visited = try getVisitedPoints(grid, start);
-
     var count: usize = 0;
 
     // Only try to place obstacles where the guard will move, anywhere else will not affect the result
-    var itr = visited.table.keyIterator();
+    var itr = (try getVisitedPoints(parsed)).table.keyIterator();
     while(itr.next()) |point| {
         grid[point.y][point.x] = '#';
         if(try isLoop(grid, start)) {
@@ -36,11 +31,12 @@ pub fn part2(input: string) !usize {
     return count;
 }
 
-fn getVisitedPoints(grid: []const []const u8, start: Point) !HashSet(Point) {
+fn getVisitedPoints(input: ParsedInput) !HashSet(Point) {
+    const grid = input.grid;
     const width = grid[0].len;
     const height = grid.len;
 
-    var current = start;
+    var current = input.start;
     var visited = HashSet(Point).init();
     var dir = Direction.Up;
 
@@ -91,7 +87,7 @@ fn isLoop(grid: [][]u8, start: Point) !bool {
     }
 }
 
-fn parseInput(input: string) !ParsedInput {
+inline fn parseInput(input: string) !ParsedInput {
     const grid = try splitIntoArray(u8, input, "\n");
     const width = grid[0].len;
     const height = grid.len;
@@ -134,10 +130,7 @@ const Point = struct {
 };
 
 const Direction = enum {
-    Up,
-    Down,
-    Left,
-    Right,
+    Up, Down, Left, Right,
 
     inline fn next(self: Direction) Direction {
         switch(self) {

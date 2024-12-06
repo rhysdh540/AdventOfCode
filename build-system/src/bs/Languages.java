@@ -1,3 +1,5 @@
+package bs;
+
 import javax.tools.ToolProvider;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -28,6 +30,16 @@ public enum Languages {
 				throw new RuntimeException("Java not found in " + java);
 			}
 
+			try {
+				Files.walk(tmp).sorted((a, b) -> b.getNameCount() - a.getNameCount()).forEach(p -> {
+					if(!Files.isDirectory(p)) {
+						p.toFile().deleteOnExit();
+					}
+				});
+			} catch (IOException e) {
+				throw unchecked(e);
+			}
+
 			return new String[] {java.toString(), "-cp", tmp.toAbsolutePath().toString(), "Day" + day};
 		}
 
@@ -37,11 +49,15 @@ public enum Languages {
 		}
 	},
 	ZIG("template.zig") {
+		public enum Release {
+			Debug, ReleaseFast, ReleaseSafe, ReleaseSmall
+		}
+
 		@Override
 		protected String[] cmd(int year, int day) {
 			return new String[] {
 					"zig", "run", getSrcFile(year, day).toAbsolutePath().toString(),
-					"-O", "ReleaseSafe",
+					"-O", Release.ReleaseFast.name()
 			};
 		}
 

@@ -41,8 +41,6 @@ public class Day5 {
 			}
 		}
 
-		System.out.println(valid.size());
-
 		int sum = 0;
 		for (List<Integer> list : valid) {
 			sum += list.get(list.size() / 2);

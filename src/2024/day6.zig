@@ -18,17 +18,52 @@ pub fn part2(input: string) !usize {
 
     var count: usize = 0;
 
+    var itrMutex: std.Thread.Mutex = .{};
+    var countMutex: std.Thread.Mutex = .{};
+    const numThreads = (std.Thread.getCpuCount() catch 2) / 2;
+    var threads = try allocator.alloc(std.Thread, numThreads);
+
     // Only try to place obstacles where the guard will move, anywhere else will not affect the result
     var itr = (try getVisitedPoints(parsed)).table.keyIterator();
-    while(itr.next()) |point| {
-        grid[point.y][point.x] = '#';
-        if(try isLoop(grid, start)) {
-            count += 1;
-        }
-        grid[point.y][point.x] = '.';
+    for(0..numThreads) |i| {
+        const thread = try std.Thread.spawn(.{ .allocator = allocator },
+            part2_thread, .{ grid, start, &itr, &count, &itrMutex, &countMutex });
+        threads[i] = thread;
+    }
+
+    for(threads) |thread| {
+        thread.join();
     }
 
     return count;
+}
+
+fn part2_thread(
+    grid: [][]u8, start: Point,
+    itr: *std.AutoHashMap(Point, bool).KeyIterator,
+    count: *usize,
+    itrMutex: *std.Thread.Mutex, countMutex: *std.Thread.Mutex
+) !void {
+    var point: *Point = undefined;
+
+    while(true) {
+        // synchronize on the iterator to prevent getting the same point multiple times
+        itrMutex.lock();
+        point = itr.next() orelse {
+            itrMutex.unlock();
+            break;
+        };
+        itrMutex.unlock();
+
+        // we can run isLoop in parallel since it doesn't modify the grid (just the checks)
+        if(try isLoop(grid, start, point.*)) {
+
+            // synchronize on the count to make sure we don't miss any increments
+            countMutex.lock();
+            count.* += 1;
+            countMutex.unlock();
+        }
+    }
 }
 
 fn getVisitedPoints(input: ParsedInput) !HashSet(Point) {
@@ -42,9 +77,9 @@ fn getVisitedPoints(input: ParsedInput) !HashSet(Point) {
 
     while (true) {
         _ = try visited.add(current);
-        const next = current.next(dir);
+        const next = current.next(dir) orelse break;
 
-        if(next.x < 0 or next.x >= width or next.y < 0 or next.y >= height) {
+        if(next.x >= width or next.y >= height) {
             break;
         }
 
@@ -58,7 +93,7 @@ fn getVisitedPoints(input: ParsedInput) !HashSet(Point) {
     return visited;
 }
 
-fn isLoop(grid: [][]u8, start: Point) !bool {
+fn isLoop(grid: [][]u8, start: Point, point: Point) !bool {
     const width = grid[0].len;
     const height = grid.len;
 
@@ -73,13 +108,13 @@ fn isLoop(grid: [][]u8, start: Point) !bool {
             return true;
         }
 
-        const next = current.next(dir);
+        const next = current.next(dir) orelse return false;
 
-        if(next.x < 0 or next.x >= width or next.y < 0 or next.y >= height) {
+        if(next.x >= width or next.y >= height) {
             return false;
         }
 
-        if(grid[next.y][next.x] == '#') {
+        if(grid[next.y][next.x] == '#' or (next.x == point.x and next.y == point.y)) {
             dir = dir.next();
         } else {
             current = next;
@@ -119,7 +154,13 @@ const Point = struct {
         return .{ .x = x, .y = y };
     }
 
-    inline fn next(self: Point, direction: Direction) Point {
+    inline fn next(self: Point, direction: Direction) ?Point {
+        if(direction == Direction.Up and self.y == 0) {
+            return null;
+        }
+        if(direction == Direction.Left and self.x == 0) {
+            return null;
+        }
         return switch(direction) {
             Direction.Up => of(self.x, self.y - 1),
             Direction.Down => of(self.x, self.y + 1),

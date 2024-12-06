@@ -73,6 +73,8 @@ public class Day6 {
 
 		int count = 0;
 
+		// Try to put an obstacle in every empty cell and see if the guard gets stuck in a loop
+		// it's more efficient to only check cells where the guard will move, see the zig solution for that
 		for(int i = 0; i < grid.length; i++) {
 			for(int j = 0; j < grid[i].length; j++) {
 				if(grid[i][j] == '#') {
@@ -88,12 +90,10 @@ public class Day6 {
 
 				while(true) {
 					PointDir pd = new PointDir(current.x, current.y, direction);
-					if(visited.contains(pd)) {
+					if(!visited.add(pd)) {
 						count++;
 						break;
 					}
-
-					visited.add(pd);
 
 					int newX = current.x;
 					int newY = current.y;

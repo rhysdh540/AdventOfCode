@@ -8,8 +8,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Calendar;
-import java.util.TimeZone;
 
+@SuppressWarnings("resource")
 public enum Languages {
 	JAVA("Template.java") {
 		@Override
@@ -183,7 +183,9 @@ public enum Languages {
 				conn.setRequestProperty("Cookie", "session=" + token);
 				conn.connect();
 
-				Files.writeString(input, new String(conn.getInputStream().readAllBytes()));
+				String content = new String(conn.getInputStream().readAllBytes());
+				content = content.substring(0, content.length() - 1); // remove trailing newline
+				Files.writeString(input, content);
 			}
 		} catch (Exception e) {
 			throw unchecked(e);

@@ -1,5 +1,11 @@
+# idea junk
 .idea/
-.DS_Store
 *.iml
 out/
+META-INF/
+
+# macos junk
+.DS_Store
+
+# definitely don't commit this
 token.txt

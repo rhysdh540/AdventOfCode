@@ -14,7 +14,7 @@ public enum Languages {
 		@Override
 		protected String[] cmd(int year, int day) {
 			Path tmp;
-			String tmpName = "aoc-out-%d-%d_%s".formatted(year, day, Long.toHexString(Math.abs(Long.hashCode(System.nanoTime()))));
+			String tmpName = "aoc-javac-%d-%d_%s".formatted(year, day, random());
 			try {
 				tmp = Files.createTempDirectory(tmpName);
 			} catch (Exception e) {
@@ -48,6 +48,7 @@ public enum Languages {
 			return Path.of("src", String.valueOf(year), "Day" + day + ".java");
 		}
 	},
+
 	ZIG("template.zig") {
 		public enum Release {
 			Debug, ReleaseFast, ReleaseSafe, ReleaseSmall
@@ -64,6 +65,59 @@ public enum Languages {
 		@Override
 		protected Path getSrcFile(int year, int day) {
 			return Path.of("src", String.valueOf(year), "day" + day + ".zig");
+		}
+	},
+
+	KOTLIN("template.kt") {
+		@Override
+		protected String[] cmd(int year, int day) {
+			try {
+				Process p = new ProcessBuilder("kotlin", "-version").start();
+				p.waitFor();
+				if(p.exitValue() != 0) {
+					throw new IOException("Kotlin not found in $PATH");
+				}
+			} catch (Exception e) {
+				throw unchecked(e);
+			}
+
+			Path tmp;
+			String tmpName = "aoc-kotlinc-%d-%d_%s".formatted(year, day, random());
+			try {
+				tmp = Files.createTempDirectory(tmpName);
+			} catch (Exception e) {
+				throw unchecked(e);
+			}
+
+			try {
+				Process kotlinc = new ProcessBuilder("kotlinc", getSrcFile(year, day).toAbsolutePath().toString(),
+						"-d", tmp.toAbsolutePath().toString())
+						.start();
+
+				kotlinc.waitFor();
+				if(kotlinc.exitValue() != 0) {
+					throw new IOException("kotlinc exited with code " + kotlinc.exitValue());
+				}
+			} catch (Exception e) {
+				throw unchecked(e);
+			}
+
+			try {
+				Files.walk(tmp).sorted((a, b) -> b.getNameCount() - a.getNameCount()).forEach(p -> {
+					if(!Files.isDirectory(p)) {
+						p.toFile().deleteOnExit();
+					}
+				});
+			} catch (IOException e) {
+				throw unchecked(e);
+			}
+
+			return new String[] {"kotlin", "-cp", tmp.toAbsolutePath().toString(), "Day" + day};
+		}
+
+		@Override
+		protected Path getSrcFile(int year, int day) {
+			return Path.of("src", String.valueOf(year), "Day" + day + ".kt");
 		}
 	},
 	;
@@ -142,5 +196,9 @@ public enum Languages {
 	@SuppressWarnings("unchecked")
 	public static <T extends Throwable> RuntimeException unchecked(Throwable t) throws T {
 		throw (T) t;
+	}
+
+	protected static String random() {
+		return Long.toHexString(Math.abs(Long.hashCode(System.nanoTime())));
 	}
 }

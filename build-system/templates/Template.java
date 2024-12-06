@@ -1,7 +1,7 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.PrintStream;
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 public class Day{{day}} {
 	public static Object part1(String input) throws Throwable {
@@ -15,7 +15,7 @@ public class Day{{day}} {
 	public static void main(String[] args) throws Throwable {
 		String input = Files.readString(Paths.get("inputs/{{year}}/{{day}}.txt"));
 		var o = System.out;
-		System.setOut(new PrintStream(new ByteArrayOutputStream()));
+		System.setOut(new PrintStream(OutputStream.nullOutputStream()));
 		part1(input); part2(input);
 		System.setOut(o);
 

@@ -99,6 +99,7 @@ fn isLoop(grid: [][]u8, start: Point, point: Point) !bool {
 
     var current = start;
     var visited = HashSet(State).init();
+    defer visited.deinit();
     var dir = Direction.Up;
 
     while (true) {
@@ -208,7 +209,7 @@ fn HashSet(comptime T: type) type {
             return self.table.contains(e);
         }
 
-        pub fn dealloc(self: *HashSet(T)) void {
+        pub fn deinit(self: *HashSet(T)) void {
             self.table.deinit();
         }
     };

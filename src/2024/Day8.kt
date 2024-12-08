@@ -60,8 +60,9 @@ fun part2_8(input: String): Any? {
                 var dx = y.first - x.first
                 var dy = y.second - x.second
 
-                dx /= gcd(dx, dy)
-                dy /= gcd(dx, dy)
+                val gcd = gcd(dx, dy)
+                dx /= gcd
+                dy /= gcd
 
                 // x backwards
                 var cx = x.first - dx
@@ -84,7 +85,7 @@ fun part2_8(input: String): Any? {
                 // between x and y
                 cx = x.first
                 cy = x.second
-                repeat(gcd(dx, dy) + 1) {
+                repeat(gcd + 1) {
                     set.add(Pair(cx, cy))
                     cx += dx
                     cy += dy

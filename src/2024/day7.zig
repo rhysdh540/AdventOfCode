@@ -59,7 +59,7 @@ fn isValid(equation: Equation, index: usize, currentSum: usize, p2: bool) !bool 
 
     if(p2) {
         const combined = concat(currentSum, equation.nums[index]);
-        if(combined <= equation.target and try isValid(equation, index + 1, combined, p2)) {
+        if(combined <= equation.target and try isValid(equation, index + 1, combined, true)) {
             return true;
         }
     }

@@ -46,7 +46,7 @@ public enum Languages {
 
 		@Override
 		protected Path getSrcFile(int year, int day) {
-			return Path.of("src", String.valueOf(year), "Day" + day + ".java");
+			return Path.of("src", String.valueOf(year), String.valueOf(day), "Day" + day + ".java");
 		}
 	},
 
@@ -58,14 +58,14 @@ public enum Languages {
 		@Override
 		protected String[] cmd(int year, int day) {
 			return new String[] {
-					"zig", "run", getSrcFile(year, day).toAbsolutePath().toString(),
+					"zig", "4.run", getSrcFile(year, day).toAbsolutePath().toString(),
 					"-O", Release.ReleaseFast.name()
 			};
 		}
 
 		@Override
 		protected Path getSrcFile(int year, int day) {
-			return Path.of("src", String.valueOf(year), "day" + day + ".zig");
+			return Path.of("src", String.valueOf(year), String.valueOf(day), "day" + day + ".zig");
 		}
 	},
 
@@ -118,7 +118,7 @@ public enum Languages {
 
 		@Override
 		protected Path getSrcFile(int year, int day) {
-			return Path.of("src", String.valueOf(year), "Day" + day + ".kt");
+			return Path.of("src", String.valueOf(year), String.valueOf(day), "Day" + day + ".kt");
 		}
 	},
 	;

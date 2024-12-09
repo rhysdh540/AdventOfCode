@@ -6,7 +6,7 @@ class Run {
 	public static void main(String[] args) throws Throwable {
 		if(args.length == 0) {
 			System.err.println("error: no arguments provided");
-			System.err.println("Usage: aoc run <language> <year> <day>");
+			System.err.println("Usage: aoc 4.run <language> <year> <day>");
 			System.exit(1);
 		}
 

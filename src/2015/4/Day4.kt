@@ -1,3 +1,5 @@
+import java.lang.invoke.MethodHandles
+import java.lang.invoke.MethodType
 import java.security.MessageDigest
 import java.util.stream.IntStream
 import kotlin.io.path.Path

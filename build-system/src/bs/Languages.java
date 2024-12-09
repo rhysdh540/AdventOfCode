@@ -171,7 +171,7 @@ public enum Languages {
 
 				// if the day is in the future, we don't have access to the input
 				// so return early
-				if(year > Calendar.getInstance().get(Calendar.YEAR) || day > Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+				if(year >= Calendar.getInstance().get(Calendar.YEAR) && day > Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
 					System.out.printf("Skipping input download because the input for %d/%d is not available yet%n", year, day);
 					return;
 				}

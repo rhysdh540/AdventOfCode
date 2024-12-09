@@ -8,15 +8,46 @@ fun part1_4(input: String): Any? {
 }
 
 fun part2_4(input: String): Any? {
-    return run(input, "000000")
+    return run(input, "000000", parallel = true)
 }
 
-fun run(input: String, match: String): Int {
-    return IntStream.iterate(0) { i -> i + 1 }.parallel().filter { i ->
-        val md = MessageDigest.getInstance("MD5")
-        val hash = md.digest((input + i).toByteArray())
-        hash.joinToString("") { "%02x".format(it) }.startsWith(match)
-    }.findFirst().asInt
+fun run(input: String, match: String, parallel: Boolean = false): Int {
+    val md5 = ThreadLocal.withInitial { MessageDigest.getInstance("MD5") }
+
+    val stream = IntStream.iterate(0) { i -> i + 1 }.filter { i ->
+        val hash = md5.get().digest((input + i).toByteArray())
+        hash.hexMatches(match)
+    }
+
+    if(parallel) {
+        stream.parallel()
+    }
+
+    return stream.findFirst().asInt
+}
+
+fun ByteArray.hexMatches(match: String): Boolean {
+    val hexChars = "0123456789abcdef".toCharArray()
+    val len = match.length
+
+    for (i in 0 until len) {
+        val byteIndex = i / 2
+        if (byteIndex >= this.size) {
+            return false
+        }
+        val byte = this[byteIndex].toInt() and 0xFF
+
+        val expectedChar = if (i and 1 == 0) {
+            hexChars[byte ushr 4]
+        } else {
+            hexChars[byte and 0x0F]
+        }
+
+        if (expectedChar != match[i]) {
+            return false
+        }
+    }
+    return true
 }
 
 fun main() {

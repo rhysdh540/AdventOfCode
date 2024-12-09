@@ -154,6 +154,7 @@ public enum Languages {
 			if(Files.exists(src)) {
 				System.out.println("File already exists: " + src);
 			} else {
+				Files.createDirectories(src.getParent());
 				Files.writeString(src, template);
 				System.out.println("File created: " + src);
 			}

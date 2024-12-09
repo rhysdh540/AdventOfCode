@@ -1,3 +1,6 @@
+import Day3.move
+import Day3.origin
+import Day3.plus
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
@@ -28,19 +31,21 @@ fun part2_3(input: String): Any? {
     return visited.size
 }
 
-operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>): Pair<Int, Int> {
-    return Pair(first + other.first, second + other.second)
-}
+object Day3 {
+    operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>): Pair<Int, Int> {
+        return Pair(first + other.first, second + other.second)
+    }
 
-val origin = Pair(0, 0)
+    val origin = Pair(0, 0)
 
-fun move(c: Char): Pair<Int, Int> {
-    return when(c) {
-        'v' -> Pair(0, 1)
-        '>' -> Pair(1, 0)
-        '^' -> Pair(0, -1)
-        '<' -> Pair(-1, 0)
-        else -> throw AssertionError()
+    fun move(c: Char): Pair<Int, Int> {
+        return when (c) {
+            'v' -> Pair(0, 1)
+            '>' -> Pair(1, 0)
+            '^' -> Pair(0, -1)
+            '<' -> Pair(-1, 0)
+            else -> throw AssertionError()
+        }
     }
 }
 

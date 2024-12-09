@@ -2,23 +2,25 @@ import kotlin.io.path.Path
 import kotlin.io.path.readText
 
 fun part1_10(input: String): Any? {
-    return run(40, input)
+    return Day10.run(40, input)
 }
 
 fun part2_10(input: String): Any? {
-    return run(50, input)
+    return Day10.run(50, input)
 }
 
-fun run(n: Int, input: String): Int {
-    val regex = Regex("""(\d)\1*""")
-    var result = input
-    repeat(n) {
-        result = regex.findAll(result).joinToString("") {
-            "${it.value.length}${it.value[0]}"
+object Day10 {
+    fun run(n: Int, input: String): Int {
+        val regex = Regex("""(\d)\1*""")
+        var result = input
+        repeat(n) {
+            result = regex.findAll(result).joinToString("") {
+                "${it.value.length}${it.value[0]}"
+            }
         }
-    }
 
-    return result.length
+        return result.length
+    }
 }
 
 fun main() {

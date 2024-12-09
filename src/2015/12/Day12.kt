@@ -1,24 +1,27 @@
+import Day12.sum
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
 fun part1_12(input: String): Any? {
-    val numbers = Regex("-?\\d+").findAll(input).map { it.value.toInt() }.toList()
-    return numbers.sum()
+    return Regex("-?\\d+").findAll(input).map { it.value.toInt() }.sum()
 }
 
 fun part2_12(input: String): Any? {
     return sum(Zson.parse<Map<String, Any>>(input)!!)
 }
 
-fun sum(json: Any): Int {
-    return when (json) {
-        is Int -> json
-        is List<*> -> json.sumOf { sum(it!!) }
-        is Map<*, *> -> {
-            if (json.values.contains("red")) 0
-            else json.values.sumOf { sum(it!!) }
+object Day12 {
+    fun sum(json: Any): Int {
+        return when (json) {
+            is Int -> json
+            is List<*> -> json.sumOf { sum(it!!) }
+            is Map<*, *> -> {
+                if (json.values.contains("red")) 0
+                else json.values.sumOf { sum(it!!) }
+            }
+
+            else -> 0
         }
-        else -> 0
     }
 }
 

@@ -85,15 +85,16 @@ public enum Languages {
 			Path tmp;
 			String tmpName = "aoc-kotlinc-%d-%d_%s".formatted(year, day, random());
 			try {
-				tmp = Files.createTempDirectory(tmpName);
+				tmp = Files.createTempFile(tmpName, ".jar");
 			} catch (Exception e) {
 				throw unchecked(e);
 			}
 
 			try {
 				Process kotlinc = new ProcessBuilder("kotlinc", getSrcFile(year, day).toAbsolutePath().toString(),
-						"-d", tmp.toAbsolutePath().toString())
-						.start();
+						"-d", tmp.toAbsolutePath().toString(),
+						"-include-runtime"
+				).start();
 
 				kotlinc.waitFor();
 				if(kotlinc.exitValue() != 0) {
@@ -113,7 +114,7 @@ public enum Languages {
 				throw unchecked(e);
 			}
 
-			return new String[] {"kotlin", "-cp", tmp.toAbsolutePath().toString(), "Day" + day};
+			return new String[] {"kotlin", tmp.toAbsolutePath().toString()};
 		}
 
 		@Override

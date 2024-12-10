@@ -58,7 +58,7 @@ public enum Languages {
 		@Override
 		protected String[] cmd(int year, int day) {
 			return new String[] {
-					"zig", "4.run", getSrcFile(year, day).toAbsolutePath().toString(),
+					"zig", "run", getSrcFile(year, day).toAbsolutePath().toString(),
 					"-O", Release.ReleaseFast.name()
 			};
 		}

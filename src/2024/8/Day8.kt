@@ -50,6 +50,8 @@ fun part2_8(input: String): Any? {
         }
     }
 
+    fun gcd(a: Int, b: Int): Int = if (b == 0) abs(a) else gcd(b, a % b)
+
     val set = mutableSetOf<Pair<Int, Int>>()
     for ((_, points) in map) {
         for (j in points.indices) {
@@ -96,8 +98,6 @@ fun part2_8(input: String): Any? {
 
     return set.size
 }
-
-fun gcd(a: Int, b: Int): Int = if (b == 0) abs(a) else gcd(b, a % b)
 
 fun main() {
     val input = Path("inputs/2024/8.txt").readText()

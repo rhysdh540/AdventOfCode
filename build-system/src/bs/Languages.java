@@ -7,7 +7,9 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 @SuppressWarnings("resource")
 public enum Languages {
@@ -172,7 +174,8 @@ public enum Languages {
 
 				// if the day is in the future, we don't have access to the input
 				// so return early
-				if(year >= Calendar.getInstance().get(Calendar.YEAR) && day > Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+				Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("America/New_York")));
+				if(year >= cal.get(Calendar.YEAR) && day > cal.get(Calendar.DAY_OF_MONTH)) {
 					System.out.printf("Skipping input download because the input for %d/%d is not available yet%n", year, day);
 					return;
 				}

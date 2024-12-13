@@ -56,6 +56,7 @@ fun part2_13(input: String): Any? {
     }
 
     // finds the greatest common divisor of a and b, and the coefficients x and y
+    // such that ax + by = gcd(a, b)
     fun gcde(a: Int, b: Int): Triple<Int, Long, Long> {
         if (b == 0) return Triple(a, 1L, 0L)
         val (gcd, x1, y1) = gcde(b, a % b)

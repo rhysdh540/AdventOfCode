@@ -9,10 +9,9 @@ fun part1_2(input: String): Any? {
 }
 
 fun part2_2(input: String): Any? {
+    fun allowed(f: List<Int>) = (f == f.sorted() || f == f.sortedDescending()) && f.zipWithNext().all { abs(it.first - it.second) in 1..3 }
     return input.lines().map { it.split(' ').map { it.toInt() } }.count { l ->
-        { f: List<Int> -> (f == f.sorted() || f == f.sortedDescending()) && f.zipWithNext().all { abs(it.first - it.second) in 1..3 } }.let {
-            it(l) || l.indices.any { it(l.toMutableList().apply { removeAt(it) }) }
-        }
+        allowed(l) || l.indices.any { allowed((l as MutableList<Int>).apply { removeAt(it) }) }
     }
 }
 

@@ -15,15 +15,20 @@ fun part2_7(input: String): Any? {
 }
 
 object Day7 {
+    // returns 3 things:
+    // 1. mappings: a map of output to function
+    // 2. resolved: a cache of output to value (so it doesn't take forever)
+    // 3. get: a function that takes an input and returns the value (this is what we use to get the value of "a")
     fun getMappings(input: String): Triple<MutableMap<String, () -> UShort>, MutableMap<String, UShort>, (String) -> UShort> {
         val mappings = mutableMapOf<String, () -> UShort>()
         val resolved = mutableMapOf<String, UShort>()
 
         fun get(input: String): UShort {
             if (resolved.contains(input)) return resolved[input]!!
-            val result = if (mappings.contains(input)) mappings[input]!!.invoke()
-            else if (input.chars().allMatch { it.toChar() >= '0' && it.toChar() <= '9' }) input.toUShort()
-            else error("unexpected key $input")
+            val result = if (mappings.contains(input))
+                mappings[input]!!.invoke()
+            else
+                input.toUShortOrNull() ?: error("unknown input $input")
             resolved[input] = result
             return result
         }
@@ -37,7 +42,7 @@ object Day7 {
                 }
 
                 2 -> mappings.put(output) {
-                    if (insns[0] != "NOT") error("unexpected prefix operator $insns[0]")
+                    if (insns[0] != "NOT") error("unexpected prefix operator ${insns[0]}")
                     get(insns[1]).inv()
                 }
 

@@ -7,7 +7,7 @@ fun part1_22(input: String): Any? {
         .map { it.split(": ")[1].toInt() }
         .let { Player(hp = it[0], damage = it[1]) }
 
-    return Day22.play(boss = boss)
+    return Day22.play(boss)
 }
 
 fun part2_22(input: String): Any? {
@@ -15,7 +15,7 @@ fun part2_22(input: String): Any? {
         .map { it.split(": ")[1].toInt() }
         .let { Player(hp = it[0], damage = it[1]) }
 
-    return Day22.play(boss = boss, hardMode = true)
+    return Day22.play(boss, hardMode = true)
 }
 
 object Day22 {
@@ -63,8 +63,8 @@ object Day22 {
     )
 
     fun play(
-        player: Player = Player(hp = 50, mana = 500),
         boss: Player,
+        player: Player = Player(hp = 50, mana = 500),
         manaSpent: Int = 0,
         hardMode: Boolean = false,
         playerTurn: Boolean = true,

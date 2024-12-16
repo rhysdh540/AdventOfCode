@@ -33,15 +33,12 @@ object Day11 {
         val hasStraight = (0 until password.size - 2).any {
             password[it] + 1 == password[it + 1] && password[it + 1] + 1 == password[it + 2]
         }
-
         if (!hasStraight) return false
 
         val hasNoIOL = password.none { it == 'i' || it == 'o' || it == 'l' }
-
         if (!hasNoIOL) return false
 
         val hasTwoPairs = String(password).windowed(2).filter { it[0] == it[1] }.distinct().size >= 2
-
         return hasTwoPairs
     }
 }

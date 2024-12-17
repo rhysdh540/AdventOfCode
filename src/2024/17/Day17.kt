@@ -1,3 +1,4 @@
+import java.lang.invoke.MethodHandle
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
@@ -10,7 +11,8 @@ fun part1_17(input: String): Any? {
 
     val instructions = parts[1].drop("Program: ".length).split(",").map { it.toInt() }
 
-    val output = Day17.runProgram(registers, instructions)
+    val t = Triple(registers["A"]!!, registers["B"]!!, registers["C"]!!)
+    val output = Day17.runProgram(t, instructions)
     return output.joinToString(",")
 }
 
@@ -19,7 +21,8 @@ fun part2_17(input: String): Any? {
     val instructions = parts[1].drop("Program: ".length).split(",").map { it.toInt() }
 
     val a = Day17.reconstructInitialA(instructions)
-    val run = Day17.runProgram(mutableMapOf("A" to a.toInt(), "B" to 0, "C" to 0), instructions)
+//    val run = Day17.runProgram(mutableMapOf("A" to a.toInt(), "B" to 0, "C" to 0), instructions)
+    val run = Day17.runProgram(Triple(a, 0, 0), instructions)
     if(run != instructions) {
         error("Reconstructed A value: $a is incorrect")
     }
@@ -28,13 +31,15 @@ fun part2_17(input: String): Any? {
 }
 
 object Day17 {
-    fun runProgram(registers: MutableMap<String, Int>, instructions: List<Int>): List<Int> {
-        fun getComboValue(operand: Int, registers: Map<String, Int>): Int {
+    fun runProgram(registers: Triple<Int, Int, Int>, instructions: List<Int>): List<Int> {
+        var (a, b, c) = registers
+
+        fun getComboValue(operand: Int): Int {
             return when (operand) {
                 in 0..3 -> operand
-                4 -> registers["A"]!!
-                5 -> registers["B"]!!
-                6 -> registers["C"]!!
+                4 -> a
+                5 -> b
+                6 -> c
                 else -> error("Invalid combo operand: $operand")
             }
         }
@@ -49,34 +54,34 @@ object Day17 {
 
             when (opcode) {
                 0 -> { // adv
-                    val power = getComboValue(operand, registers)
-                    registers["A"] = registers["A"]!! / (1 shl power)
+                    val power = getComboValue(operand)
+                    a = a / (1 shl power)
                 }
                 1 -> { // bxl
-                    registers["B"] = registers["B"]!! xor operand
+                    b = b xor operand
                 }
                 2 -> { // bst
-                    registers["B"] = getComboValue(operand, registers) % 8
+                    b = getComboValue(operand) % 8
                 }
                 3 -> { // jnz
-                    if (registers["A"] != 0) {
+                    if (a != 0) {
                         i = operand
                         continue
                     }
                 }
                 4 -> { // bxc
-                    registers["B"] = registers["B"]!! xor registers["C"]!!
+                    b = b xor c
                 }
                 5 -> { // out
-                    output.add(getComboValue(operand, registers) % 8)
+                    output.add(getComboValue(operand) % 8)
                 }
                 6 -> { // bdv
-                    val power = getComboValue(operand, registers)
-                    registers["B"] = registers["A"]!! / (1 shl power)
+                    val power = getComboValue(operand)
+                    b = a / (1 shl power)
                 }
                 7 -> { // cdv
-                    val power = getComboValue(operand, registers)
-                    registers["C"] = registers["A"]!! / (1 shl power)
+                    val power = getComboValue(operand)
+                    c = a / (1 shl power)
                 }
                 else -> error("Unknown opcode: $opcode at position $i")
             }
@@ -92,7 +97,7 @@ object Day17 {
         for(i in desiredOutput.indices.reversed()) {
             a = a shl 3 // move to the left by 3 bits to make room for the next value
             val shortenedProgram = desiredOutput.drop(i)
-            while (runProgram(mutableMapOf("A" to a, "B" to 0, "C" to 0), desiredOutput) != shortenedProgram) {
+            while (runProgram(Triple(a, 0, 0), desiredOutput) != shortenedProgram) {
                 a++
             }
 

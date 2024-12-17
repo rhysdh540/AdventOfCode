@@ -1,4 +1,3 @@
-import java.lang.invoke.MethodHandle
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
@@ -6,13 +5,13 @@ fun part1_17(input: String): Any? {
     val parts = input.split("\n\n")
     val registers = parts[0].lines().associate {
         val (r, v) = Regex("""Register (.): (\d+)""").find(it)!!.destructured
-        r to v.toInt()
+        r to v.toLong()
     }.toMutableMap()
 
     val instructions = parts[1].drop("Program: ".length).split(",").map { it.toInt() }
 
     val t = Triple(registers["A"]!!, registers["B"]!!, registers["C"]!!)
-    val output = Day17.runProgram(t, instructions)
+    val output = Day17.interpret(t, instructions)
     return output.joinToString(",")
 }
 
@@ -20,10 +19,17 @@ fun part2_17(input: String): Any? {
     val parts = input.split("\n\n")
     val instructions = parts[1].drop("Program: ".length).split(",").map { it.toInt() }
 
-    val a = Day17.reconstructInitialA(instructions)
-//    val run = Day17.runProgram(mutableMapOf("A" to a.toInt(), "B" to 0, "C" to 0), instructions)
-    val run = Day17.runProgram(Triple(a, 0, 0), instructions)
-    if(run != instructions) {
+    var a1 = 0L
+    for (i in instructions.indices.reversed()) {
+        a1 = a1 shl 3 // move to the left by 3 bits to make room for the next value
+        val shortenedProgram = instructions.drop(i)
+        while (Day17.interpret(Triple(a1, 0, 0), instructions) != shortenedProgram) {
+            a1++
+        }
+    }
+    val a = a1
+    val run = Day17.interpret(Triple(a, 0, 0), instructions)
+    if (run != instructions) {
         error("Reconstructed A value: $a is incorrect")
     }
 
@@ -31,12 +37,12 @@ fun part2_17(input: String): Any? {
 }
 
 object Day17 {
-    fun runProgram(registers: Triple<Int, Int, Int>, instructions: List<Int>): List<Int> {
+    fun interpret(registers: Triple<Long, Long, Long>, instructions: List<Int>): List<Int> {
         var (a, b, c) = registers
 
-        fun getComboValue(operand: Int): Int {
+        fun getComboValue(operand: Int): Long {
             return when (operand) {
-                in 0..3 -> operand
+                in 0..3 -> operand.toLong()
                 4 -> a
                 5 -> b
                 6 -> c
@@ -54,17 +60,16 @@ object Day17 {
 
             when (opcode) {
                 0 -> { // adv
-                    val power = getComboValue(operand)
-                    a = a / (1 shl power)
+                    a = a / (1 shl getComboValue(operand).toInt())
                 }
                 1 -> { // bxl
-                    b = b xor operand
+                    b = b xor operand.toLong()
                 }
                 2 -> { // bst
                     b = getComboValue(operand) % 8
                 }
                 3 -> { // jnz
-                    if (a != 0) {
+                    if (a != 0L) {
                         i = operand
                         continue
                     }
@@ -73,38 +78,21 @@ object Day17 {
                     b = b xor c
                 }
                 5 -> { // out
-                    output.add(getComboValue(operand) % 8)
+                    output.add((getComboValue(operand) % 8).toInt())
                 }
                 6 -> { // bdv
-                    val power = getComboValue(operand)
-                    b = a / (1 shl power)
+                    b = a / (1 shl getComboValue(operand).toInt())
                 }
                 7 -> { // cdv
-                    val power = getComboValue(operand)
-                    c = a / (1 shl power)
+                    c = a / (1 shl getComboValue(operand).toInt())
                 }
                 else -> error("Unknown opcode: $opcode at position $i")
             }
+
             i += 2
         }
 
         return output
-    }
-
-    fun reconstructInitialA(desiredOutput: List<Int>): Int {
-        var a = 0
-
-        for(i in desiredOutput.indices.reversed()) {
-            a = a shl 3 // move to the left by 3 bits to make room for the next value
-            val shortenedProgram = desiredOutput.drop(i)
-            while (runProgram(Triple(a, 0, 0), desiredOutput) != shortenedProgram) {
-                a++
-            }
-
-            println("Bit $i: ${a and 7}")
-        }
-
-        return a
     }
 }
 

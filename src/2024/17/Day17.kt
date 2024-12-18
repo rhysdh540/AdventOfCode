@@ -23,6 +23,11 @@ fun part1_17(input: String): Any? {
 
     val instructions = parts[1].drop("Program: ".length).split(",").map { it.toInt() }
 
+    if(true) {
+        Day17.compile(instructions, Day17.CompilerOptions(debug = true))
+        return null
+    }
+
     val t = Triple(registers["A"]!!, registers["B"]!!, registers["C"]!!)
     val output = Day17.runCompiled(t, instructions)
     return output.joinToString(",")
@@ -200,12 +205,14 @@ object Day17 {
             error("Program size must be even")
         }
 
+        val insnNames = arrayOf("adv", "bxl", "bst", "jnz", "bxc", "out", "bdv", "cdv")
+
         for(i in program.chunked(2).withIndex()) {
             val (insn, operand) = i.value
             m.visitLabel(labels[i.index])
 
             if(opts.debug) {
-                println("Insn: $insn, Operand: $operand, Label: L${i.index}")
+                println("Insn ${i.index + 1}: ${insnNames[insn]} $operand")
             }
 
             when (insn) {
@@ -322,6 +329,7 @@ object Day17 {
             verify(bytes)
             if (!Path("testing").exists()) Path("testing").createDirectory()
             Path("testing/$name.class").writeBytes(bytes)
+            println("Dumped class file to testing/$name.class")
         }
 
         val clazz = cl.defineClass(name, bytes)

@@ -15,7 +15,7 @@ fun part1_18(input: String): Any? {
 fun part2_18(input: String): Any? {
     val nums = input.lines().map { it.split(",").let { it[0].toInt() to it[1].toInt() } }
     val grid = Array(71) { BooleanArray(71) }
-    for (p in nums) {
+    for (p in nums.drop(1024)) {
         grid[p.first][p.second] = true
 
         if (Day18.solve(grid) == null) {

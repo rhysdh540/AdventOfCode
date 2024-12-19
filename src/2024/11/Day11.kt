@@ -21,7 +21,7 @@ object Day11 {
             if (key in memo) return memo[key]!!
 
             val transformed = when {
-                stone == 0L -> listOf<Long>(1)
+                stone == 0L -> listOf(1L)
                 stone.toString().length % 2 == 0 -> {
                     val s = stone.toString()
                     val half = s.length / 2
@@ -33,11 +33,7 @@ object Day11 {
                 else -> listOf(stone * 2024)
             }
 
-            var total = 0L
-            for (newStone in transformed) {
-                total += count(newStone, n - 1)
-            }
-
+            val total = transformed.sumOf { count(it, n - 1) }
             memo[key] = total
             return total
         }

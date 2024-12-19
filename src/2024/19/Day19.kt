@@ -11,7 +11,7 @@ fun part1_19(input: String): Any? {
         return towels.any { pattern.startsWith(it) && valid(pattern.removePrefix(it)) }
     }
 
-    return patterns.filter { valid(it) }.size
+    return patterns.count { valid(it) }
 }
 
 fun part2_19(input: String): Any? {

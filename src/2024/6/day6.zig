@@ -39,7 +39,7 @@ pub fn part2(input: string) !usize {
 }
 
 fn part2_thread(
-    grid: [][]u8, start: Point,
+    grid: [][]bool, start: Point,
     itr: *std.AutoHashMap(Point, bool).KeyIterator,
     count: *usize,
     itrMutex: *std.Thread.Mutex, countMutex: *std.Thread.Mutex
@@ -83,7 +83,7 @@ fn getVisitedPoints(input: ParsedInput) !HashSet(Point) {
             break;
         }
 
-        if(grid[next.y][next.x] == '#') {
+        if(grid[next.y][next.x]) {
             dir = dir.next();
         } else {
             current = next;
@@ -93,7 +93,7 @@ fn getVisitedPoints(input: ParsedInput) !HashSet(Point) {
     return visited;
 }
 
-fn isLoop(grid: [][]u8, start: Point, point: Point) !bool {
+fn isLoop(grid: [][]bool, start: Point, point: Point) !bool {
     const width = grid[0].len;
     const height = grid.len;
 
@@ -115,7 +115,7 @@ fn isLoop(grid: [][]u8, start: Point, point: Point) !bool {
             return false;
         }
 
-        if(grid[next.y][next.x] == '#' or (next.x == point.x and next.y == point.y)) {
+        if(grid[next.y][next.x] or (next.x == point.x and next.y == point.y)) {
             dir = dir.next();
         } else {
             current = next;
@@ -124,26 +124,29 @@ fn isLoop(grid: [][]u8, start: Point, point: Point) !bool {
 }
 
 inline fn parseInput(input: string) !ParsedInput {
-    const grid = try splitIntoArray(u8, input, "\n");
-    const width = grid[0].len;
-    const height = grid.len;
+    const count = std.mem.count(u8, input, "\n") + 1;
+    const split = try allocator.alloc([]bool, count);
 
-    // look for ^ to initialize start
+    var itr = std.mem.split(u8, input, "\n");
+    var i: usize = 0;
     var start: Point = undefined;
-    for(0..height) |y| {
-        for(0..width) |x| {
-            if(grid[y][x] == '^') {
-                start = Point.of(x, y);
-                break;
+    while(itr.next()) |token| {
+        const copy: []bool = try allocator.alloc(bool, token.len);
+        for(token, 0..) |c, j| {
+            if(c == '^') {
+                start = Point.of(j, i);
             }
+            copy[j] = c == '#';
         }
+        split[i] = copy;
+        i += 1;
     }
 
-    return .{ .grid = grid, .start = start };
+    return .{ .grid = split, .start = start };
 }
 
 const ParsedInput = struct {
-    grid: [][]u8,
+    grid: [][]bool,
     start: Point,
 };
 
@@ -213,23 +216,6 @@ fn HashSet(comptime T: type) type {
             self.table.deinit();
         }
     };
-}
-
-fn splitIntoArray(comptime T: type, input: []const T, separator: []const T) ![][]T {
-    const count = std.mem.count(T, input, separator) + 1;
-    const split = try allocator.alloc([]T, count);
-
-    var itr = std.mem.split(T, input, separator);
-    var i: usize = 0;
-    while(itr.next()) |token| {
-        //token is const, so we need to copy it
-        const copy: []T = try allocator.alloc(T, token.len);
-        @memcpy(copy, token);
-        split[i] = copy;
-        i += 1;
-    }
-
-    return split;
 }
 
 pub fn main() !void {

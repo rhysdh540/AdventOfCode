@@ -2,16 +2,8 @@ import kotlin.io.path.Path
 import kotlin.io.path.readText
 
 fun part1_19(input: String): Any? {
-    val parts = input.split("\n\n")
-    val towels = parts[0].split(", ").toSet()
-    val patterns = parts[1].split("\n")
-
-    fun valid(pattern: String): Boolean {
-        if(pattern.isEmpty()) return true
-        return towels.any { pattern.startsWith(it) && valid(pattern.removePrefix(it)) }
-    }
-
-    return patterns.count { valid(it) }
+    val (towels, patterns) = input.split("\n\n")
+    return patterns.split("\n").count { it.matches(Regex("^(${towels.replace(", ", "|")})*")) }
 }
 
 fun part2_19(input: String): Any? {
@@ -19,16 +11,10 @@ fun part2_19(input: String): Any? {
     val towels = parts[0].split(", ").toSet()
     val patterns = parts[1].split("\n")
 
-    val memo = mutableMapOf<String, Long>()
+    val memo = mutableMapOf<String, Long>("" to 1)
 
-    fun count(p: String): Long {
-        if(p.isEmpty()) return 1
-        memo[p]?.let { return it }
-
-        val c = towels.filter { p.startsWith(it) }.sumOf { count(p.removePrefix(it)) }
-
-        memo[p] = c
-        return c
+    fun count(p: String): Long = memo.getOrPut(p) {
+        towels.filter { p.startsWith(it) }.sumOf { count(p.removePrefix(it)) }
     }
 
     return patterns.sumOf { count(it) }

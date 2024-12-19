@@ -23,11 +23,6 @@ fun part1_17(input: String): Any? {
 
     val instructions = parts[1].drop("Program: ".length).split(",").map { it.toInt() }
 
-    if(true) {
-        Day17.compile(instructions, Day17.CompilerOptions(debug = true))
-        return null
-    }
-
     val t = Triple(registers["A"]!!, registers["B"]!!, registers["C"]!!)
     val output = Day17.runCompiled(t, instructions)
     return output.joinToString(",")
@@ -37,11 +32,13 @@ fun part2_17(input: String): Any? {
     val parts = input.split("\n\n")
     val instructions = parts[1].drop("Program: ".length).split(",").map { it.toInt() }
 
+    val prog = Day17.compile(instructions)
+
     var a = 0L
     for (i in instructions.indices.reversed()) {
         a = a shl 3 // move to the left by 3 bits to make room for the next value
         val shortenedProgram = instructions.drop(i)
-        while (Day17.runInterpreted(Triple(a, 0, 0), instructions) != shortenedProgram) {
+        while (prog(a, 0, 0) != shortenedProgram) {
             a++
         }
     }

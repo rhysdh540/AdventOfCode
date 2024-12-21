@@ -82,24 +82,6 @@ object Day21 {
         start: Pair<Int, Int>,
         end: Pair<Int, Int>
     ): String {
-        fun moveVertical(startRow: Int, endRow: Int): String {
-            val rowDiff = endRow - startRow
-            return when {
-                rowDiff > 0 -> "v".repeat(rowDiff)
-                rowDiff < 0 -> "^".repeat(-rowDiff)
-                else -> ""
-            }
-        }
-
-        fun moveHorizontal(startCol: Int, endCol: Int): String {
-            val colDiff = endCol - startCol
-            return when {
-                colDiff > 0 -> ">".repeat(colDiff)
-                colDiff < 0 -> "<".repeat(-colDiff)
-                else -> ""
-            }
-        }
-
         val commands = StringBuilder()
 
         val (startRow, startCol) = start
@@ -107,13 +89,20 @@ object Day21 {
         val (minRow, maxRow) = minOf(startRow, endRow) to maxOf(startRow, endRow)
         val (minCol, maxCol) = minOf(startCol, endCol) to maxOf(startCol, endCol)
 
-        val hv = {
-            commands.append(moveHorizontal(startCol, endCol))
-            commands.append(moveVertical(startRow, endRow))
+        fun moveVertical() {
+            val rowDiff = endRow - startRow
+            when {
+                rowDiff > 0 -> commands.append("v".repeat(rowDiff))
+                rowDiff < 0 -> commands.append("^".repeat(-rowDiff))
+            }
         }
-        val vh = {
-            commands.append(moveVertical(startRow, endRow))
-            commands.append(moveHorizontal(startCol, endCol))
+
+        fun moveHorizontal() {
+            val colDiff = endCol - startCol
+            when {
+                colDiff > 0 -> commands.append(">".repeat(colDiff))
+                colDiff < 0 -> commands.append("<".repeat(-colDiff))
+            }
         }
 
         if (endCol > startCol) {
@@ -125,9 +114,13 @@ object Day21 {
             val spaceInStartCol = (minRow until maxRow).any { buttons[it][startCol] == ' ' }
 
             if (spaceInEndRow || spaceInStartCol) {
-                hv()
+                // forced to go the othe way to avoid the space
+                moveHorizontal()
+                moveVertical()
             } else {
-                vh()
+                // go preferred way
+                moveVertical()
+                moveHorizontal()
             }
         } else {
             // NW or SW
@@ -138,9 +131,13 @@ object Day21 {
             val spaceInStartRow = buttons[startRow].substring(minCol, maxCol).contains(' ')
 
             if (spaceInEndCol || spaceInStartRow) {
-                vh()
+                // forced to go the othe way to avoid the space
+                moveVertical()
+                moveHorizontal()
             } else {
-                hv()
+                // go preferred way
+                moveHorizontal()
+                moveVertical()
             }
         }
 

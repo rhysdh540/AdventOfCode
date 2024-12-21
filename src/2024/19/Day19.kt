@@ -11,7 +11,7 @@ fun part2_19(input: String): Any? {
     val towels = parts[0].split(", ").toSet()
     val patterns = parts[1].split("\n")
 
-    val memo = mutableMapOf<String, Long>("" to 1)
+    val memo = mutableMapOf("" to 1L)
 
     fun count(p: String): Long = memo.getOrPut(p) {
         towels.filter { p.startsWith(it) }.sumOf { count(p.removePrefix(it)) }

@@ -12,7 +12,7 @@ fun part2_21(input: String): Any? {
 object Day21 {
     fun run(input: String, num: Int): Long {
         return input.lines().sumOf {
-            val len = makePath(it, num, true)
+            val len = makePath(it, num)
             val numericPart = it.dropLast(1).toInt()
             numericPart * len
         }
@@ -24,30 +24,31 @@ object Day21 {
         "123",
         " 0A"
     )
+
     val dirPaths = findShortestPaths(
         " ^A",
         "<v>"
     )
 
-    val makePathCache = mutableMapOf<Pair<String, Int>, Long>()
-
-    fun makePath(combo: String, levels: Int, numpad: Boolean): Long {
+    fun makePath(combo: String, levels: Int, numpad: Boolean = true,
+                 memo: MutableMap<Pair<String, Int>, Long> = mutableMapOf()
+    ): Long {
         val key = Pair(combo, levels)
-        makePathCache[key]?.let { return it }
+        memo[key]?.let { return it }
         val paths = if (numpad) keyPaths else dirPaths
 
         // add A to the front since that's where you start
-        val e = "A$combo".zipWithNext().sumOf { (start, end) ->
+        val result = "A$combo".zipWithNext().sumOf { (start, end) ->
             val path = paths[start]!![end]!!
             if (levels == 0) {
                 return@sumOf path.length.toLong() + 1
             } else {
                 // add A to the path because you have to click A after each move
-                return@sumOf makePath("${path}A", levels - 1, false)
+                return@sumOf makePath("${path}A", levels - 1, false, memo)
             }
         }
-        makePathCache[key] = e
-        return e
+        memo[key] = result
+        return result
     }
 
     // map returned maps a button to a map of buttons and the path to get there
@@ -55,20 +56,14 @@ object Day21 {
         val paths = mutableMapOf<Char, MutableMap<Char, String>>()
 
         // Map each button to its (row, column) position
-        val buttonPositions = mutableMapOf<Char, Pair<Int, Int>>()
-        for (i in buttons.indices) {
-            for (j in buttons[i].indices) {
-                val button = buttons[i][j]
-                if (button != ' ') {
-                    buttonPositions[button] = Pair(i, j)
-                }
-            }
-        }
+        val buttonPositions = buttons.flatMapIndexed { i, row ->
+            row.withIndex().filter { it.value != ' ' }.map { (j, value) -> value to Pair(i, j) }
+        }.toMap()
 
-        for ((button, startPos) in buttonPositions) {
-            for ((button1, endPos) in buttonPositions) {
+        for ((start, startPos) in buttonPositions) {
+            for ((end, endPos) in buttonPositions) {
                 val path = findPath(buttons, startPos, endPos)
-                paths.computeIfAbsent(button) { mutableMapOf() }[button1] = path
+                paths.computeIfAbsent(start) { mutableMapOf() }[end] = path
             }
         }
 

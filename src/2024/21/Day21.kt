@@ -81,8 +81,6 @@ object Day21 {
 
         val (startRow, startCol) = start
         val (endRow, endCol) = end
-        val (minRow, maxRow) = minOf(startRow, endRow) to maxOf(startRow, endRow)
-        val (minCol, maxCol) = minOf(startCol, endCol) to maxOf(startCol, endCol)
 
         fun moveVertical() {
             val rowDiff = endRow - startRow
@@ -100,40 +98,14 @@ object Day21 {
             }
         }
 
-        if (endCol > startCol) {
-            // NE or SE
-            // prefer vh
-            // check that there's no space in endRow or startCol
-
-            val spaceInEndRow = buttons[endRow].substring(minCol, maxCol).contains(' ')
-            val spaceInStartCol = (minRow until maxRow).any { buttons[it][startCol] == ' ' }
-
-            if (spaceInEndRow || spaceInStartCol) {
-                // forced to go the othe way to avoid the space
-                moveHorizontal()
-                moveVertical()
-            } else {
-                // go preferred way
-                moveVertical()
-                moveHorizontal()
-            }
+        if((endCol > startCol && buttons[endRow][startCol] == ' ') // going right and there's a space
+        || (endCol < startCol && buttons[startRow][endCol] != ' ') // going left and there's no space
+            ) {
+            moveHorizontal()
+            moveVertical()
         } else {
-            // NW or SW
-            // prefer hv
-            // check that there's no space in endCol or startRow
-
-            val spaceInEndCol = (minRow until maxRow).any { buttons[it][endCol] == ' ' }
-            val spaceInStartRow = buttons[startRow].substring(minCol, maxCol).contains(' ')
-
-            if (spaceInEndCol || spaceInStartRow) {
-                // forced to go the othe way to avoid the space
-                moveVertical()
-                moveHorizontal()
-            } else {
-                // go preferred way
-                moveHorizontal()
-                moveVertical()
-            }
+            moveVertical()
+            moveHorizontal()
         }
 
         return commands.toString()

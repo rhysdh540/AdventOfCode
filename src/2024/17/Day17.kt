@@ -271,7 +271,7 @@ object Day17 {
                     m.visitInsn(L2I)
                     m.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false)
                     m.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "add", "(Ljava/lang/Object;)Z", false)
-                    m.visitInsn(POP)
+                    m.visitInsn(POP) // pop the boolean result of add
                 }
                 6 -> { // bdv
                     div(lvtB, operand)

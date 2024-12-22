@@ -1,5 +1,7 @@
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.log10
+import kotlin.math.pow
 
 fun part1_11(input: String): Any? {
     return Day11.run(input, 25)
@@ -18,19 +20,16 @@ object Day11 {
             if (n == 0) return 1
 
             val key = stone to n
-            if (key in memo) return memo[key]!!
+            memo[key]?.let { return it }
 
-            val transformed = when {
-                stone == 0L -> listOf(1L)
-                stone.toString().length % 2 == 0 -> {
-                    val s = stone.toString()
-                    val half = s.length / 2
-                    val left = s.substring(0, half).toLong()
-                    val right = s.substring(half).toLong()
-                    listOf(left, right)
+            val transformed = if (stone == 0L) listOf(1L) else {
+                val numDigits = log10(stone.toDouble()).toInt() + 1
+                if (numDigits and 1 == 0) {
+                    val divisor = 10.0.pow(numDigits / 2).toLong()
+                    listOf(stone / divisor, stone % divisor)
+                } else {
+                    listOf(stone * 2024)
                 }
-
-                else -> listOf(stone * 2024)
             }
 
             val total = transformed.sumOf { count(it, n - 1) }

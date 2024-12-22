@@ -30,8 +30,9 @@ object Day21 {
         "<v>"
     )
 
-    fun makePath(combo: String, levels: Int, numpad: Boolean = true,
-                 memo: MutableMap<Pair<String, Int>, Long> = mutableMapOf()
+    fun makePath(
+        combo: String, levels: Int, numpad: Boolean = true,
+        memo: MutableMap<Pair<String, Int>, Long> = mutableMapOf()
     ): Long {
         val key = Pair(combo, levels)
         memo[key]?.let { return it }
@@ -98,9 +99,9 @@ object Day21 {
             }
         }
 
-        if((endCol > startCol && buttons[endRow][startCol] == ' ') // going right and there's a space
-        || (endCol < startCol && buttons[startRow][endCol] != ' ') // going left and there's no space
-            ) {
+        if ((endCol > startCol && buttons[endRow][startCol] == ' ') // going right and there's a space
+         || (endCol < startCol && buttons[startRow][endCol] != ' ') // going left and there's no space
+        ) {
             moveHorizontal()
             moveVertical()
         } else {

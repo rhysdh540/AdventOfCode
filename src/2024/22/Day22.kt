@@ -9,16 +9,26 @@ fun part1_22(input: String): Any? {
 fun part2_22(input: String): Any? {
     val allPrices = mutableMapOf<Int, Long>()
 
-    fun key(diffs: List<Int>): Int {
-        return diffs.fold(0) { acc, diff -> (acc shl 4) or (diff and 0xF) }
+    // hashes the last 4 price diffs from index (i + 5)
+    fun key(prices: List<Long>, i: Int): Int {
+        val a = prices[i].toInt()
+        val b = prices[i + 1].toInt()
+        val c = prices[i + 2].toInt()
+        val d = prices[i + 3].toInt()
+        val e = prices[i + 4].toInt()
+
+        var r = (a - b) and 0xF
+        r = (r shl 4) or ((b - c) and 0xF)
+        r = (r shl 4) or ((c - d) and 0xF)
+        r = (r shl 4) or ((d - e) and 0xF)
+        return r
     }
 
-    input.lines().map { it.toLong() }.forEach { num ->
-        val prices = Day22.seq(num).take(2001).map { it % 10 }.toList()
-        val diffs = prices.zipWithNext { a, b -> (b - a).toInt() }.windowed(4)
+    input.lines().forEach { num ->
+        val prices = Day22.seq(num.toLong()).take(2001).map { it % 10 }.toList()
         val seen = BitSet()
-        prices.drop(4).zip(diffs).forEach { (price, diff) ->
-            val key = key(diff)
+        prices.drop(4).forEachIndexed { i, price ->
+            val key = key(prices, i)
             if(!seen[key]) {
                 seen.set(key)
                 allPrices.merge(key, price, Long::plus)

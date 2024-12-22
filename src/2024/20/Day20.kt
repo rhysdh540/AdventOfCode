@@ -18,7 +18,7 @@ object Day20 {
 
         lateinit var start: Pair<Int, Int>
         lateinit var end: Pair<Int, Int>
-        val points = mutableListOf<Pair<Int, Int>>()
+        val points = mutableSetOf<Pair<Int, Int>>()
         input.lines().forEachIndexed { i, line ->
             line.forEachIndexed { j, c ->
                 if(c == 'S') start = Pair(i, j)
@@ -51,7 +51,7 @@ object Day20 {
 
         var count = 0
         for(i in 0 until pathLength) {
-            for(j in i until pathLength) {
+            for(j in i + 4 until pathLength) {
                 val dist = manhattan(path[i], path[j])
                 if(dist <= cheatLen) {
                     val d1 = distances[path[i]]!!

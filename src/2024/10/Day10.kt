@@ -3,7 +3,9 @@ import kotlin.io.path.readText
 
 fun part1_10(input: String): Any? {
     val grid = input.lines().map { it.map { it.digitToIntOrNull() ?: -10 } }
-    val trailheads = grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) Pair(x, y) else null } }.flatten().filterNotNull().toMutableList()
+    val trailheads =
+        grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) Pair(x, y) else null } }.flatten()
+            .filterNotNull().toMutableList()
     val directions = listOf(Pair(0, -1), Pair(1, 0), Pair(0, 1), Pair(-1, 0))
 
     return trailheads.sumOf {
@@ -32,7 +34,9 @@ fun part1_10(input: String): Any? {
 
 fun part2_10(input: String): Any? {
     val grid = input.lines().map { it.map { it.digitToIntOrNull() ?: -10 } }
-    val trailheads = grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) Pair(x, y) else null } }.flatten().filterNotNull().toMutableList()
+    val trailheads =
+        grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) Pair(x, y) else null } }.flatten()
+            .filterNotNull().toMutableList()
     val directions = listOf(Pair(0, -1), Pair(1, 0), Pair(0, 1), Pair(-1, 0))
 
     return trailheads.sumOf {

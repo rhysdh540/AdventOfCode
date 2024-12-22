@@ -11,7 +11,7 @@ fun part1_7(input: String): Any? {
         Pair(result, nums)
     }
 
-    fun go(nums: List<Int>, target: Long, index: Int, sum: Long): Boolean {
+    fun go(nums: List<Int>, target: Long, index: Int = 1, sum: Long = nums[0].toLong()): Boolean {
         if (index == nums.size) {
             return sum == target
         }
@@ -29,7 +29,7 @@ fun part1_7(input: String): Any? {
 
     var sum = 0L
     for((result, nums) in equations) {
-        if(go(nums, result, 1, nums[0].toLong())) {
+        if(go(nums, result)) {
             sum += result
         }
     }
@@ -51,7 +51,7 @@ fun part2_7(input: String): Any? {
         return newA.toLong()
     }
 
-    fun go(nums: List<Int>, target: Long, index: Int, sum: Long): Boolean {
+    fun go(nums: List<Int>, target: Long, index: Int = 1, sum: Long = nums[0].toLong()): Boolean {
         if (index == nums.size) {
             return sum == target
         }
@@ -71,14 +71,7 @@ fun part2_7(input: String): Any? {
         return false
     }
 
-    var sum = 0L
-    for((result, nums) in equations) {
-        if(go(nums, result, 1, nums[0].toLong())) {
-            sum += result
-        }
-    }
-
-    return sum
+    return equations.filter { (result, nums) -> go(nums, result) }.sumOf { it.first }
 }
 
 fun main() {

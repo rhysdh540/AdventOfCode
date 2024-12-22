@@ -23,14 +23,7 @@ fun part1_9(input: String): Any? {
         }
     }
 
-    var checksum = 0L
-    for ((position, block) in blocks.withIndex()) {
-        if (block != -1) {
-            checksum += position * block
-        }
-    }
-
-    return checksum
+    return blocks.withIndex().filter { it.value != -1 }.sumOf { it.index * it.value.toLong() }
 }
 
 fun part2_9(input: String): Any? {
@@ -44,6 +37,7 @@ fun part2_9(input: String): Any? {
         }
     }
 
+    // free spaces
     fun fs(blocks: List<Int>): List<Pair<Int, Int>> {
         val fs = mutableListOf<Pair<Int, Int>>()
         var start = -1
@@ -76,6 +70,7 @@ fun part2_9(input: String): Any? {
         val span = fs.find { span ->
             span.first + file.len - 1 <= span.second && span.second < file.start
         }
+
         if (span != null) {
             val newStart = span.first
             val newEnd = newStart + file.len - 1
@@ -93,14 +88,7 @@ fun part2_9(input: String): Any? {
         }
     }
 
-    var checksum = 0L
-    for ((pos, block) in blocks.withIndex()) {
-        if (block != -1) {
-            checksum += pos * block
-        }
-    }
-
-    return checksum
+    return blocks.withIndex().filter { it.value != -1 }.sumOf { it.index * it.value.toLong() }
 }
 
 fun main() {

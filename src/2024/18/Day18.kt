@@ -15,15 +15,10 @@ fun part1_18(input: String): Any? {
 fun part2_18(input: String): Any? {
     val nums = input.lines().map { it.split(",").let { it[0].toInt() to it[1].toInt() } }
     val grid = Array(71) { BooleanArray(71) }
-    for (p in nums.drop(1024)) {
-        grid[p.first][p.second] = true
-
-        if (Day18.solve(grid) == null) {
-            return "${p.first},${p.second}"
-        }
-    }
-
-    return null
+    return nums.drop(1024).first {
+        grid[it.first][it.second] = true
+        Day18.solve(grid) == null
+    }.let { "${it.first},${it.second}" }
 }
 
 object Day18 {

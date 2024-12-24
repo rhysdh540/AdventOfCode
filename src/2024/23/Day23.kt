@@ -6,11 +6,11 @@ fun part1_23(input: String): Any? {
         .flatMap { it.split("-").let { (a, b) -> listOf(a to b, b to a) } }
         .groupBy({ it.first }, { it.second })
 
-    return connections.flatMap { (computer, neighbors) ->
-        neighbors.map { n ->
-            neighbors.intersect(connections[n]!!).count { it[0] == 't' || computer[0] == 't' || n[0] == 't' }
+    return connections.entries.sumOf { (computer, neighbors) ->
+        neighbors.sumOf { n ->
+            neighbors.intersect(connections[n]!!).count { computer[0] == 't' || n[0] == 't' || it[0] == 't' }
         }
-    }.sum() / 6
+    } / 6
 }
 
 fun part2_23(input: String): String {

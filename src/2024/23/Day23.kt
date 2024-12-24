@@ -18,20 +18,19 @@ fun part2_23(input: String): String {
         .flatMap { it.split("-").let { (a, b) -> listOf(a to b, b to a) } }
         .groupBy({ it.first }, { it.second })
 
-    val cliques = mutableListOf<Set<String>>()
-
     // Bron-Kerbosch algorithm
     fun bk(
         r: Set<String> = mutableSetOf(), // Current clique
         p: Set<String>,                  // Potential candidates
         x: Set<String> = mutableSetOf(), // Excluded candidates
-    ) {
+        cliques: MutableList<Set<String>> = mutableListOf()
+    ): List<Set<String>> {
+        p as MutableSet; x as MutableSet
+
         if (p.isEmpty() && x.isEmpty()) {
             cliques.add(r)
-            return
+            return cliques
         }
-
-        p as MutableSet; x as MutableSet
 
         val pivot = (p union x).first()
         val neighborsOfPivot = connections[pivot]!!
@@ -41,16 +40,16 @@ fun part2_23(input: String): String {
             bk(
                 r + v,
                 p intersect neighbors,
-                x intersect neighbors
+                x intersect neighbors,
+                cliques
             )
             p.remove(v)
             x.add(v)
         }
+        return cliques
     }
 
-    bk(p = connections.keys.toSet())
-
-    return cliques.maxBy { it.size }.sorted().joinToString(",")
+    return bk(p = connections.keys.toSet()).maxBy { it.size }.sorted().joinToString(",")
 }
 
 fun main() {

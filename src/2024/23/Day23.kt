@@ -19,37 +19,41 @@ fun part2_23(input: String): String {
         .groupBy({ it.first }, { it.second })
 
     // Bron-Kerbosch algorithm
-    fun bk(
+    fun bkMax(
         r: Set<String> = mutableSetOf(), // Current clique
         p: Set<String>,                  // Potential candidates
         x: Set<String> = mutableSetOf(), // Excluded candidates
-        cliques: MutableList<Set<String>> = mutableListOf()
-    ): List<Set<String>> {
+    ): Set<String> {
         p as MutableSet; x as MutableSet
 
         if (p.isEmpty() && x.isEmpty()) {
-            cliques.add(r)
-            return cliques
+            return r // r is a maximal clique
         }
 
         val pivot = (p union x).first()
         val neighborsOfPivot = connections[pivot]!!
 
+        var max = r
         for (v in p - neighborsOfPivot) {
             val neighbors = connections[v]!!
-            bk(
+            val new = bkMax(
                 r + v,
                 p intersect neighbors,
                 x intersect neighbors,
-                cliques
             )
+
+            if (new.size > max.size) {
+                max = new
+            }
+
             p.remove(v)
             x.add(v)
         }
-        return cliques
+
+        return max
     }
 
-    return bk(p = connections.keys.toSet()).maxBy { it.size }.sorted().joinToString(",")
+    return bkMax(p = connections.keys.toSet()).sorted().joinToString(",")
 }
 
 fun main() {

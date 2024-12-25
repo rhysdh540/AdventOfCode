@@ -1,0 +1,17 @@
+# idea junk
+.idea/
+*.iml
+out/
+META-INF/
+
+# macos junk
+.DS_Store
+
+# compiled language junk
+*.class
+*.o
+*.exe
+# idk how to ignore unix executables cause no extension
+
+# definitely don't commit this
+token.txt

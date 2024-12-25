@@ -27,12 +27,6 @@ fun part1_24(input: String): Any? {
 }
 
 fun part2_24(input: String): Any? {
-    fun String.lineMatches(operand1: String, operator: String, operand2: String): Boolean {
-        return this.startsWith("$operand1 $operator $operand2 ->") || this.startsWith("$operand2 $operator $operand1 ->")
-    }
-
-    fun String.lineOutput() = this.split(" -> ")[1]
-
     data class BitAdder(
         val pSum: String,
         val gCarry: String,
@@ -41,12 +35,29 @@ fun part2_24(input: String): Any? {
         val zSum: String
     )
 
+    data class Gate(
+        val input1: String,
+        val operator: String,
+        val input2: String,
+        val output: String
+    ) {
+        fun lineMatches(input1: String, operator: String, input2: String): Boolean {
+            if(this.operator != operator) return false
+            return (this.input1 == input1 && this.input2 == input2) || (this.input1 == input2 && this.input2 == input1)
+        }
+    }
+
+    val gates = input.split("\n\n")[1].lines().map {
+        val (input1, operator, input2, _, output) = it.split(" ")
+        Gate(input1, operator, input2, output)
+    }.toMutableList()
+
     val bitAdders = mutableListOf<BitAdder>()
 
     // this is a very manual solution
     // first understand how a bit adder works
     // then run this program and figure out which wires need to be swapped when it errors
-    // add the swaps to the set at the bottom
+    // add the swaps to the set below(the program will now automatically swap them)
     // repeat until it works (should be 4 times i hope)
 
     // each bit looks like this: (where 00 is the bit number, and cin is the zCarry of the previous bit)
@@ -61,17 +72,29 @@ fun part2_24(input: String): Any? {
 
     )
 
+    for((a, b) in swaps) {
+        val firstGate = gates.single { it.output == a }
+        val secondGate = gates.single { it.output == b }
+        gates.remove(firstGate)
+        gates.remove(secondGate)
+
+        val newFirstGate = Gate(firstGate.input1, firstGate.operator, firstGate.input2, b)
+        val newSecondGate = Gate(secondGate.input1, secondGate.operator, secondGate.input2, a)
+        gates.add(newFirstGate)
+        gates.add(newSecondGate)
+    }
+
     for (i in 0..44) {
         println("// Bit $i")
-        val iPadded = i.toString().padStart(2, '0')
+        val (x, y) = i.toString().padStart(2, '0').let { "x$it" to "y$it" }
 
-        val pSum = input.lines().firstOrNull { it.lineMatches("x$iPadded", "XOR", "y$iPadded") }?.lineOutput()
-            ?: error("pSum not found for bit $i, x$iPadded XOR y$iPadded")
-        println("x$iPadded XOR y$iPadded -> $pSum // pSum")
+        val pSum = gates.firstOrNull { it.lineMatches(x, "XOR", y) }?.output
+            ?: error("pSum not found for bit $i, $x XOR $y")
+        println("$x XOR $y -> $pSum // pSum")
 
-        val gCarry = input.lines().firstOrNull { it.lineMatches("x$iPadded", "AND", "y$iPadded") }?.lineOutput()
-            ?: error("gCarry not found for bit $i, x$iPadded AND y$iPadded")
-        println("x$iPadded AND y$iPadded -> $gCarry // gCarry")
+        val gCarry = gates.firstOrNull { it.lineMatches(x, "AND", y) }?.output
+            ?: error("gCarry not found for bit $i, $x AND $y")
+        println("$x AND $y -> $gCarry // gCarry")
 
         val cin = if (i != 0) bitAdders[i - 1].zCarry else {
             // special case 0 since it has no cin, gCarry is the zCarry
@@ -80,15 +103,15 @@ fun part2_24(input: String): Any? {
             continue
         }
 
-        val cCarry = input.lines().firstOrNull { it.lineMatches(pSum, "AND", cin) }?.lineOutput()
+        val cCarry = gates.firstOrNull { it.lineMatches(pSum, "AND", cin) }?.output
             ?: error("cCarry not found for bit $i, $pSum AND $cin")
         println("$pSum AND $gCarry -> $cin // cCarry")
 
-        val zCarry = input.lines().firstOrNull { it.lineMatches(gCarry, "OR", cCarry) }?.lineOutput()
+        val zCarry = gates.firstOrNull { it.lineMatches(gCarry, "OR", cCarry) }?.output
             ?: error("zCarry not found for bit $i, $gCarry OR $cCarry")
         println("$gCarry OR $cCarry -> $zCarry // zCarry")
 
-        val zSum = input.lines().firstOrNull { it.lineMatches(pSum, "XOR", cin) }?.lineOutput()
+        val zSum = gates.firstOrNull { it.lineMatches(pSum, "XOR", cin) }?.output
             ?: error("zSum not found for bit $i, $pSum XOR $cin")
         println("$pSum XOR $cin -> $zSum // zSum")
 

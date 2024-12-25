@@ -10,7 +10,7 @@ fun part1_23(input: String): Any? {
         neighbors.sumOf { n ->
             neighbors.intersect(connections[n]!!).count { computer[0] == 't' || n[0] == 't' || it[0] == 't' }
         }
-    } / 6
+    }.div(6)
 }
 
 fun part2_23(input: String): String {

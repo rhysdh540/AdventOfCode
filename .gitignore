@@ -7,11 +7,12 @@ META-INF/
 # macos junk
 .DS_Store
 
-# compiled language junk
-*.class
-*.o
-*.exe
-# idk how to ignore unix executables cause no extension
+# gradle junk
+build/
+.gradle/
+
+# aoc inputs
+src/**/resources/*.txt
 
 # definitely don't commit this
 token.txt

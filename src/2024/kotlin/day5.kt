@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 import java.util.Collections
 
 private fun PuzzleInput.part1(): Any? {
-    val (rules, sequences) = splitBy(blankLines).map {
+    val (rules, sequences) = sections.map {
         it.lines().map {
             it.split(Regex("[|,]")).map { it.toInt() }
         }
@@ -14,7 +14,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val (rulesS, sequencesS) = splitBy(blankLines).map { it.split("\n") }
+    val (rulesS, sequencesS) = sections.map { it.split("\n") }
     val rules = rulesS.map { it.split("|") }.map { it[0].toInt() to it[1].toInt() }
     val sequences = sequencesS.map { it.split(",").map { it.toInt() } }
 

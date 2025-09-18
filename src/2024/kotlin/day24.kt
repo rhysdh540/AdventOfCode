@@ -1,7 +1,7 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val (x, l) = splitBy(blankLines)
+    val (x, l) = sections
 
     val mappings = mutableMapOf<String, () -> Boolean>()
     for (line in x.lines()) {
@@ -46,7 +46,7 @@ private fun PuzzleInput.part2(): Any? {
         }
     }
 
-    val gates = splitBy(blankLines)[1].lines().map {
+    val gates = sections[1].lines().map {
         val (input1, operator, input2, _, output) = it.split(" ")
         Gate(input1, operator, input2, output)
     }.toMutableSet()

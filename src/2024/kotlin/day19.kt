@@ -1,12 +1,12 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val (towels, patterns) = splitBy(blankLines)
+    val (towels, patterns) = sections
     return patterns.split("\n").count { it.matches(Regex("^(${towels.replace(", ", "|")})*")) }
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val parts = splitBy(blankLines)
+    val parts = sections
     val towels = parts[0].split(", ").toSet()
     val patterns = parts[1].split("\n")
 

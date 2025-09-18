@@ -10,6 +10,8 @@ class PuzzleInput(raw: String) {
         return input.split(delimiter)
     }
 
+    val sections by lazy { splitBy(blankLines) }
+
     val charGrid: List<List<Char>> by lazy {
         lines.map { it.toList() }
     }

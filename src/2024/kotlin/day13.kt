@@ -1,11 +1,11 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return splitBy(blankLines).map { parseInput(it, 0) }.sumOf { it.solve() }
+    return sections.map { parseInput(it, 0) }.sumOf { it.solve() }
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return splitBy(blankLines).map { parseInput(it, 10_000_000_000_000) }.sumOf { it.solve() }
+    return sections.map { parseInput(it, 10_000_000_000_000) }.sumOf { it.solve() }
 }
 
 private data class ClawMachine(val aX: Int, val aY: Int, val bX: Int, val bY: Int, val pX: Long, val pY: Long) {

@@ -46,8 +46,6 @@ private fun PuzzleInput.part2(): Any? {
         }
     }
 
-    fun gcd(a: Int, b: Int): Int = if (b == 0) abs(a) else gcd(b, a % b)
-
     val set = mutableSetOf<Pair<Int, Int>>()
     for ((_, points) in map) {
         for (j in points.indices) {
@@ -58,7 +56,7 @@ private fun PuzzleInput.part2(): Any? {
                 var dx = y.first - x.first
                 var dy = y.second - x.second
 
-                val gcd = gcd(dx, dy)
+                val gcd = dx gcd dy
                 dx /= gcd
                 dy /= gcd
 

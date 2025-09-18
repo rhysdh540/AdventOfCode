@@ -5,7 +5,7 @@ private fun PuzzleInput.part1(): Any? {
     operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.second][pos.first]
     operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) { this[pos.second][pos.first] = value }
 
-    val (gridStr, insnsStr) = splitBy(blankLines)
+    val (gridStr, insnsStr) = sections
     val grid = gridStr.lines().map { it.toMutableList() }.toMutableList()
     val insns = insnsStr.replace("\n", "")
 
@@ -57,7 +57,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val (gridStr, insnsStr) = splitBy(blankLines)
+    val (gridStr, insnsStr) = sections
     val grid = gridStr.lines().map {
         it.flatMap {
             when (it) {

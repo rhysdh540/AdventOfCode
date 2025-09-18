@@ -15,7 +15,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.writeBytes
 
 private fun PuzzleInput.part1(): Any? {
-    val (regs, insns) = splitBy(blankLines)
+    val (regs, insns) = sections
     val registers = regs.lines().associate {
         val (r, v) = Regex("""Register (.): (\d+)""").find(it)!!.destructured
         r to v.toLong()
@@ -29,7 +29,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val (registers, insns) = splitBy(blankLines)
+    val (_, insns) = sections
     val instructions = insns.drop("Program: ".length).split(",").map { it.toInt() }
 
     val prog = Day17.compile(instructions)

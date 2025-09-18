@@ -1,14 +1,14 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val locks = splitBy(blankLines).filter {
+    val locks = sections.filter {
         it.lines().first().all { it == '#' }
     }.map {
         val skip = it.substringAfter("\n")
         skip.rotateRight().lines().map { it.count { it == '#' } }
     }
 
-    val keys = splitBy(blankLines).filter {
+    val keys = sections.filter {
         it.lines().first().all { it == '.' }
     }.map {
         val skip = it.substringBeforeLast("\n")

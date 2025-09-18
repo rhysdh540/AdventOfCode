@@ -23,14 +23,9 @@ class AocPlugin : Plugin<Project> {
             }
         }
 
-        tasks.register("downloadInput", DownloadInputTask::class.java) {
-            group = "aoc"
-            description = "Download input for Advent of Code puzzles"
-        }
-
         tasks.register("aocInit", InitTask::class.java) {
             group = "aoc"
-            description = "Initialize a new Advent of Code puzzle"
+            description = "Initialize a new Advent of Code puzzle and/or download its input"
         }
     }
 }

@@ -10,10 +10,13 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    "2024Implementation"("org.ow2.asm:asm-tree:9.7.1")
+    "2024Implementation"("org.ow2.asm:asm-util:9.7.1")
+}
+
 kotlin {
-    jvmToolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+    jvmToolchain(21)
 }
 
 tasks.withType<KotlinCompile> {

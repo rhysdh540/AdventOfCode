@@ -1,21 +1,26 @@
 import dev.rdh.aoc.*
-import kotlin.math.abs
 
 private fun PuzzleInput.part1(): Any? {
-    return lines.map { it.spaced.ints }.count {
-        (it == it.sorted() || it == it.sortedDescending()) && it.zipWithNext().all { abs(it.first - it.second) in 1..3 }
-    }
+    val (towels, patterns) = splitBy(blankLines)
+    return patterns.split("\n").count { it.matches(Regex("^(${towels.replace(", ", "|")})*")) }
 }
 
 private fun PuzzleInput.part2(): Any? {
-    fun allowed(f: List<Int>) = (f == f.sorted() || f == f.sortedDescending()) && f.zipWithNext().all { abs(it.first - it.second) in 1..3 }
-    return lines.map { it.spaced.ints }.count { l ->
-        allowed(l) || l.indices.any { allowed(l.toMutableList().apply { removeAt(it) }) }
+    val parts = splitBy(blankLines)
+    val towels = parts[0].split(", ").toSet()
+    val patterns = parts[1].split("\n")
+
+    val memo = mutableMapOf("" to 1L)
+
+    fun count(p: String): Long = memo.getOrPut(p) {
+        towels.filter { p.startsWith(it) }.sumOf { count(p.removePrefix(it)) }
     }
+
+    return patterns.sumOf { count(it) }
 }
 
 fun main() {
-    val input = getInput(2024, 2)
+    val input = getInput(2024, 19)
 
     var start = System.nanoTime()
     var result = input.part1()

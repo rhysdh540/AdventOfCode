@@ -10,6 +10,7 @@ META-INF/
 # gradle junk
 build/
 .gradle/
+.kotlin/
 
 # aoc inputs
 src/**/resources/*.txt

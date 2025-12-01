@@ -31,6 +31,18 @@ abstract class InitTask : DefaultTask() {
         val year = year.get()
         val day = day.get()
 
+        if (year < 2015 || year > now.year) {
+            error("year must be between 2015 and ${now.year}")
+        }
+
+        if (year < 2025 && day !in 1..25) {
+            error("day must be between 1 and 25 before 2025")
+        }
+
+        if (year >= 2025 && day !in 1..12) {
+            error("day must be between 1 and 12 since 2025")
+        }
+
         val code = code
             .replace("{{year}}", year.toString())
             .replace("{{day}}", day.toString())

@@ -1,14 +1,10 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val ranges = input.split(",").map {
-        val s = it.split("-").longs
-        s.first()..s.last()
-    }
-
-    return ranges.sumOf {
+    return splitBy(",").sumOf {
+        val range = it.split("-").longs.let { r -> r.first()..r.last() }
         var total = 0L
-        for (d in 1..(it.last.numDigits / 2)) {
+        for (d in 1..(range.last.numDigits / 2)) {
             // every "interesting" number has the form n = k * 10^d + k = k(10^d + 1)
 
             val m = 10.pow(d) + 1 // n = km, as above
@@ -21,8 +17,8 @@ private fun PuzzleInput.part1(): Any? {
             // given all this, we want to find all n in range with 2d digits
             // L <= mk <= R ==> L/m <= k <= R/m
             // then combine with loK <= k <= hiK
-            val a = Math.ceilDiv(it.first, m).coerceAtLeast(loK)
-            val b = Math.floorDiv(it.last, m).coerceAtMost(hiK)
+            val a = Math.ceilDiv(range.first, m).coerceAtLeast(loK)
+            val b = Math.floorDiv(range.last, m).coerceAtMost(hiK)
 
             // if a > b, then there are no valid k in range
             // if a <= b, then every k in [a, b] is valid
@@ -38,15 +34,11 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val ranges = input.split(",").map {
-        val s = it.split("-").longs
-        s.first()..s.last()
-    }
-
     // can't figure out how to do this mathematically yet
-    return ranges.sumOf {
+    return splitBy(",").sumOf {
+        val range = it.split("-").longs.let { r -> r.first()..r.last() }
         var sum = 0L
-        for (num in it) {
+        for (num in range) {
             val str = num.toString()
             val len = str.length
 

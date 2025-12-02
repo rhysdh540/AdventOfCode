@@ -45,7 +45,7 @@ private fun seq(num: Long) = generateSequence(num) {
 }
 
 fun main() {
-    val input = getInput(2024, 22)
+    val input = PuzzleInput(2024, 22)
 
     var start = System.nanoTime()
     var result = input.part1()

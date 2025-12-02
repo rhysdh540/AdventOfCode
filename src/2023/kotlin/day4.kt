@@ -24,7 +24,7 @@ private fun getWinningNumbers(line: String): Int {
 }
 
 fun main() {
-    val input = getInput(2023, 4)
+    val input = PuzzleInput(2023, 4)
 
     var start = System.nanoTime()
     var result = input.part1()

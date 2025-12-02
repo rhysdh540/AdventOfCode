@@ -26,7 +26,7 @@ private fun calculate(time: Long, distance: Long): Long {
 }
 
 fun main() {
-    val input = getInput(2023, 6)
+    val input = PuzzleInput(2023, 6)
 
     var start = System.nanoTime()
     var result = input.part1()

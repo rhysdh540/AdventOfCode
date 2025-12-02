@@ -59,7 +59,7 @@ private data class Robot(var x: Int, var y: Int, var dx: Int, var dy: Int) {
 }
 
 fun main() {
-    val input = getInput(2024, 14)
+    val input = PuzzleInput(2024, 14)
 
     var start = System.nanoTime()
     var result = input.part1()

@@ -64,7 +64,7 @@ private fun run(insns: List<Pair<String, Long>>): Long {
 }
 
 fun main() {
-    val input = getInput(2023, 18)
+    val input = PuzzleInput(2023, 18)
 
     var start = System.nanoTime()
     var result = input.part1()

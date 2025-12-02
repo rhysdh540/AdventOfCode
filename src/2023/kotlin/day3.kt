@@ -57,7 +57,7 @@ private fun List<List<Char>>.numbers(sym: Symbol): MutableSet<Int> {
 }
 
 fun main() {
-    val input = getInput(2023, 3)
+    val input = PuzzleInput(2023, 3)
 
     var start = System.nanoTime()
     var result = input.part1()

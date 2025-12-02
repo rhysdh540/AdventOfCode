@@ -202,7 +202,7 @@ private data class Rule(val predicate: (Part) -> Boolean, val output: String) {
 }
 
 fun main() {
-    val input = getInput(2023, 19)
+    val input = PuzzleInput(2023, 19)
 
     var start = System.nanoTime()
     var result = input.part1()

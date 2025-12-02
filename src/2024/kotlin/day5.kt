@@ -39,7 +39,7 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 fun main() {
-    val input = getInput(2024, 5)
+    val input = PuzzleInput(2024, 5)
 
     var start = System.nanoTime()
     var result = input.part1()

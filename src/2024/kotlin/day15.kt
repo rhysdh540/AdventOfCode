@@ -152,7 +152,7 @@ private fun pg(grid: List<List<Char>>, robot: Pair<Int, Int>) =
     }.joinToString("\n") { it })
 
 fun main() {
-    val input = getInput(2024, 15)
+    val input = PuzzleInput(2024, 15)
 
     var start = System.nanoTime()
     var result = input.part1()

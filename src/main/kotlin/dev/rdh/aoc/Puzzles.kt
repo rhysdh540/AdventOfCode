@@ -1,7 +1,14 @@
 package dev.rdh.aoc
 
-class PuzzleInput(raw: String) {
-    val input = raw
+class PuzzleInput private constructor(val year: Int, val day: Int, val input: String) {
+    constructor(year: Int, day: Int) : this(year, day, Unit.run {
+        val callerClass = Class.forName(Thread.currentThread().stackTrace[2].className)
+        val resourceName = callerClass.getResource("$day.txt") ?: error("Input file not found for $year/$day")
+        resourceName.readText()
+    })
+
+    constructor(input: String) : this(-1, -1, input)
+
     val lines: List<String> by lazy {
         splitBy("\n")
     }
@@ -39,12 +46,24 @@ class PuzzleInput(raw: String) {
     }
 
     val chars: List<Char> by lazy {
-        raw.toList()
+        input.toList()
     }
 }
 
-fun getInput(year: Int, day: Int): PuzzleInput {
-    val callerClass = Class.forName(Thread.currentThread().stackTrace[2].className)
-    val resourceName = callerClass.getResource("$day.txt") ?: error("Input file not found for $year/$day")
-    return PuzzleInput(resourceName.readText())
+inline fun PuzzleInput.benchmark(part1: PuzzleInput.() -> Any?, part2: PuzzleInput.() -> Any?, iterations: Int = 1000) {
+    val time1 = (1..iterations).sumOf {
+        val start = System.nanoTime()
+        this.part1()
+        System.nanoTime() - start
+    }
+
+    val time2 = (1..iterations).sumOf {
+        val start = System.nanoTime()
+        this.part2()
+        System.nanoTime() - start
+    }
+
+    println("Benchmark results for $year/$day over $iterations iterations:")
+    println("    Part 1: %.2fms".format((time1 / iterations) / 1e6))
+    println("    Part 2: %.2fms".format((time2 / iterations) / 1e6))
 }

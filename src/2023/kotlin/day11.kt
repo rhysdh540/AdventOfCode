@@ -41,7 +41,7 @@ private fun Iterable<Iterable<Boolean>>.expandRows(): List<List<Boolean>> {
 }
 
 fun main() {
-    val input = getInput(2023, 11)
+    val input = PuzzleInput(2023, 11)
 
     var start = System.nanoTime()
     var result = input.part1()

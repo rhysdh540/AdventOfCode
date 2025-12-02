@@ -62,7 +62,7 @@ private fun parseInput(input: String, prizeOffset: Long): ClawMachine {
 }
 
 fun main() {
-    val input = getInput(2024, 13)
+    val input = PuzzleInput(2024, 13)
 
     var start = System.nanoTime()
     var result = input.part1()

@@ -51,7 +51,7 @@ private fun moveRocksNorth(grid: List<List<Char>>): MutableList<MutableList<Char
 }
 
 fun main() {
-    val input = getInput(2023, 14)
+    val input = PuzzleInput(2023, 14)
 
     var start = System.nanoTime()
     var result = input.part1()

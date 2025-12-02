@@ -111,7 +111,7 @@ private fun findPath(
 }
 
 fun main() {
-    val input = getInput(2024, 21)
+    val input = PuzzleInput(2024, 21)
 
     var start = System.nanoTime()
     var result = input.part1()

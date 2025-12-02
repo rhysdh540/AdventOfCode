@@ -72,7 +72,7 @@ private fun PuzzleInput.getPaths(): Sequence<Pair<Set<Pair<Int, Int>>, Int>> {
 }
 
 fun main() {
-    val input = getInput(2024, 16)
+    val input = PuzzleInput(2024, 16)
 
     var start = System.nanoTime()
     var result = input.part1()

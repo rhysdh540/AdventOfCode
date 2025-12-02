@@ -47,7 +47,7 @@ private fun solve(grid: Array<BooleanArray>): Int? {
 }
 
 fun main() {
-    val input = getInput(2024, 18)
+    val input = PuzzleInput(2024, 18)
 
     var start = System.nanoTime()
     var result = input.part1()

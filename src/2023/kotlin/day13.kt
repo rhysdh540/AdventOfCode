@@ -34,7 +34,7 @@ private fun findReflection(grid: List<String>, fixSmudge: Boolean): Int {
 }
 
 fun main() {
-    val input = getInput(2023, 13)
+    val input = PuzzleInput(2023, 13)
 
     var start = System.nanoTime()
     var result = input.part1()

@@ -1,5 +1,4 @@
 import dev.rdh.aoc.*
-import kotlin.math.abs
 
 private fun PuzzleInput.part1(): Any? {
     val w = grid[0].indices
@@ -94,7 +93,7 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 fun main() {
-    val input = getInput(2024, 8)
+    val input = PuzzleInput(2024, 8)
 
     var start = System.nanoTime()
     var result = input.part1()

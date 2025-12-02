@@ -83,7 +83,7 @@ private data class Map(val entries: Array<Entry>) {
 }
 
 fun main() {
-    val input = getInput(2023, 5)
+    val input = PuzzleInput(2023, 5)
 
     var start = System.nanoTime()
     var result = input.part1()

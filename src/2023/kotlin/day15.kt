@@ -39,7 +39,7 @@ private fun String.hash(): Int {
 }
 
 fun main() {
-    val input = getInput(2023, 15)
+    val input = PuzzleInput(2023, 15)
 
     var start = System.nanoTime()
     var result = input.part1()

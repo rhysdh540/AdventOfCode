@@ -354,7 +354,7 @@ private object Day17 {
 }
 
 fun main() {
-    val input = getInput(2024, 17)
+    val input = PuzzleInput(2024, 17)
 
     var start = System.nanoTime()
     var result = input.part1()

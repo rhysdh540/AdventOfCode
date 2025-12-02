@@ -165,7 +165,7 @@ private object Broadcaster : Module {
 }
 
 fun main() {
-    val input = getInput(2023, 20)
+    val input = PuzzleInput(2023, 20)
 
     var start = System.nanoTime()
     var result = input.part1()

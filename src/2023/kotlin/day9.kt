@@ -25,7 +25,7 @@ private fun calculateDifferences(nums: List<Int>): Pair<Int, Int> {
 }
 
 fun main() {
-    val input = getInput(2023, 9)
+    val input = PuzzleInput(2023, 9)
 
     var start = System.nanoTime()
     var result = input.part1()

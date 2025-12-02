@@ -1,4 +1,4 @@
-import dev.rdh.aoc.PuzzleInput
+import dev.rdh.aoc.*
 import kotlin.math.abs
 
 private fun PuzzleInput.part1(): Any? {
@@ -12,7 +12,7 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 fun main() {
-    val input = dev.rdh.aoc.getInput(2024, 1)
+    val input = PuzzleInput(2024, 1)
 
     var start = System.nanoTime()
     var result = input.part1()

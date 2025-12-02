@@ -37,7 +37,7 @@ private fun getRGB(line: String): Triple<Int, Int, Int> {
 }
 
 fun main() {
-    val input = getInput(2023, 2)
+    val input = PuzzleInput(2023, 2)
 
     var start = System.nanoTime()
     var result = input.part1()

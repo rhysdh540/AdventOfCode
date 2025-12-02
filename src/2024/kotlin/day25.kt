@@ -36,7 +36,7 @@ private fun String.rotateRight(): String {
 }
 
 fun main() {
-    val input = getInput(2024, 25)
+    val input = PuzzleInput(2024, 25)
 
     var start = System.nanoTime()
     var result = input.part1()

@@ -1,6 +1,4 @@
-import dev.rdh.aoc.PuzzleInput
-import dev.rdh.aoc.getInput
-import dev.rdh.aoc.plus
+import dev.rdh.aoc.*
 import java.util.*
 
 private fun PuzzleInput.part1(): Any? {
@@ -108,7 +106,7 @@ private fun run(grid: List<List<Int>>, nextStates: State.(states: MutableList<St
 }
 
 fun main() {
-    val input = getInput(2023, 17)
+    val input = PuzzleInput(2023, 17)
 
     var start = System.nanoTime()
     var result = input.part1()

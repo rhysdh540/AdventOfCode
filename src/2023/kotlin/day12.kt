@@ -109,7 +109,7 @@ fun repeat(record: Pair<String, List<Int>>, times: Int): Pair<String, List<Int>>
 }
 
 fun main() {
-    val input = getInput(2023, 12)
+    val input = PuzzleInput(2023, 12)
 
     var start = System.nanoTime()
     var result = input.part1()

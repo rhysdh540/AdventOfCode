@@ -65,7 +65,7 @@ private fun PuzzleInput.run(cheatLen: Int): Int {
 }
 
 fun main() {
-    val input = getInput(2024, 20)
+    val input = PuzzleInput(2024, 20)
 
     var start = System.nanoTime()
     var result = input.part1()

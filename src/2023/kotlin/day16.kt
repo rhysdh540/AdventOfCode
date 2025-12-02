@@ -103,7 +103,7 @@ private fun shoot(grid: List<List<Char>>, start: Beam): Int {
 }
 
 fun main() {
-    val input = getInput(2023, 16)
+    val input = PuzzleInput(2023, 16)
 
     var start = System.nanoTime()
     var result = input.part1()

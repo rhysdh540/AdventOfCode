@@ -39,7 +39,7 @@ private fun PuzzleInput.run(times: Int): Long {
 }
 
 fun main() {
-    val input = getInput(2024, 11)
+    val input = PuzzleInput(2024, 11)
 
     var start = System.nanoTime()
     var result = input.part1()

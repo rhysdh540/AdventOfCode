@@ -168,7 +168,7 @@ private enum class Type(private val t: Char) {
 }
 
 fun main() {
-    val input = getInput(2023, 10)
+    val input = PuzzleInput(2023, 10)
 
     var start = System.nanoTime()
     var result = input.part1()

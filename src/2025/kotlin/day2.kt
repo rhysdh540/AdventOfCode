@@ -5,7 +5,7 @@ private fun PuzzleInput.part1(): Any? {
         val range = it.split("-").longs.let { r -> r.first()..r.last() }
         var total = 0L
         for (d in 1..(range.last.numDigits / 2)) {
-            // every "interesting" number has the form n = k * 10^d + k = k(10^d + 1)
+            // every invalid id has the form n = k * 10^d + k = k(10^d + 1)
 
             val m = 10.pow(d) + 1 // n = km, as above
 
@@ -25,8 +25,7 @@ private fun PuzzleInput.part1(): Any? {
             if (a <= b) {
                 // Σn = Σmk = mΣk from k=a to b
                 // which is just an arithmetic series
-                val sumK = (b - a + 1) * (a + b) / 2
-                total += m * sumK
+                total += m * (b - a + 1) * (a + b) / 2
             }
         }
         total
@@ -58,7 +57,7 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 fun main() {
-    val input = getInput(2025, 2)
+    val input = PuzzleInput(2025, 2)
 
     var start = System.nanoTime()
     var result = input.part1()

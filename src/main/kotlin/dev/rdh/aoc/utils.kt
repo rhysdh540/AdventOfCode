@@ -1,7 +1,6 @@
 package dev.rdh.aoc
 
 import kotlin.math.abs
-import kotlin.math.log10
 
 val Iterable<String>.ints get() = map { it.toInt() }
 val Iterable<String>.longs get() = map { it.toLong() }
@@ -99,3 +98,13 @@ val Long.numDigits: Int
         }
         return count
     }
+
+fun IntRange.sum(): Long {
+    val n = this.last - this.first + 1
+    return n.toLong() * (this.first + this.last) / 2
+}
+
+fun LongRange.sum(): Long {
+    val n = this.last - this.first + 1
+    return n * (this.first + this.last) / 2
+}

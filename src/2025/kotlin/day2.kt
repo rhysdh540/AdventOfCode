@@ -24,8 +24,7 @@ private fun PuzzleInput.part1(): Any? {
             // if a <= b, then every k in [a, b] is valid
             if (a <= b) {
                 // Σn = Σmk = mΣk from k=a to b
-                // which is just an arithmetic series
-                total += m * (b - a + 1) * (a + b) / 2
+                total += m * (a..b).sum()
             }
         }
         total
@@ -33,26 +32,39 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    // can't figure out how to do this mathematically yet
     return splitBy(",").sumOf {
         val range = it.split("-").longs.let { r -> r.first()..r.last() }
-        var sum = 0L
-        for (num in range) {
-            val str = num.toString()
-            val len = str.length
+        // here, an invalid id has the form n = k * (10^{d(t-1)} + 10^{d(t-2)} + ... + 10^d + 1) for t >= 2
+        // which is a geometric series summing to n = k * (10^{dt} - 1) / (10^d - 1)
+        // so let's say that C(d,t) = (10^{dt} - 1) / (10^d - 1), and n=kC(d,t)
+        // given L <= n <= R, we have L/C(d,t) <= k <= R/C(d,t), and all k in that range are valid
 
-            for (m in 1 until len) {
-                if (len % m == 0) {
-                    val base = str.take(m)
-                    val repeats = len / m
-                    if (repeats >= 2 && str == base.repeat(repeats)) {
-                        sum += num
-                        break
+        val seen = mutableSetOf<Long>()
+
+        val maxDigits = range.last.numDigits
+        for (d in 1..maxDigits) {
+            val maxT = maxDigits / d
+            if (maxT < 2) continue // need at least two repeats
+
+            val step = 10.pow(d)
+            val loK = 10.pow(d - 1)
+            val hiK = 10.pow(d) - 1
+
+            for (t in 2..maxT) {
+                val c = (step.pow(t) - 1) / (step - 1)
+                val nMin = loK * c
+                if (nMin > range.last) break // k is only going to get larger, so stop here
+                val a = Math.ceilDiv(range.first, c).coerceAtLeast(loK)
+                val b = Math.floorDiv(range.last, c).coerceAtMost(hiK)
+
+                if (a <= b) {
+                    for (k in a..b) {
+                        seen.add(k * c)
                     }
                 }
             }
         }
-        sum
+        seen.sum()
     }
 }
 

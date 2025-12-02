@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "2.3.0-RC"
 }
 
 apply<dev.rdh.aoc.gradle.AocPlugin>()
@@ -11,8 +11,8 @@ repositories {
 }
 
 dependencies {
-    "2024Implementation"("org.ow2.asm:asm-tree:9.7.1")
-    "2024Implementation"("org.ow2.asm:asm-util:9.7.1")
+    "2024Implementation"("org.ow2.asm:asm-tree:9.9")
+    "2024Implementation"("org.ow2.asm:asm-util:9.9")
 }
 
 kotlin {
@@ -20,5 +20,5 @@ kotlin {
 }
 
 tasks.withType<KotlinCompile> {
-    compilerOptions.freeCompilerArgs.add("-Xcontext-receivers")
+    compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
 }

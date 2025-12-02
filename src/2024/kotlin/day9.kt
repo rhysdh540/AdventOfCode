@@ -58,7 +58,7 @@ private fun PuzzleInput.part2(): Any? {
 
     data class File(val id: Int, var start: Int, var end: Int, val len: Int)
 
-    val files = (0..input.length / 2).map<Int, File> { id ->
+    val files = (0..input.length / 2).map { id ->
         val start = blocks.indexOf(id)
         val end = blocks.lastIndexOf(id)
         File(id, start, end, (end - start + 1))

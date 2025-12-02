@@ -10,9 +10,7 @@ import java.time.ZoneId
 import org.gradle.kotlin.dsl.*
 
 class AocPlugin : Plugin<Project> {
-    override fun apply(project: Project) = project.applyPlugin()
-
-    private fun Project.applyPlugin() {
+    override fun apply(project: Project): Unit = with(project) {
         for (year in 2015..now.year) {
             if (file("src/$year").exists()) {
                 sourceSets.create("$year").apply {

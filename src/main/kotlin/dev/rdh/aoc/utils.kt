@@ -1,6 +1,7 @@
 package dev.rdh.aoc
 
 import kotlin.math.abs
+import kotlin.math.log10
 
 val Iterable<String>.ints get() = map { it.toInt() }
 val Iterable<String>.longs get() = map { it.toLong() }
@@ -67,3 +68,34 @@ infix fun Int.gcd(other: Int): Int = if (other == 0) abs(this) else other gcd (t
 infix fun Long.gcd(other: Long): Long = if (other == 0L) abs(this) else other gcd (this % other)
 infix fun Int.lcm(other: Int): Int = (this / (this gcd other)) * other
 infix fun Long.lcm(other: Long): Long = (this / (this gcd other)) * other
+
+fun Int.pow(exp: Int): Long {
+    var result = 1L
+    repeat(exp) {
+        result *= this
+    }
+    return result
+}
+
+fun Long.pow(exp: Int): Long {
+    var result = 1L
+    repeat(exp) {
+        result *= this
+    }
+    return result
+}
+
+val Int.numDigits: Int
+    get() = toLong().numDigits
+
+val Long.numDigits: Int
+    get() {
+        if (this == 0L) return 1
+        var count = 0
+        var n = abs(this)
+        while (n > 0) {
+            n /= 10
+            count++
+        }
+        return count
+    }

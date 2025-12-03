@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalTypeInference::class)
+@file:Suppress("NOTHING_TO_INLINE")
 
 package dev.rdh.aoc
 
@@ -60,4 +61,19 @@ inline fun <T> Iterable<T>.sumOf(selector: (T) -> Long?): Long {
         sum += selector(element) ?: 0L
     }
     return sum
+}
+
+inline operator fun <T> List<T>.get(range: IntRange): List<T> {
+    return this.subList(range.first, range.last)
+}
+
+@JvmName("getMutable")
+inline operator fun <T> MutableList<T>.get(range: IntRange): MutableList<T> {
+    return (this as List<T>)[range] as MutableList<T>
+}
+
+inline operator fun <T> MutableList<T>.set(range: IntRange, newList: Iterable<T>) {
+    this.subList(range.first, range.last)
+        .clear()
+    this.addAll(range.first, newList.toList())
 }

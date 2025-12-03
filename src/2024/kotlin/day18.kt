@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 import java.util.PriorityQueue
 
 private fun PuzzleInput.part1(): Any? {
-    val nums = input.lines().map { it.split(",").let { it[0].toInt() to it[1].toInt() } }
+    val nums = lines.map { it.split(",").ints.toPair() }
     val grid = Array(71) { BooleanArray(71) }
     for (i in nums.slice(0..1024)) {
         grid[i.first][i.second] = true
@@ -12,7 +12,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val nums = input.lines().map { it.split(",").let { it[0].toInt() to it[1].toInt() } }
+    val nums = lines.map { it.split(",").ints.toPair() }
     val grid = Array(71) { BooleanArray(71) }
     return nums.drop(1024).first {
         grid[it.first][it.second] = true
@@ -46,19 +46,4 @@ private fun solve(grid: Array<BooleanArray>): Int? {
     return null
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 18)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 18).withSolutions({ part1() }, { part2() }).run()

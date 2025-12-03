@@ -21,7 +21,7 @@ private fun PuzzleInput.part1(): Any? {
         r to v.toLong()
     }.toMutableMap()
 
-    val instructions = insns.drop("Program: ".length).split(",").map { it.toInt() }
+    val instructions = insns.drop("Program: ".length).split(",").ints
 
     val t = Triple(registers["A"]!!, registers["B"]!!, registers["C"]!!)
     val output = Day17.runCompiled(t, instructions)
@@ -30,7 +30,7 @@ private fun PuzzleInput.part1(): Any? {
 
 private fun PuzzleInput.part2(): Any? {
     val (_, insns) = sections
-    val instructions = insns.drop("Program: ".length).split(",").map { it.toInt() }
+    val instructions = insns.drop("Program: ".length).split(",").ints
 
     val prog = Day17.compile(instructions)
 
@@ -76,30 +76,38 @@ private object Day17 {
                 0 -> { // adv
                     a = a shr getComboOperand(operand).toInt()
                 }
+
                 1 -> { // bxl
                     b = b xor operand.toLong()
                 }
+
                 2 -> { // bst
                     b = getComboOperand(operand) % 8
                 }
+
                 3 -> { // jnz
                     if (a != 0L) {
                         i = operand
                         continue
                     }
                 }
+
                 4 -> { // bxc
                     b = b xor c
                 }
+
                 5 -> { // out
                     output.add((getComboOperand(operand) % 8).toInt())
                 }
+
                 6 -> { // bdv
                     b = a shr getComboOperand(operand).toInt()
                 }
+
                 7 -> { // cdv
                     c = a shr getComboOperand(operand).toInt()
                 }
+
                 else -> error("Unknown opcode: $opcode at position $i")
             }
 
@@ -136,7 +144,7 @@ private object Day17 {
     )
 
     fun compile(program: List<Int>, opts: CompilerOptions = CompilerOptions()): (Long, Long, Long) -> List<Int> {
-        if(opts.invalidateCache) {
+        if (opts.invalidateCache) {
             compileCache.remove(program)
         } else {
             compileCache[program]?.let { return convert(it) }
@@ -166,14 +174,14 @@ private object Day17 {
          */
         fun getComboOperand(operand: Int, int: Boolean = false) {
             when (operand) {
-                in 0..3 -> m.visitLdcInsn(if(int) operand else operand.toLong())
+                in 0..3 -> m.visitLdcInsn(if (int) operand else operand.toLong())
                 4 -> m.visitVarInsn(LLOAD, lvtA)
                 5 -> m.visitVarInsn(LLOAD, lvtB)
                 6 -> m.visitVarInsn(LLOAD, lvtC)
                 else -> error("Invalid combo operand: $operand")
             }
 
-            if(operand !in 0..3 && int) {
+            if (operand !in 0..3 && int) {
                 m.visitInsn(L2I)
             }
         }
@@ -182,7 +190,7 @@ private object Day17 {
         // store the result of a / (1 << combo(operand)) or a >> combo(operand) into storeIndex
         fun div(storeIndex: Int, operand: Int) {
             m.visitVarInsn(LLOAD, lvtA)
-            if(opts.optimizeDiv) {
+            if (opts.optimizeDiv) {
                 // a = a >> combo(operand)
                 getComboOperand(operand, true)
                 m.visitInsn(LSHR)
@@ -198,17 +206,17 @@ private object Day17 {
 
         val labels = Array(program.size / 2) { Label() }
 
-        if(program.size % 2 != 0) {
+        if (program.size % 2 != 0) {
             error("Program size must be even")
         }
 
         val insnNames = arrayOf("adv", "bxl", "bst", "jnz", "bxc", "out", "bdv", "cdv")
 
-        for(i in program.chunked(2).withIndex()) {
+        for (i in program.chunked(2).withIndex()) {
             val (insn, operand) = i.value
             m.visitLabel(labels[i.index])
 
-            if(opts.debug) {
+            if (opts.debug) {
                 println("Insn ${i.index + 1}: ${insnNames[insn]} $operand")
             }
 
@@ -216,6 +224,7 @@ private object Day17 {
                 0 -> { // adv
                     div(lvtA, operand)
                 }
+
                 1 -> { // bxl
                     // b = b ^ operand
 
@@ -224,11 +233,12 @@ private object Day17 {
                     m.visitInsn(LXOR)
                     m.visitVarInsn(LSTORE, lvtB)
                 }
+
                 2 -> { // bst
                     // b = combo(operand) % 8
 
                     getComboOperand(operand)
-                    if(opts.optimizeMod) {
+                    if (opts.optimizeMod) {
                         m.visitLdcInsn(7L)
                         m.visitInsn(LAND)
                     } else {
@@ -237,6 +247,7 @@ private object Day17 {
                     }
                     m.visitVarInsn(LSTORE, lvtB)
                 }
+
                 3 -> { // jnz
                     // if a != 0 goto operand
 
@@ -245,6 +256,7 @@ private object Day17 {
                     m.visitInsn(LCMP)
                     m.visitJumpInsn(IFNE, labels[operand])
                 }
+
                 4 -> { // bxc
                     // b = b ^ c
 
@@ -253,12 +265,13 @@ private object Day17 {
                     m.visitInsn(LXOR)
                     m.visitVarInsn(LSTORE, lvtB)
                 }
+
                 5 -> { // out
                     // combo(operand) % 8
 
                     m.visitVarInsn(ALOAD, lvtOutput)
                     getComboOperand(operand)
-                    if(opts.optimizeMod) {
+                    if (opts.optimizeMod) {
                         m.visitLdcInsn(7L)
                         m.visitInsn(LAND)
                     } else {
@@ -273,16 +286,19 @@ private object Day17 {
                     m.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "add", "(Ljava/lang/Object;)Z", false)
                     m.visitInsn(POP) // pop the boolean result of add
                 }
+
                 6 -> { // bdv
                     div(lvtB, operand)
                 }
+
                 7 -> { // cdv
                     div(lvtC, operand)
                 }
+
                 else -> error(buildString {
                     val index = i.index * 2
                     append("Unknown opcode: $insn at position ${index + 1}\n")
-                    if(program.size <= 16) {
+                    if (program.size <= 16) {
                         append(program.joinToString(","))
                         append("\n")
                         append("  ".repeat(index))
@@ -302,7 +318,7 @@ private object Day17 {
         m.visitVarInsn(ALOAD, lvtOutput)
         m.visitInsn(ARETURN)
 
-        if(opts.variableNames) {
+        if (opts.variableNames) {
             m.visitParameter("a", 0)
             m.visitParameter("b", 0)
             m.visitParameter("c", 0)
@@ -322,7 +338,7 @@ private object Day17 {
 
         val bytes = w.toByteArray()
 
-        if(opts.debug) {
+        if (opts.debug) {
             verify(bytes)
             if (!Path("testing").exists()) Path("testing").createDirectory()
             Path("testing/$name.class").writeBytes(bytes)
@@ -353,19 +369,4 @@ private object Day17 {
     }
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 17)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 17).withSolutions({ part1() }, { part2() }).run()

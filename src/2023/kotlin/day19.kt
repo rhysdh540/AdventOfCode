@@ -26,7 +26,8 @@ private fun PuzzleInput.part1(): Any? {
 
         while (true) {
             val rules = workflows[currentWorkflow] ?: error("No workflow named $currentWorkflow")
-            val rule = rules.firstOrNull { it.predicate(part) } ?: error("No rule matched for $part in workflow $currentWorkflow")
+            val rule = rules.firstOrNull { it.predicate(part) }
+                ?: error("No rule matched for $part in workflow $currentWorkflow")
             if (rule.output == "A") {
                 accepted.add(part)
                 break
@@ -201,19 +202,4 @@ private data class Rule(val predicate: (Part) -> Boolean, val output: String) {
     )
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 19)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 19).withSolutions({ part1() }, { part2() }).run()

@@ -8,25 +8,11 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    fun allowed(f: List<Int>) = (f == f.sorted() || f == f.sortedDescending()) && f.zipWithNext().all { abs(it.first - it.second) in 1..3 }
+    fun allowed(f: List<Int>) =
+        (f == f.sorted() || f == f.sortedDescending()) && f.zipWithNext().all { abs(it.first - it.second) in 1..3 }
     return lines.map { it.spaced.ints }.count { l ->
         allowed(l) || l.indices.any { allowed(l.toMutableList().apply { removeAt(it) }) }
     }
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 2)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 2).withSolutions({ part1() }, { part2() }).run()

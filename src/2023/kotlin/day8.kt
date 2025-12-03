@@ -9,7 +9,7 @@ private fun PuzzleInput.part1(): Any? {
     }
 
     return generateSequence("AAA" to 0) { (it, count) ->
-        if(it == "ZZZ") null
+        if (it == "ZZZ") null
         else {
             val (left, right) = nodes[it]!!
             val next = if (insns[count % insns.size]) right else left
@@ -28,7 +28,7 @@ private fun PuzzleInput.part2(): Any? {
 
     val periods = nodes.filter { it.key[2] == 'A' }.map {
         generateSequence(it.key to 0) { (it, count) ->
-            if(it[2] == 'Z') null
+            if (it[2] == 'Z') null
             else {
                 val (left, right) = nodes[it]!!
                 val next = if (insns[count % insns.size]) right else left
@@ -40,19 +40,4 @@ private fun PuzzleInput.part2(): Any? {
     return periods.reduce(Long::lcm)
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 8)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 8).withSolutions({ part1() }, { part2() }).run()

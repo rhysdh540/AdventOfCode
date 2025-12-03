@@ -29,7 +29,7 @@ private fun PuzzleInput.part2(): Any? {
 
 private fun String.hash(): Int {
     var current = 0
-    for(c in this) {
+    for (c in this) {
         current += c.code
         current *= 17
         current %= 256
@@ -38,19 +38,4 @@ private fun String.hash(): Int {
     return current
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 15)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 15).withSolutions({ part1() }, { part2() }).run()

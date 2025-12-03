@@ -3,13 +3,16 @@ import dev.rdh.aoc.*
 private fun PuzzleInput.part1(): Any? {
     operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = Pair(first + other.first, second + other.second)
     operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.second][pos.first]
-    operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) { this[pos.second][pos.first] = value }
+    operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
+        this[pos.second][pos.first] = value
+    }
 
     val (gridStr, insnsStr) = sections
     val grid = gridStr.lines().map { it.toMutableList() }.toMutableList()
     val insns = insnsStr.replace("\n", "")
 
-    var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') Pair(x, y) else null } }.flatten().filterNotNull().first()
+    var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') Pair(x, y) else null } }.flatten()
+        .filterNotNull().first()
     grid[robot] = '.'
     val dirs = listOf(Pair(0, -1), Pair(1, 0), Pair(0, 1), Pair(-1, 0))
 
@@ -71,7 +74,8 @@ private fun PuzzleInput.part2(): Any? {
     }.toMutableList()
     val insns = insnsStr.replace("\n", "")
 
-    var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') Pair(x, y) else null } }.flatten().filterNotNull().first()
+    var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') Pair(x, y) else null } }.flatten()
+        .filterNotNull().first()
     grid[robot] = '.'
 
     val dirs = listOf(Pair(0, -1), Pair(1, 0), Pair(0, 1), Pair(-1, 0))
@@ -86,9 +90,9 @@ private fun PuzzleInput.part2(): Any? {
         val rNext = right + dir
         val lNext = left + dir
 
-        if(grid[rNext] == '#' || grid[lNext] == '#') return false
-        if(grid[rNext] in "[]" && rNext != left && !canMoveBoxes(rNext, dir)) return false
-        if(grid[lNext] in "[]" && lNext != right && !canMoveBoxes(lNext, dir)) return false
+        if (grid[rNext] == '#' || grid[lNext] == '#') return false
+        if (grid[rNext] in "[]" && rNext != left && !canMoveBoxes(rNext, dir)) return false
+        if (grid[lNext] in "[]" && lNext != right && !canMoveBoxes(lNext, dir)) return false
         return true
     }
 
@@ -102,8 +106,8 @@ private fun PuzzleInput.part2(): Any? {
         val rNext = right + dir
         val lNext = left + dir
 
-        if(grid[rNext] in "[]" && rNext != left) moveBoxes(rNext, dir)
-        if(grid[lNext] in "[]" && lNext != right) moveBoxes(lNext, dir)
+        if (grid[rNext] in "[]" && rNext != left) moveBoxes(rNext, dir)
+        if (grid[lNext] in "[]" && lNext != right) moveBoxes(lNext, dir)
 
         grid[right] = '.'
         grid[left] = '.'
@@ -142,7 +146,10 @@ private fun PuzzleInput.part2(): Any? {
 
 private operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = Pair(first + other.first, second + other.second)
 private operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.second][pos.first]
-private operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) { this[pos.second][pos.first] = value }
+private operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
+    this[pos.second][pos.first] = value
+}
+
 private fun <T> Iterable<T>.sumIndexed(transform: (index: Int, T) -> Int) = mapIndexed(transform).sum()
 private fun pg(grid: List<List<Char>>, robot: Pair<Int, Int>) =
     println(grid.mapIndexed { y, row ->
@@ -151,19 +158,4 @@ private fun pg(grid: List<List<Char>>, robot: Pair<Int, Int>) =
         }.joinToString("")
     }.joinToString("\n") { it })
 
-fun main() {
-    val input = PuzzleInput(2024, 15)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 15).withSolutions({ part1() }, { part2() }).run()

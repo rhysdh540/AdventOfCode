@@ -2,8 +2,6 @@
 
 package dev.rdh.aoc
 
-import kotlin.system.exitProcess
-
 class PuzzleInput private constructor(val year: Int, val day: Int, val input: String) {
     constructor(year: Int, day: Int) : this(year, day, Unit.run {
         val callerClass = Class.forName(Thread.currentThread().stackTrace[2].className)
@@ -45,15 +43,41 @@ class PuzzleInput private constructor(val year: Int, val day: Int, val input: St
         return charGrid.map { row -> row.map { it.digitToIntOrNull() ?: default } }
     }
 
-    val ints: List<Int> by lazy {
-        lines.map { it.toInt() }
-    }
-
     val chars: List<Char> by lazy {
         input.toList()
     }
 
-    inline fun benchmark(part1: PuzzleInput.() -> Any?, part2: PuzzleInput.() -> Any?, iterations: Int = 1000) {
+    fun withSolutions(
+        part1: PuzzleInput.() -> Any?,
+        part2: PuzzleInput.() -> Any?
+    ): Solution {
+        return Solution(this, part1, part2)
+    }
+}
+
+class Solution(val input: PuzzleInput,
+               private val part1: PuzzleInput.() -> Any?,
+               private val part2: PuzzleInput.() -> Any?) {
+    fun part1() = input.part1()
+    fun part2() = input.part2()
+
+    fun run() {
+        var start = System.nanoTime()
+        var result = part1()
+        var end = System.nanoTime()
+        println("Advent of Code ${input.year}/${input.day}")
+        println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
+        println(result)
+
+        start = System.nanoTime()
+        result = part2()
+        end = System.nanoTime()
+        println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
+        println(result)
+        println("----------------------")
+    }
+
+    fun benchmark(iterations: Int = 1000) {
         repeat(iterations) { part1(); part2() }
 
         val time1 = (1..iterations).sumOf {
@@ -68,9 +92,8 @@ class PuzzleInput private constructor(val year: Int, val day: Int, val input: St
             System.nanoTime() - start
         }
 
-        println("Benchmark results for $year/$day over $iterations iterations:")
+        println("Benchmark results for ${input.year}/${input.day} over $iterations iterations:")
         println("    Part 1: %.2fms".format((time1 / iterations) / 1e6))
         println("    Part 2: %.2fms".format((time2 / iterations) / 1e6))
-        exitProcess(0)
     }
 }

@@ -12,12 +12,12 @@ private fun PuzzleInput.part1(): Any? {
 
     val quadrants = IntArray(4)
     robots.forEach {
-        if(it.x < 50) {
-            if(it.y < 51) quadrants[0]++
-            else if(it.y > 51) quadrants[2]++
-        } else if(it.x > 50) {
-            if(it.y < 51) quadrants[1]++
-            else if(it.y > 51) quadrants[3]++
+        if (it.x < 50) {
+            if (it.y < 51) quadrants[0]++
+            else if (it.y > 51) quadrants[2]++
+        } else if (it.x > 50) {
+            if (it.y < 51) quadrants[1]++
+            else if (it.y > 51) quadrants[3]++
         }
     }
 
@@ -37,7 +37,7 @@ private fun PuzzleInput.part2(): Any? {
         // The input generator likely started from a grid with no overlapping robots (when it started with the tree picture)
         // and then moved backwards to the initial state
         // So we can just check if there are no overlapping robots
-        if(robots.all { r -> robots.count { it.x == r.x && it.y == r.y } == 1 }) {
+        if (robots.all { r -> robots.count { it.x == r.x && it.y == r.y } == 1 }) {
             //uncomment to print the grid
 //            Array(103) { x -> CharArray(101) { y -> if(robots.any { it.x == y && it.y == x }) '#' else '.' } }
 //                .forEach { println(it.concatToString()) }
@@ -58,19 +58,4 @@ private data class Robot(var x: Int, var y: Int, var dx: Int, var dy: Int) {
     }
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 14)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 14).withSolutions({ part1() }, { part2() }).run()

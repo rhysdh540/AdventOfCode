@@ -3,7 +3,7 @@ import kotlin.math.sqrt
 
 private fun PuzzleInput.part1(): Any? {
     val (times, distances) = lines.map {
-        it.substring(it.indexOf(':') + 1).split(' ').filter { it.isNotEmpty() }.map { it.toInt() }
+        it.substring(it.indexOf(':') + 1).split(' ').filter { it.isNotEmpty() }.ints
     }
 
     return (times zip distances).map { (time, distance) -> calculate(time.toLong(), distance.toLong()) }
@@ -25,19 +25,4 @@ private fun calculate(time: Long, distance: Long): Long {
     return root1 - root2
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 6)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 6).withSolutions({ part1() }, { part2() }).run()

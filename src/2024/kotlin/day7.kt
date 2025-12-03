@@ -15,11 +15,11 @@ private fun PuzzleInput.part1(): Any? {
             return sum == target
         }
 
-        if(go(nums, target, index + 1, sum + nums[index])) {
+        if (go(nums, target, index + 1, sum + nums[index])) {
             return true
         }
 
-        if(go(nums, target, index + 1, sum * nums[index])) {
+        if (go(nums, target, index + 1, sum * nums[index])) {
             return true
         }
 
@@ -48,15 +48,15 @@ private fun PuzzleInput.part2(): Any? {
             return sum == target
         }
 
-        if(go(nums, target, index + 1, sum + nums[index])) {
+        if (go(nums, target, index + 1, sum + nums[index])) {
             return true
         }
 
-        if(go(nums, target, index + 1, sum * nums[index])) {
+        if (go(nums, target, index + 1, sum * nums[index])) {
             return true
         }
 
-        if(go(nums, target, index + 1, sum concat nums[index])) {
+        if (go(nums, target, index + 1, sum concat nums[index])) {
             return true
         }
 
@@ -66,19 +66,4 @@ private fun PuzzleInput.part2(): Any? {
     return equations.filter { (result, nums) -> go(nums, result) }.sumOf { it.first }
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 7)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 7).withSolutions({ part1() }, { part2() }).run()

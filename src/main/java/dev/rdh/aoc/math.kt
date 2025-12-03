@@ -64,3 +64,11 @@ inline operator fun BigInteger.times(other: BigInteger): BigInteger = this.multi
 inline operator fun BigInteger.div(other: BigInteger): BigInteger = this.divide(other)
 inline operator fun BigInteger.rem(other: BigInteger): BigInteger = this.remainder(other)
 inline operator fun BigInteger.unaryMinus(): BigInteger = this.negate()
+
+infix fun UShort.shr(other: UShort): UShort {
+    return (this.toInt() shr other.toInt()).toUShort()
+}
+
+infix fun UShort.shl(other: UShort): UShort {
+    return (this.toInt() shl other.toInt()).toUShort()
+}

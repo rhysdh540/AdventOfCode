@@ -79,7 +79,8 @@ private fun PuzzleInput.part2(): Any? {
                     }
 
                     visitedStates.add(state)
-                    val nextPos = Pair(pos.first + directions[direction].first, pos.second + directions[direction].second)
+                    val nextPos =
+                        Pair(pos.first + directions[direction].first, pos.second + directions[direction].second)
                     if (nextPos.first !in grid.indices || nextPos.second !in grid[0].indices) {
                         break // exit grid
                     }
@@ -99,19 +100,4 @@ private fun PuzzleInput.part2(): Any? {
     return positions.size
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 6)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 6).withSolutions({ part1() }, { part2() }).run()

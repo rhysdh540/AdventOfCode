@@ -16,7 +16,7 @@ private data class Symbol(val symbol: Char, val x: Int, val y: Int) {
     fun getSurrounding(): Array<IntArray> {
         return arrayOf(
             intArrayOf(x - 1, y - 1), intArrayOf(x, y - 1), intArrayOf(x + 1, y - 1),
-            intArrayOf(x - 1, y),                           intArrayOf(x + 1, y),
+            intArrayOf(x - 1, y), intArrayOf(x + 1, y),
             intArrayOf(x - 1, y + 1), intArrayOf(x, y + 1), intArrayOf(x + 1, y + 1)
         )
     }
@@ -26,7 +26,7 @@ private fun List<List<Char>>.symbols(): List<Symbol> {
     val symbols = mutableListOf<Symbol>()
     for (y in indices) {
         for (x in this[y].indices) {
-            if(this[y][x] in "@#$%^&*\\-=+/") {
+            if (this[y][x] in "@#$%^&*\\-=+/") {
                 symbols.add(Symbol(this[y][x], x, y))
             }
         }
@@ -37,16 +37,16 @@ private fun List<List<Char>>.symbols(): List<Symbol> {
 
 private fun List<List<Char>>.numbers(sym: Symbol): MutableSet<Int> {
     val numbers = mutableSetOf<Int>()
-    for((x, y) in sym.getSurrounding()) {
+    for ((x, y) in sym.getSurrounding()) {
         var (x, y) = x to y
         if (!this[y][x].isDigit()) continue
-        while(x >= 0 && this[y][x] != '.' && this[y][x].isDigit()) {
+        while (x >= 0 && this[y][x] != '.' && this[y][x].isDigit()) {
             x--
         }
 
         x++
         val start = x
-        while(x < this[y].size && this[y][x] != '.' && this[y][x].isDigit()) {
+        while (x < this[y].size && this[y][x] != '.' && this[y][x].isDigit()) {
             x++
         }
 
@@ -56,19 +56,4 @@ private fun List<List<Char>>.numbers(sym: Symbol): MutableSet<Int> {
     return numbers
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 3)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 3).withSolutions({ part1() }, { part2() }).run()

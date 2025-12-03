@@ -102,19 +102,4 @@ private fun shoot(grid: List<List<Char>>, start: Beam): Int {
     return count
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 16)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 16).withSolutions({ part1() }, { part2() }).run()

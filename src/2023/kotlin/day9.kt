@@ -16,7 +16,7 @@ private fun calculateDifferences(line: String): Pair<Int, Int> {
 
 private fun calculateDifferences(nums: List<Int>): Pair<Int, Int> {
     val differences = nums.zipWithNext { a, b -> b - a }
-    if(differences.all { it == 0 }) return Pair(0, 0)
+    if (differences.all { it == 0 }) return Pair(0, 0)
 
     val nextPair = calculateDifferences(differences)
     val prev = differences.first() - nextPair.first
@@ -24,19 +24,4 @@ private fun calculateDifferences(nums: List<Int>): Pair<Int, Int> {
     return Pair(prev, next)
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 9)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 9).withSolutions({ part1() }, { part2() }).run()

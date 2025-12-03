@@ -94,28 +94,28 @@ private data class PipePart(val type: Type, val x: Int, val y: Int) {
     fun findAdjacent(grid: Array<Array<PipePart>>): MutableList<PipePart> {
         val result = mutableListOf<PipePart>()
 
-        if(y > 0) {
+        if (y > 0) {
             val north = grid[y - 1][x]
             if (type.hasNorth() && north.type.hasSouth()) {
                 result.add(north)
             }
         }
 
-        if(y < grid.size - 1) {
+        if (y < grid.size - 1) {
             val south = grid[y + 1][x]
             if (type.hasSouth() && south.type.hasNorth()) {
                 result.add(south)
             }
         }
 
-        if(x < grid[y].size - 1) {
+        if (x < grid[y].size - 1) {
             val east = grid[y][x + 1]
             if (type.hasEast() && east.type.hasWest()) {
                 result.add(east)
             }
         }
 
-        if(x > 0) {
+        if (x > 0) {
             val west = grid[y][x - 1]
             if (type.hasWest() && west.type.hasEast()) {
                 result.add(west)
@@ -144,6 +144,7 @@ private enum class Type(private val t: Char) {
     SOUTH_WEST('7'),
     EMPTY('.'),
     ;
+
     fun hasNorth(): Boolean {
         return this == VERTICAL || this == NORTH_EAST || this == NORTH_WEST || this == START
     }
@@ -167,19 +168,4 @@ private enum class Type(private val t: Char) {
     }
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 10)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 10).withSolutions({ part1() }, { part2() }).run()

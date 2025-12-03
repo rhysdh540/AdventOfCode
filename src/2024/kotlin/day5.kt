@@ -4,7 +4,7 @@ import java.util.Collections
 private fun PuzzleInput.part1(): Any? {
     val (rules, sequences) = sections.map {
         it.lines().map {
-            it.split(Regex("[|,]")).map { it.toInt() }
+            it.split(Regex("[|,]")).ints
         }
     }
 
@@ -15,8 +15,8 @@ private fun PuzzleInput.part1(): Any? {
 
 private fun PuzzleInput.part2(): Any? {
     val (rulesS, sequencesS) = sections.map { it.split("\n") }
-    val rules = rulesS.map { it.split("|") }.map { it[0].toInt() to it[1].toInt() }
-    val sequences = sequencesS.map { it.split(",").map { it.toInt() } }
+    val rules = rulesS.map { it.split("|") }.map { it.ints.toPair() }
+    val sequences = sequencesS.map { it.split(",").ints }
 
     return sequences.filter { seq ->
         var valid = true
@@ -38,19 +38,4 @@ private fun PuzzleInput.part2(): Any? {
     }.sumOf { it[it.size / 2] }
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 5)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 5).withSolutions({ part1() }, { part2() }).run()

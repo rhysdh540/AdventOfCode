@@ -28,7 +28,7 @@ private fun PuzzleInput.part2(): Any? {
         val seen = BitSet()
         prices.drop(4).forEachIndexed { i, price ->
             val key = key(prices, i)
-            if(!seen[key]) {
+            if (!seen[key]) {
                 seen.set(key)
                 allPrices.merge(key, price, Long::plus)
             }
@@ -44,19 +44,4 @@ private fun seq(num: Long) = generateSequence(num) {
     n xor ((n shl 11) and 0xFFFFFFL)
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 22)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 22).withSolutions({ part1() }, { part2() }).run()

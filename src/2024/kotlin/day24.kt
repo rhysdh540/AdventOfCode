@@ -41,7 +41,7 @@ private fun PuzzleInput.part2(): Any? {
         val output: String
     ) {
         fun lineMatches(input1: String, operator: String, input2: String): Boolean {
-            if(this.operator != operator) return false
+            if (this.operator != operator) return false
             return (this.input1 == input1 && this.input2 == input2) || (this.input1 == input2 && this.input2 == input1)
         }
     }
@@ -88,7 +88,15 @@ private fun PuzzleInput.part2(): Any? {
 
                 val cin = if (i != 0) bitAdders[i - 1].zCarry else {
                     // special case 0 since it has no cin, gCarry is the zCarry
-                    bitAdders.add(BitAdder(pSum, gCarry, "", gCarry, pSum)) // doesn't really matter what's what as long as the BitAdder's zCarry is gCarry
+                    bitAdders.add(
+                        BitAdder(
+                            pSum,
+                            gCarry,
+                            "",
+                            gCarry,
+                            pSum
+                        )
+                    ) // doesn't really matter what's what as long as the BitAdder's zCarry is gCarry
                     continue
                 }
 
@@ -140,19 +148,4 @@ private fun PuzzleInput.part2(): Any? {
     return swaps.flatMap { it.toList() }.sorted().joinToString(",")
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 24)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 24).withSolutions({ part1() }, { part2() }).run()

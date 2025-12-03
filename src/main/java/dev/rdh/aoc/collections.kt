@@ -77,3 +77,54 @@ inline operator fun <T> MutableList<T>.set(range: IntRange, newList: Iterable<T>
         .clear()
     this.addAll(range.first, newList.toList())
 }
+
+fun Iterable<Boolean>.cardinality(): Int {
+    var count = 0
+    for (b in this) {
+        if (b) count++
+    }
+    return count
+}
+
+fun BooleanArray.cardinality(): Int {
+    var count = 0
+    for (b in this) {
+        if (b) count++
+    }
+    return count
+}
+
+fun <T> Iterable<T>.permutations(): List<Iterable<T>> {
+    if (count() == 1) return listOf(this)
+    val perms = mutableListOf<List<T>>()
+    val toInsert = first()
+    for (perm in drop(1).permutations()) {
+        for (i in 0..perm.count()) {
+            val newPerm = perm.toMutableList()
+            newPerm.add(i, toInsert)
+            perms.add(newPerm)
+        }
+    }
+    return perms
+}
+
+fun <T> Iterable<T>.toPair(forceTwo: Boolean = false): Pair<T, T> {
+    val iter = this.iterator()
+    val first = iter.next()
+    val second = iter.next()
+    if (forceTwo && iter.hasNext()) {
+        throw IllegalArgumentException("Iterable has more than two elements")
+    }
+    return Pair(first, second)
+}
+
+fun <T> Iterable<T>.toTriple(forceThree: Boolean = false): Triple<T, T, T> {
+    val iter = this.iterator()
+    val first = iter.next()
+    val second = iter.next()
+    val third = iter.next()
+    if (forceThree && iter.hasNext()) {
+        throw IllegalArgumentException("Iterable has more than three elements")
+    }
+    return Triple(first, second, third)
+}

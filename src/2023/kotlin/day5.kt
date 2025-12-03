@@ -42,7 +42,7 @@ private data class Map(val entries: Array<Entry>) {
 
     fun getValue(key: Long): Long {
         entries.forEach {
-            if(key in it.source until it.source + it.range) {
+            if (key in it.source until it.source + it.range) {
                 return it.destination + (key - it.source)
             }
         }
@@ -82,19 +82,4 @@ private data class Map(val entries: Array<Entry>) {
     }
 }
 
-fun main() {
-    val input = PuzzleInput(2023, 5)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2023, 5).withSolutions({ part1() }, { part2() }).run()

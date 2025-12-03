@@ -19,9 +19,9 @@ private fun PuzzleInput.run(cheatLen: Int): Int {
     val points = mutableSetOf<Pair<Int, Int>>()
     lines.forEachIndexed { i, line ->
         line.forEachIndexed { j, c ->
-            if(c == 'S') start = Pair(i, j)
-            if(c == 'E') end = Pair(i, j)
-            if(c != '#') points.add(Pair(i, j))
+            if (c == 'S') start = Pair(i, j)
+            if (c == 'E') end = Pair(i, j)
+            if (c != '#') points.add(Pair(i, j))
         }
     }
 
@@ -31,7 +31,7 @@ private fun PuzzleInput.run(cheatLen: Int): Int {
 
         val result = mutableListOf<Pair<Int, Int>>()
         val dirs = listOf(Pair(0, 1), Pair(0, -1), Pair(1, 0), Pair(-1, 0))
-        while(current != end) {
+        while (current != end) {
             val next = dirs.map { Pair(current.first + it.first, current.second + it.second) }
                 .first { it != prev && points.contains(it) }
 
@@ -48,10 +48,10 @@ private fun PuzzleInput.run(cheatLen: Int): Int {
     val distances = path.withIndex().associate { it.value to it.index }
 
     var count = 0
-    for(i in 0 until pathLength) {
-        for(j in i + 4 until pathLength) {
+    for (i in 0 until pathLength) {
+        for (j in i + 4 until pathLength) {
             val dist = manhattan(path[i], path[j])
-            if(dist <= cheatLen) {
+            if (dist <= cheatLen) {
                 val d1 = distances[path[i]]!!
                 val d2 = pathLength - distances[path[j]]!!
                 val newLen = d1 + dist + d2
@@ -64,19 +64,4 @@ private fun PuzzleInput.run(cheatLen: Int): Int {
     return count
 }
 
-fun main() {
-    val input = PuzzleInput(2024, 20)
-
-    var start = System.nanoTime()
-    var result = input.part1()
-    var end = System.nanoTime()
-    println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-
-    start = System.nanoTime()
-    result = input.part2()
-    end = System.nanoTime()
-    println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
-    println(result)
-    println("----------------------")
-}
+fun main() = PuzzleInput(2024, 20).withSolutions({ part1() }, { part2() }).run()

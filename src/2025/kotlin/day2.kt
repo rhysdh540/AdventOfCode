@@ -17,8 +17,8 @@ private fun PuzzleInput.part1(): Any? {
             // given all this, we want to find all n in range with 2d digits
             // L <= mk <= R ==> L/m <= k <= R/m
             // then combine with loK <= k <= hiK
-            val a = Math.ceilDiv(range.first, m).coerceAtLeast(loK)
-            val b = Math.floorDiv(range.last, m).coerceAtMost(hiK)
+            val a = range.first.ceilDiv(m).coerceAtLeast(loK)
+            val b = range.last.floorDiv(m).coerceAtMost(hiK)
 
             // if a > b, then there are no valid k in range
             // if a <= b, then every k in [a, b] is valid
@@ -39,8 +39,7 @@ private fun PuzzleInput.part2(): Any? {
         // so let's say that C(d,t) = (10^{dt} - 1) / (10^d - 1), and n=kC(d,t)
         // given L <= n <= R, we have L/C(d,t) <= k <= R/C(d,t), and all k in that range are valid
 
-        val seen = mutableSetOf<Long>()
-
+        var sum = 0L
         val maxDigits = range.last.numDigits
         for (d in 1..maxDigits) {
             val maxT = maxDigits / d
@@ -54,17 +53,15 @@ private fun PuzzleInput.part2(): Any? {
                 val c = (step.pow(t) - 1) / (step - 1)
                 val nMin = loK * c
                 if (nMin > range.last) break // k is only going to get larger, so stop here
-                val a = Math.ceilDiv(range.first, c).coerceAtLeast(loK)
-                val b = Math.floorDiv(range.last, c).coerceAtMost(hiK)
+                val a = range.first.ceilDiv(c).coerceAtLeast(loK)
+                val b = range.last.floorDiv(c).coerceAtMost(hiK)
 
                 if (a <= b) {
-                    for (k in a..b) {
-                        seen.add(k * c)
-                    }
+                    sum += c * (a..b).sum()
                 }
             }
         }
-        seen.sum()
+        sum
     }
 }
 

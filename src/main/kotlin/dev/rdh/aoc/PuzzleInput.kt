@@ -1,4 +1,8 @@
+@file:Suppress("NOTHING_TO_INLINE", "unused")
+
 package dev.rdh.aoc
+
+import kotlin.system.exitProcess
 
 class PuzzleInput private constructor(val year: Int, val day: Int, val input: String) {
     constructor(year: Int, day: Int) : this(year, day, Unit.run {
@@ -50,6 +54,8 @@ class PuzzleInput private constructor(val year: Int, val day: Int, val input: St
     }
 
     inline fun benchmark(part1: PuzzleInput.() -> Any?, part2: PuzzleInput.() -> Any?, iterations: Int = 1000) {
+        repeat(iterations) { part1(); part2() }
+
         val time1 = (1..iterations).sumOf {
             val start = System.nanoTime()
             this.part1()
@@ -65,5 +71,6 @@ class PuzzleInput private constructor(val year: Int, val day: Int, val input: St
         println("Benchmark results for $year/$day over $iterations iterations:")
         println("    Part 1: %.2fms".format((time1 / iterations) / 1e6))
         println("    Part 2: %.2fms".format((time2 / iterations) / 1e6))
+        exitProcess(0)
     }
 }

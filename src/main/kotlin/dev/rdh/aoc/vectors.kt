@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE", "unused")
+
 package dev.rdh.aoc
 
 val Pair<Int, Int>.x get() = first

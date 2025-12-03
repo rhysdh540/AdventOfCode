@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE", "unused")
+
 package dev.rdh.aoc
 
 val Iterable<String>.ints get() = map { it.toInt() }

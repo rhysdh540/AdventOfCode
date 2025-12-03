@@ -39,7 +39,7 @@ private fun PuzzleInput.part2(): Any? {
         // so let's say that C(d,t) = (10^{dt} - 1) / (10^d - 1), and n=kC(d,t)
         // given L <= n <= R, we have L/C(d,t) <= k <= R/C(d,t), and all k in that range are valid
 
-        var sum = 0L
+        val seen = mutableSetOf<Long>()
         val maxDigits = range.last.numDigits
         for (d in 1..maxDigits) {
             val maxT = maxDigits / d
@@ -57,11 +57,13 @@ private fun PuzzleInput.part2(): Any? {
                 val b = range.last.floorDiv(c).coerceAtMost(hiK)
 
                 if (a <= b) {
-                    sum += c * (a..b).sum()
+                    for (k in a..b) {
+                        seen.add(c * k)
+                    }
                 }
             }
         }
-        sum
+        seen.sum()
     }
 }
 

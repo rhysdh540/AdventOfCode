@@ -22,7 +22,7 @@ private fun PuzzleInput.run(k: Int): Any? {
         if (stack.size > k) {
             stack[k..stack.size].clear()
         }
-        stack.joinToString("").toLong()
+        stack.fold(0L) { acc, d -> acc * 10 + d }
     }
 }
 

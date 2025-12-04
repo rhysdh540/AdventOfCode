@@ -19,20 +19,20 @@ private fun PuzzleInput.part2(): Any? {
 
 private fun run(grid: List<List<Boolean>>): Int {
     val galaxies = grid.mapIndexed { i, row ->
-        row.mapIndexed { j, b -> if (b) Pair(i, j) else null }.filterNotNull()
+        row.mapIndexed { j, b -> if (b) v(i, j) else null }.filterNotNull()
     }.flatten()
 
     // calculate sum of manhattan distances
     return galaxies.indices.sumOf { i ->
         galaxies.drop(i + 1).sumOf { g ->
-            abs(galaxies[i].first - g.first) + abs(galaxies[i].second - g.second)
+            abs(galaxies[i].x - g.x) + abs(galaxies[i].y - g.y)
         }
     }
 }
 
 private fun Iterable<Iterable<Boolean>>.expandRows(): List<List<Boolean>> {
     return this.flatMap {
-        if (it.any { it }) {
+        if (it.anyTrue()) {
             listOf(it.toList())
         } else {
             listOf(it.toList(), it.toList())

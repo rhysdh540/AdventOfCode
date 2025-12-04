@@ -5,7 +5,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    var (floor, i) = Pair(0, 0)
+    var (floor, i) = v(0, 0)
     for (c in input) {
         floor += if (c == '(') 1 else -1
         if (floor == -1) {

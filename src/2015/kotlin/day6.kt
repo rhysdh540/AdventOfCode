@@ -4,7 +4,7 @@ private fun PuzzleInput.part1(): Any? {
     val regex = Regex("""(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)""")
     val instructions = lines.map {
         val (action, x1, y1, x2, y2) = regex.find(it)!!.destructured
-        Triple(action, Pair(x1.toInt(), y1.toInt()), Pair(x2.toInt(), y2.toInt()))
+        Triple(action, v(x1.toInt(), y1.toInt()), v(x2.toInt(), y2.toInt()))
     }
 
     val grid = Array(1000) { BooleanArray(1000) }
@@ -30,7 +30,7 @@ private fun PuzzleInput.part2(): Any? {
     val regex = Regex("""(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)""")
     val instructions = lines.map {
         val (action, x1, y1, x2, y2) = regex.find(it)!!.destructured
-        Triple(action, Pair(x1.toInt(), y1.toInt()), Pair(x2.toInt(), y2.toInt()))
+        Triple(action, v(x1.toInt(), y1.toInt()), v(x2.toInt(), y2.toInt()))
     }
 
     val grid = Array(1000) { IntArray(1000) }

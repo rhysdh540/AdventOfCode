@@ -16,20 +16,20 @@ private fun PuzzleInput.part1(): Any? {
     val set = mutableSetOf<Pair<Int, Int>>()
     for ((_, points) in map) {
         for (j in points.indices) {
-            for (k in j + 1..points.size - 1) {
-                val x = points[j]
-                val y = points[k]
+            for (k in (j + 1)..<points.size) {
+                val a = points[j]
+                val b = points[k]
 
-                val dx = y.first - x.first
-                val dy = y.second - x.second
+                val dx = b.x - a.x
+                val dy = b.y - a.y
 
-                set.add(Pair(x.first - dx, x.second - dy))
-                set.add(Pair(y.first + dx, y.second + dy))
+                set.add(Pair(a.x - dx, a.y - dy))
+                set.add(Pair(b.x + dx, b.y + dy))
             }
         }
     }
 
-    return set.filter { it.first in h && it.second in w }.size
+    return set.filter { it.x in h && it.y in w }.size
 }
 
 private fun PuzzleInput.part2(): Any? {
@@ -48,20 +48,20 @@ private fun PuzzleInput.part2(): Any? {
     val set = mutableSetOf<Pair<Int, Int>>()
     for ((_, points) in map) {
         for (j in points.indices) {
-            for (k in j + 1..points.size - 1) {
-                val x = points[j]
-                val y = points[k]
+            for (k in (j + 1)..<points.size) {
+                val a = points[j]
+                val b = points[k]
 
-                var dx = y.first - x.first
-                var dy = y.second - x.second
+                var dx = b.x - a.x
+                var dy = b.y - a.y
 
                 val gcd = dx gcd dy
                 dx /= gcd
                 dy /= gcd
 
                 // x backwards
-                var cx = x.first - dx
-                var cy = x.second - dy
+                var cx = a.x - dx
+                var cy = a.y - dy
                 while (cx in h && cy in w) {
                     set.add(Pair(cx, cy))
                     cx -= dx
@@ -69,8 +69,8 @@ private fun PuzzleInput.part2(): Any? {
                 }
 
                 // y forwards
-                cx = y.first + dx
-                cy = y.second + dy
+                cx = b.x + dx
+                cy = b.y + dy
                 while (cx in h && cy in w) {
                     set.add(Pair(cx, cy))
                     cx += dx
@@ -78,8 +78,8 @@ private fun PuzzleInput.part2(): Any? {
                 }
 
                 // between x and y
-                cx = x.first
-                cy = x.second
+                cx = a.x
+                cy = a.y
                 repeat(gcd + 1) {
                     set.add(Pair(cx, cy))
                     cx += dx

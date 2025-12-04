@@ -3,9 +3,9 @@ import dev.rdh.aoc.*
 private fun PuzzleInput.part1(): Any? {
     val grid = intGridOr(-10)
     val trailheads =
-        grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) Pair(x, y) else null } }.flatten()
+        grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) v(x, y) else null } }.flatten()
             .filterNotNull().toMutableList()
-    val directions = listOf(Pair(0, -1), Pair(1, 0), Pair(0, 1), Pair(-1, 0))
+    val directions = listOf(v(0, -1), v(1, 0), v(0, 1), v(-1, 0))
 
     return trailheads.sumOf {
         val visited = mutableSetOf(it)
@@ -20,9 +20,9 @@ private fun PuzzleInput.part1(): Any? {
                 val nx = x + dx
                 val ny = y + dy
                 val next = grid.getOrNull(ny)?.getOrNull(nx) ?: continue
-                if (next - grid[y][x] == 1 && Pair(nx, ny) !in visited) {
-                    visited.add(Pair(nx, ny))
-                    queue.add(Pair(nx, ny))
+                if (next - grid[y][x] == 1 && v(nx, ny) !in visited) {
+                    visited.add(v(nx, ny))
+                    queue.add(v(nx, ny))
                 }
             }
         }
@@ -34,9 +34,9 @@ private fun PuzzleInput.part1(): Any? {
 private fun PuzzleInput.part2(): Any? {
     val grid = intGridOr(-10)
     val trailheads =
-        grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) Pair(x, y) else null } }.flatten()
+        grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) v(x, y) else null } }.flatten()
             .filterNotNull().toMutableList()
-    val directions = listOf(Pair(0, -1), Pair(1, 0), Pair(0, 1), Pair(-1, 0))
+    val directions = listOf(v(0, -1), v(1, 0), v(0, 1), v(-1, 0))
 
     return trailheads.sumOf {
         val queue = ArrayDeque(listOf(it))
@@ -51,7 +51,7 @@ private fun PuzzleInput.part2(): Any? {
                 val ny = y + dy
                 val next = grid.getOrNull(ny)?.getOrNull(nx) ?: continue
                 if (next - grid[y][x] == 1) {
-                    queue.add(Pair(nx, ny))
+                    queue.add(v(nx, ny))
                 }
             }
         }

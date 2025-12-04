@@ -5,7 +5,7 @@ private fun PuzzleInput.part1(): Any? {
     val nums = lines.map { it.split(",").ints.toPair() }
     val grid = Array(71) { BooleanArray(71) }
     for (i in nums.slice(0..1024)) {
-        grid[i.first][i.second] = true
+        grid[i.x][i.y] = true
     }
 
     return solve(grid)
@@ -15,13 +15,13 @@ private fun PuzzleInput.part2(): Any? {
     val nums = lines.map { it.split(",").ints.toPair() }
     val grid = Array(71) { BooleanArray(71) }
     return nums.drop(1024).first {
-        grid[it.first][it.second] = true
+        grid[it.x][it.y] = true
         solve(grid) == null
-    }.let { "${it.first},${it.second}" }
+    }.let { "${it.x},${it.y}" }
 }
 
 private fun solve(grid: Array<BooleanArray>): Int? {
-    val directions = listOf(Pair(0, 1), Pair(1, 0), Pair(0, -1), Pair(-1, 0))
+    val directions = listOf(v(0, 1), v(1, 0), v(0, -1), v(-1, 0))
     val pq = PriorityQueue<Triple<Int, Int, Int>>(compareBy { it.third })
     pq.add(Triple(0, 0, 0))
     val visited = Array(71) { BooleanArray(71) }

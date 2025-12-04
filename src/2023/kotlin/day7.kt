@@ -22,9 +22,9 @@ private fun PuzzleInput.run(jokers: Boolean): Int {
         return@sortedWith Arrays.mismatch(a, b).let {
             b[it] - a[it]
         }
-    }.reversed().mapIndexed { i, h ->
+    }.reversed().sumIndexed { i, h ->
         h.bid * (i + 1)
-    }.sum()
+    }
 }
 
 private fun getCardValue(card: Char, jokers: Boolean): Int {

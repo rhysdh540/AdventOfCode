@@ -75,12 +75,6 @@ private fun PuzzleInput.part2(): Any? {
         val op = rule.op!!
         val v = rule.value!!
 
-        fun IntRange.intersect(other: IntRange): IntRange? {
-            val s = maxOf(first, other.first)
-            val e = minOf(last, other.last)
-            return if (s <= e) s..e else null
-        }
-
         val get = when (field) {
             'x' -> box.xr
             'm' -> box.mr

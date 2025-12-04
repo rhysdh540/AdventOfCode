@@ -11,7 +11,7 @@ private fun PuzzleInput.part2(): Any? {
 
 private fun PuzzleInput.run(cheatLen: Int): Int {
     fun manhattan(a: Pair<Int, Int>, b: Pair<Int, Int>): Int {
-        return abs(a.first - b.first) + abs(a.second - b.second)
+        return abs(a.x - b.x) + abs(a.y - b.y)
     }
 
     lateinit var start: Pair<Int, Int>
@@ -30,11 +30,9 @@ private fun PuzzleInput.run(cheatLen: Int): Int {
         var prev = start
 
         val result = mutableListOf<Pair<Int, Int>>()
-        val dirs = listOf(Pair(0, 1), Pair(0, -1), Pair(1, 0), Pair(-1, 0))
+        val dirs = listOf(v(0, 1), v(0, -1), v(1, 0), v(-1, 0))
         while (current != end) {
-            val next = dirs.map { Pair(current.first + it.first, current.second + it.second) }
-                .first { it != prev && points.contains(it) }
-
+            val next = dirs.map { it + current }.first { it != prev && points.contains(it) }
             result.add(current)
             prev = current
             current = next

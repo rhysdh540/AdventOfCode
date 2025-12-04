@@ -20,7 +20,7 @@ private fun PuzzleInput.getGrid(): Pair<Array<Array<PipePart>>, PipePart> {
 
     val start = grid.flatten().find { it.type == START }!!
 
-    return Pair(grid, start)
+    return grid to start
 }
 
 private fun Array<Array<PipePart>>.getLoop(start: PipePart): MutableSet<PipePart> {

@@ -156,7 +156,7 @@ private class Conjunction : Module {
 
     override fun accept(sender: String, signal: Boolean): Boolean? {
         states[sender] = signal
-        return !states.values.all { it }
+        return states.values.anyFalse()
     }
 }
 

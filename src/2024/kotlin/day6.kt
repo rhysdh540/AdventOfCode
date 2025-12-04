@@ -19,18 +19,18 @@ private fun PuzzleInput.part1(): Any? {
         visitedPositions.add(pos)
 
         val next = when (direction) {
-            0 -> Pair(pos.first - 1, pos.second)
-            1 -> Pair(pos.first, pos.second + 1)
-            2 -> Pair(pos.first + 1, pos.second)
-            3 -> Pair(pos.first, pos.second - 1)
+            0 -> Pair(pos.x - 1, pos.y)
+            1 -> Pair(pos.x, pos.y + 1)
+            2 -> Pair(pos.x + 1, pos.y)
+            3 -> Pair(pos.x, pos.y - 1)
             else -> error("")
         }
 
-        if (next.first < 0 || next.first >= grid.size || next.second < 0 || next.second >= grid[0].size) {
+        if (next.x < 0 || next.x >= grid.size || next.y < 0 || next.y >= grid[0].size) {
             break
         }
 
-        if (grid[next.first][next.second] == '#') {
+        if (grid[next.x][next.y] == '#') {
             direction = (direction + 1) % 4
         } else {
             pos = next
@@ -41,7 +41,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val grid = grid.map { it.toMutableList() }
+    val grid = grid.deepToMutableList()
     val positions = mutableListOf<Pair<Int, Int>>()
 
     var startPos = Pair(0, 0)
@@ -80,12 +80,12 @@ private fun PuzzleInput.part2(): Any? {
 
                     visitedStates.add(state)
                     val nextPos =
-                        Pair(pos.first + directions[direction].first, pos.second + directions[direction].second)
-                    if (nextPos.first !in grid.indices || nextPos.second !in grid[0].indices) {
+                        Pair(pos.x + directions[direction].x, pos.y + directions[direction].y)
+                    if (nextPos.x !in grid.indices || nextPos.y !in grid[0].indices) {
                         break // exit grid
                     }
 
-                    if (grid[nextPos.first][nextPos.second] == '#') {
+                    if (grid[nextPos.x][nextPos.y] == '#') {
                         direction = (direction + 1) % 4
                     } else {
                         pos = nextPos

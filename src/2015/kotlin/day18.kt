@@ -12,9 +12,9 @@ private fun PuzzleInput.run(stuckCorners: Boolean): Int {
     val grid = boolGrid.deepToMutableList()
     val size = grid.size
     val dirs = listOf(
-        Pair(-1, -1), Pair(-1, 0), Pair(-1, 1),
-        Pair(0, -1), Pair(0, 1),
-        Pair(1, -1), Pair(1, 0), Pair(1, 1)
+        v(-1, -1), v(-1, 0), v(-1, 1),
+        v(0, -1), v(0, 1),
+        v(1, -1), v(1, 0), v(1, 1)
     )
 
     if (stuckCorners) {

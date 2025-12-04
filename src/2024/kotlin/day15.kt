@@ -1,20 +1,14 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = Pair(first + other.first, second + other.second)
-    operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.second][pos.first]
-    operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
-        this[pos.second][pos.first] = value
-    }
-
     val (gridStr, insnsStr) = sections
     val grid = gridStr.lines().map { it.toMutableList() }.toMutableList()
     val insns = insnsStr.replace("\n", "")
 
-    var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') Pair(x, y) else null } }.flatten()
+    var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') v(x, y) else null } }.flatten()
         .filterNotNull().first()
     grid[robot] = '.'
-    val dirs = listOf(Pair(0, -1), Pair(1, 0), Pair(0, 1), Pair(-1, 0))
+    val dirs = listOf(v(0, -1), v(1, 0), v(0, 1), v(-1, 0))
 
     fun canMoveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>): Boolean {
         val next = start + dir
@@ -74,11 +68,11 @@ private fun PuzzleInput.part2(): Any? {
     }.toMutableList()
     val insns = insnsStr.replace("\n", "")
 
-    var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') Pair(x, y) else null } }.flatten()
+    var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') v(x, y) else null } }.flatten()
         .filterNotNull().first()
     grid[robot] = '.'
 
-    val dirs = listOf(Pair(0, -1), Pair(1, 0), Pair(0, 1), Pair(-1, 0))
+    val dirs = listOf(v(0, -1), v(1, 0), v(0, 1), v(-1, 0))
 
     fun canMoveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>): Boolean {
         val (left, right) = when (grid[start]) {
@@ -144,18 +138,12 @@ private fun PuzzleInput.part2(): Any? {
     }
 }
 
-private operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = Pair(first + other.first, second + other.second)
-private operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.second][pos.first]
-private operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
-    this[pos.second][pos.first] = value
-}
-
-private fun <T> Iterable<T>.sumIndexed(transform: (index: Int, T) -> Int) = mapIndexed(transform).sum()
+@Suppress("unused")
 private fun pg(grid: List<List<Char>>, robot: Pair<Int, Int>) =
     println(grid.mapIndexed { y, row ->
         row.mapIndexed { x, c ->
-            if (Pair(x, y) == robot) '@' else c
+            if (v(x, y) == robot) '@' else c
         }.joinToString("")
-    }.joinToString("\n") { it })
+    }.joinToString("\n"))
 
 fun main() = PuzzleInput(2024, 15).withSolutions({ part1() }, { part2() }).run()

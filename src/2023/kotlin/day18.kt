@@ -28,17 +28,17 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 private fun run(insns: List<Pair<String, Long>>): Long {
-    var pos = 0L to 0L
+    var pos = v(0L, 0L)
     val vertices = mutableListOf<Pair<Long, Long>>()
     vertices += pos
 
     var boundary = 0L // number of points on the perimeter
     for ((dir, num) in insns) {
         val d = when (dir) {
-            "U" -> 0L to 1L
-            "D" -> 0L to -1L
-            "L" -> -1L to 0L
-            "R" -> 1L to 0L
+            "U" -> v(0L, 1L)
+            "D" -> v(0L, -1L)
+            "L" -> v(-1L, 0L)
+            "R" -> v(1L, 0L)
             else -> error("Unknown direction: $dir")
         }
 
@@ -47,7 +47,7 @@ private fun run(insns: List<Pair<String, Long>>): Long {
         boundary += num
     }
 
-    require(pos == Pair(0L, 0L)) { "Path must return to origin, found at $pos" }
+    require(pos == v(0L, 0L)) { "Path must return to origin, found at $pos" }
 
     // shoelace
     val area = vertices.zipWithNext().sumOf { (p1, p2) ->

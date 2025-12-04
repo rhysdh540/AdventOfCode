@@ -94,6 +94,39 @@ fun BooleanArray.cardinality(): Int {
     return count
 }
 
+fun Iterable<Boolean>.anyTrue(): Boolean {
+    for (b in this) {
+        if (b) return true
+    }
+    return false
+}
+
+fun BooleanArray.anyTrue(): Boolean {
+    for (b in this) {
+        if (b) return true
+    }
+    return false
+}
+
+fun Iterable<Boolean>.anyFalse(): Boolean {
+    for (b in this) {
+        if (!b) return true
+    }
+    return false
+}
+
+fun BooleanArray.anyFalse(): Boolean {
+    for (b in this) {
+        if (!b) return true
+    }
+    return false
+}
+
+fun Iterable<Boolean>.allTrue() = !anyFalse()
+fun BooleanArray.allTrue() = !anyFalse()
+fun Iterable<Boolean>.allFalse() = !anyTrue()
+fun BooleanArray.allFalse() = !anyTrue()
+
 fun <T> Iterable<T>.permutations(): List<Iterable<T>> {
     if (count() == 1) return listOf(this)
     val perms = mutableListOf<List<T>>()
@@ -127,4 +160,26 @@ fun <T> Iterable<T>.toTriple(forceThree: Boolean = false): Triple<T, T, T> {
         throw IllegalArgumentException("Iterable has more than three elements")
     }
     return Triple(first, second, third)
+}
+
+operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.y][pos.x]
+
+operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
+    this[pos.y][pos.x] = value
+}
+
+inline fun <T> Iterable<T>.sumIndexed(transform: (index: Int, T) -> Int): Int {
+    var index = 0
+    var sum = 0
+    for (element in this) {
+        sum += transform(index, element)
+        index++
+    }
+    return sum
+}
+
+fun IntRange.intersect(other: IntRange): IntRange? {
+    val s = maxOf(first, other.first)
+    val e = minOf(last, other.last)
+    return if (s <= e) s..e else null
 }

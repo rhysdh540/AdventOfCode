@@ -2,8 +2,8 @@ import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
     val dirs = listOf(
-        Pair(0, 1), Pair(1, 0), Pair(1, 1), Pair(1, -1),
-        Pair(0, -1), Pair(-1, 0), Pair(-1, -1), Pair(-1, 1)
+        v(0, 1), v(1, 0), v(1, 1), v(1, -1),
+        v(0, -1), v(-1, 0), v(-1, -1), v(-1, 1)
     )
 
     return grid.indices.sumOf { r ->

@@ -46,6 +46,7 @@ abstract class InitTask : DefaultTask() {
         val code = code
             .replace("{{year}}", year.toString())
             .replace("{{day}}", day.toString())
+            .replace("{{part2msg}}", if (day == 25) "Merry Christmas!" else "Not implemented")
 
         val file = layout.projectDirectory.file("src/$year/kotlin/day$day.kt").asFile
         if(file.exists() && file.length() != 0L) {
@@ -112,7 +113,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return "Not implemented"
+    return "{{part2msg}}"
 }
 
 fun main() = PuzzleInput({{year}}, {{day}}).withSolutions({ part1() }, { part2() }).run()

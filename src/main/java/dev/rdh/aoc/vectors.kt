@@ -18,6 +18,8 @@ operator fun Pair<Int, Int>.minus(other: Pair<Int, Int>) = v(this.x - other.x, t
 operator fun Pair<Int, Int>.times(scalar: Int) = v(this.x * scalar, this.y * scalar)
 @JvmName("intDiv")
 operator fun Pair<Int, Int>.div(scalar: Int) = v(this.x / scalar, this.y / scalar)
+@JvmName("intUnaryMinus")
+operator fun Pair<Int, Int>.unaryMinus() = v(-this.x, -this.y)
 @JvmName("intDot")
 infix fun Pair<Int, Int>.dot(other: Pair<Int, Int>) = this.x * other.x + this.y * other.y
 
@@ -29,5 +31,17 @@ operator fun Pair<Long, Long>.minus(other: Pair<Long, Long>) = v(this.x - other.
 operator fun Pair<Long, Long>.times(scalar: Long) = v(this.x * scalar, this.y * scalar)
 @JvmName("longDiv")
 operator fun Pair<Long, Long>.div(scalar: Long) = v(this.x / scalar, this.y / scalar)
+@JvmName("longUnaryMinus")
+operator fun Pair<Long, Long>.unaryMinus() = v(-this.x, -this.y)
 @JvmName("longDot")
 infix fun Pair<Long, Long>.dot(other: Pair<Long, Long>) = this.x * other.x + this.y * other.y
+
+operator fun <T> List<List<T>>.get(x: Int, y: Int) = this[y][x]
+operator fun <T> MutableList<MutableList<T>>.set(x: Int, y: Int, value: T) {
+    this[y][x] = value
+}
+
+operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.y][pos.x]
+operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
+    this[pos.y][pos.x] = value
+}

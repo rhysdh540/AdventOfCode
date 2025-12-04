@@ -163,12 +163,6 @@ fun <T> Iterable<T>.toTriple(forceThree: Boolean = false): Triple<T, T, T> {
     return Triple(first, second, third)
 }
 
-operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.y][pos.x]
-
-operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
-    this[pos.y][pos.x] = value
-}
-
 inline fun <T> Iterable<T>.sumIndexed(transform: (index: Int, T) -> Int): Int {
     var index = 0
     var sum = 0

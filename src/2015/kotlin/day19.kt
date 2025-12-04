@@ -31,13 +31,13 @@ private fun PuzzleInput.part2(): Any? {
     // "My request for the "fewest number of steps" is a decoy - there is only one number of steps possible" - AOC guy
 
     // Count the number of tokens (elements, including Rn, Ar, and Y)
-    val tokens = Regex("[A-Z][a-z]?").findAll(molecule).count()
+    val tokens = Regex("[A-Z][a-z]?").findAll(molecule).map { it.value }.toList()
 
     // Count the number of '(' and ')'
-    val rnArCount = molecule.windowed(2).count { it == "Rn" || it == "Ar" }
+    val rnArCount = tokens.count { it == "Rn" || it == "Ar" }
 
     // Count the number of ','
-    val yCount = molecule.count { it == 'Y' }
+    val yCount = tokens.count { it == "Y" }
 
     // Apply the formula to calculate steps
     // each X => XX (un)transformation takes 1 token (the extra element)
@@ -45,10 +45,11 @@ private fun PuzzleInput.part2(): Any? {
     // each X => X(X,X) (aka X => XRnXYXAr) is similar to the X(X), but each `,` reduces the length by 2 (since you're removing the , and the X after it)
     //  we don't include the first X or Rn/Ar since removing all the `,X` will leave us with a (X) (which will then get taken care of by the second rule)
     // so the formula is tokens - count(Rn or Ar) - 2 * count(,) - 1 because we start with 1 token (the `e`)
-    return tokens - rnArCount - 2 * yCount - 1
+    return tokens.size - rnArCount - 2 * yCount - 1
 }
 
 // this works too
+@Suppress("unused")
 private fun PuzzleInput.part2bruteForce(): Any? {
     val (mappings0, moleculeReversed) = splitBy(blankLines).let {
         it[0] to it[1].reversed()

@@ -3,14 +3,15 @@ import dev.rdh.aoc.*
 private fun PuzzleInput.part1(): Any? {
     val visitedPositions = mutableSetOf<Pair<Int, Int>>()
 
-    var pos = Pair(0, 0)
-    o@ for (i in grid.indices) {
-        for (j in grid[i].indices) {
-            if (grid[i][j] == '^') {
-                pos = Pair(i, j)
-                break@o
+    var pos = run {
+        for (i in grid.indices) {
+            for (j in grid[i].indices) {
+                if (grid[i][j] == '^') {
+                    return@run v(i, j)
+                }
             }
         }
+        error("No start position found")
     }
 
     var direction = 0
@@ -19,10 +20,10 @@ private fun PuzzleInput.part1(): Any? {
         visitedPositions.add(pos)
 
         val next = when (direction) {
-            0 -> Pair(pos.x - 1, pos.y)
-            1 -> Pair(pos.x, pos.y + 1)
-            2 -> Pair(pos.x + 1, pos.y)
-            3 -> Pair(pos.x, pos.y - 1)
+            0 -> v(pos.x - 1, pos.y)
+            1 -> v(pos.x, pos.y + 1)
+            2 -> v(pos.x + 1, pos.y)
+            3 -> v(pos.x, pos.y - 1)
             else -> error("")
         }
 
@@ -44,21 +45,22 @@ private fun PuzzleInput.part2(): Any? {
     val grid = grid.deepToMutableList()
     val positions = mutableListOf<Pair<Int, Int>>()
 
-    var startPos = Pair(0, 0)
-    outer@ for (i in grid.indices) {
-        for (j in grid[i].indices) {
-            if (grid[i][j] == '^') {
-                startPos = Pair(i, j)
-                break@outer
+    val startPos = run {
+        for (i in grid.indices) {
+            for (j in grid[i].indices) {
+                if (grid[i][j] == '^') {
+                    return@run v(i, j)
+                }
             }
         }
+        error("No start position found")
     }
 
     val directions = listOf(
-        Pair(-1, 0),
-        Pair(0, 1),
-        Pair(1, 0),
-        Pair(0, -1)
+        v(-1, 0),
+        v(0, 1),
+        v(1, 0),
+        v(0, -1)
     )
 
     for (i in grid.indices) {
@@ -79,8 +81,7 @@ private fun PuzzleInput.part2(): Any? {
                     }
 
                     visitedStates.add(state)
-                    val nextPos =
-                        Pair(pos.x + directions[direction].x, pos.y + directions[direction].y)
+                    val nextPos = pos + directions[direction]
                     if (nextPos.x !in grid.indices || nextPos.y !in grid[0].indices) {
                         break // exit grid
                     }

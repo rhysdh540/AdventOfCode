@@ -5,14 +5,14 @@ private fun PuzzleInput.part1(): Any? {
         it.lines().first().all { it == '#' }
     }.map {
         val skip = it.substringAfter("\n")
-        skip.rotateRight().lines().map { it.count { it == '#' } }
+        skip.rotateRight().lines().map { it.count('#') }
     }
 
     val keys = sections.filter {
         it.lines().first().all { it == '.' }
     }.map {
         val skip = it.substringBeforeLast("\n")
-        skip.rotateRight().lines().map { it.count { it == '#' } }
+        skip.rotateRight().lines().map { it.count('#') }
     }
 
     val locksToKeys = locks.flatMap { l ->

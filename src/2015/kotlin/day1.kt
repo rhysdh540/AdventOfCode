@@ -1,7 +1,7 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return input.count { it == '(' } - input.count { it == ')' }
+    return input.count('(') - input.count(')')
 }
 
 private fun PuzzleInput.part2(): Any? {

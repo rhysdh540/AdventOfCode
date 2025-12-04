@@ -183,3 +183,11 @@ fun IntRange.intersect(other: IntRange): IntRange? {
     val e = minOf(last, other.last)
     return if (s <= e) s..e else null
 }
+
+fun CharSequence.count(char: Char): Int {
+    var count = 0
+    for (c in this) {
+        if (c == char) count++
+    }
+    return count
+}

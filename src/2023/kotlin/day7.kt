@@ -60,7 +60,7 @@ private fun replaceJoker(hand: String): String {
 }
 
 private fun evaluateTwoUnique(hand: String): HandType {
-    return hand.count { it == hand[0] }.let {
+    return hand.count(hand[0]).let {
         if (it == 4 || it == 1) HandType.FOUR_OF_A_KIND else HandType.FULL_HOUSE
     }
 }

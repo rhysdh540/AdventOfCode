@@ -10,21 +10,21 @@ infix fun Long.gcd(other: Long): Long = if (other == 0L) abs(this) else other gc
 infix fun Int.lcm(other: Int): Int = (this / (this gcd other)) * other
 infix fun Long.lcm(other: Long): Long = (this / (this gcd other)) * other
 
-fun Int.pow(exp: Int): Long {
+fun Long.pow(exp: Int): Long {
     var result = 1L
-    repeat(exp) {
-        result *= this
+    var base = this
+    var exponent = exp
+    while (exponent > 0) {
+        if (exponent and 1 == 1) {
+            result *= base
+        }
+        base *= base
+        exponent = exponent shr 1
     }
     return result
 }
 
-fun Long.pow(exp: Int): Long {
-    var result = 1L
-    repeat(exp) {
-        result *= this
-    }
-    return result
-}
+fun Int.pow(exp: Int) = this.toLong().pow(exp)
 
 val Int.numDigits: Int
     get() = toLong().numDigits

@@ -216,11 +216,12 @@ inline fun BitSet.map(transform: (Int) -> Int): List<Int> {
 }
 
 fun BitSet.toIntArray(): IntArray {
-    val list = mutableListOf<Int>()
+    val arr = IntArray(this.cardinality())
+    var index = 0
     var i = this.nextSetBit(0)
     while (i >= 0) {
-        list.add(i)
+        arr[index++] = i
         i = this.nextSetBit(i + 1)
     }
-    return list.toIntArray()
+    return arr
 }

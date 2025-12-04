@@ -13,12 +13,14 @@ repositories {
 dependencies {
     "2024Implementation"("org.ow2.asm:asm-tree:9.9")
     "2024Implementation"("org.ow2.asm:asm-util:9.9")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
-tasks.withType<KotlinCompile> {
+tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
 }

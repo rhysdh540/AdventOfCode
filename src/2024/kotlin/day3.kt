@@ -12,14 +12,10 @@ private fun PuzzleInput.part2(): Any? {
             return@fold when (op) {
                 "do" -> acc to true
                 "don't" -> acc to false
-                "mul" -> {
-                    if (enabled) {
-                        val a = a.toInt()
-                        val b = b.toInt()
-                        acc + a * b to true
-                    } else {
-                        acc to false
-                    }
+                "mul" -> if (enabled) {
+                    acc + a.toInt() * b.toInt() to true
+                } else {
+                    acc to false
                 }
 
                 else -> error("Invalid input")

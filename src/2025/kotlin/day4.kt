@@ -22,11 +22,11 @@ private fun reachable(grid: List<List<Boolean>>): Set<Pair<Int, Int>> {
     val reachable = mutableSetOf<Pair<Int, Int>>()
     for (y in grid.indices) {
         for (x in grid[y].indices) {
-            if (!grid[y][x]) continue
+            if (!grid[x, y]) continue
             val around = Vectors.d8.map { it + v(x, y) }
 
             val nrolls = around.count { (ax, ay) ->
-                ay in grid.indices && ax in grid[ay].indices && grid[ay][ax]
+                ay in grid.indices && ax in grid[ay].indices && grid[ax, ay]
             }
 
             if (nrolls < 4) {

@@ -15,8 +15,8 @@ class AocPlugin : Plugin<Project> {
             if (file("src/$year").exists()) {
                 sourceSets.create("$year").apply {
                     kotlin.srcDir("src/$year/kotlin")
-                    compileClasspath += sourceSets["main"].output
-                    runtimeClasspath += sourceSets["main"].output
+                    compileClasspath += sourceSets["main"].runtimeClasspath
+                    runtimeClasspath += sourceSets["main"].runtimeClasspath
                 }
             }
         }

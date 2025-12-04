@@ -3,6 +3,7 @@
 
 package dev.rdh.aoc
 
+import java.util.BitSet
 import kotlin.experimental.ExperimentalTypeInference
 
 fun <T> Iterable<Iterable<T>>.rotateClockwise(): List<List<T>> {
@@ -190,4 +191,42 @@ fun CharSequence.count(char: Char): Int {
         if (c == char) count++
     }
     return count
+}
+
+fun BitSet.toBooleanArray(): BooleanArray {
+    val array = BooleanArray(this.length())
+    var i = this.nextSetBit(0)
+    while (i >= 0) {
+        array[i] = true
+        i = this.nextSetBit(i + 1)
+    }
+    return array
+}
+
+inline fun BitSet.forEachSet(action: (Int) -> Unit) {
+    var i = this.nextSetBit(0)
+    while (i >= 0) {
+        action(i)
+        i = this.nextSetBit(i + 1)
+    }
+}
+
+inline fun BitSet.map(transform: (Int) -> Int): List<Int> {
+    val result = mutableListOf<Int>()
+    var i = this.nextSetBit(0)
+    while (i >= 0) {
+        result.add(transform(i))
+        i = this.nextSetBit(i + 1)
+    }
+    return result
+}
+
+fun BitSet.toIntArray(): IntArray {
+    val list = mutableListOf<Int>()
+    var i = this.nextSetBit(0)
+    while (i >= 0) {
+        list.add(i)
+        i = this.nextSetBit(i + 1)
+    }
+    return list.toIntArray()
 }

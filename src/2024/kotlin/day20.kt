@@ -30,9 +30,8 @@ private fun PuzzleInput.run(cheatLen: Int): Int {
         var prev = start
 
         val result = mutableListOf<Pair<Int, Int>>()
-        val dirs = listOf(v(0, 1), v(0, -1), v(1, 0), v(-1, 0))
         while (current != end) {
-            val next = dirs.map { it + current }.first { it != prev && points.contains(it) }
+            val next = Vectors.d4.map { it + current }.first { it != prev && it in points }
             result.add(current)
             prev = current
             current = next

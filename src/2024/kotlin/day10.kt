@@ -5,7 +5,6 @@ private fun PuzzleInput.part1(): Any? {
     val trailheads =
         grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) v(x, y) else null } }.flatten()
             .filterNotNull().toMutableList()
-    val directions = listOf(v(0, -1), v(1, 0), v(0, 1), v(-1, 0))
 
     return trailheads.sumOf {
         val visited = mutableSetOf(it)
@@ -16,7 +15,7 @@ private fun PuzzleInput.part1(): Any? {
             if (grid[y][x] == 9) {
                 count++
             }
-            for ((dx, dy) in directions) {
+            for ((dx, dy) in Vectors.d4) {
                 val nx = x + dx
                 val ny = y + dy
                 val next = grid.getOrNull(ny)?.getOrNull(nx) ?: continue
@@ -36,7 +35,6 @@ private fun PuzzleInput.part2(): Any? {
     val trailheads =
         grid.mapIndexed { y, row -> row.mapIndexed { x, cell -> if (cell == 0) v(x, y) else null } }.flatten()
             .filterNotNull().toMutableList()
-    val directions = listOf(v(0, -1), v(1, 0), v(0, 1), v(-1, 0))
 
     return trailheads.sumOf {
         val queue = ArrayDeque(listOf(it))
@@ -46,7 +44,7 @@ private fun PuzzleInput.part2(): Any? {
             if (grid[y][x] == 9) {
                 count++
             }
-            for ((dx, dy) in directions) {
+            for ((dx, dy) in Vectors.d4) {
                 val nx = x + dx
                 val ny = y + dy
                 val next = grid.getOrNull(ny)?.getOrNull(nx) ?: continue

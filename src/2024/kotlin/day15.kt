@@ -8,7 +8,6 @@ private fun PuzzleInput.part1(): Any? {
     var robot = grid.mapIndexed { y, row -> row.mapIndexed { x, c -> if (c == '@') v(x, y) else null } }.flatten()
         .filterNotNull().first()
     grid[robot] = '.'
-    val dirs = listOf(v(0, -1), v(1, 0), v(0, 1), v(-1, 0))
 
     fun canMoveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>): Boolean {
         val next = start + dir
@@ -26,10 +25,10 @@ private fun PuzzleInput.part1(): Any? {
 
     for (insn in insns) {
         val dir = when (insn) {
-            '^' -> dirs[0]
-            '>' -> dirs[1]
-            'v' -> dirs[2]
-            '<' -> dirs[3]
+            '^' -> Vectors.d4[0]
+            '>' -> Vectors.d4[1]
+            'v' -> Vectors.d4[2]
+            '<' -> Vectors.d4[3]
             else -> error("Invalid instruction: $insn")
         }
         val next = robot + dir
@@ -72,12 +71,10 @@ private fun PuzzleInput.part2(): Any? {
         .filterNotNull().first()
     grid[robot] = '.'
 
-    val dirs = listOf(v(0, -1), v(1, 0), v(0, 1), v(-1, 0))
-
     fun canMoveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>): Boolean {
         val (left, right) = when (grid[start]) {
-            '[' -> Pair(start, start + dirs[1])
-            ']' -> Pair(start + dirs[3], start)
+            '[' -> Pair(start, start + Vectors.d4[1])
+            ']' -> Pair(start + Vectors.d4[3], start)
             else -> error("Not a box cell")
         }
 
@@ -92,8 +89,8 @@ private fun PuzzleInput.part2(): Any? {
 
     fun moveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>) {
         val (left, right) = when (grid[start]) {
-            '[' -> Pair(start, start + dirs[1])
-            ']' -> Pair(start + dirs[3], start)
+            '[' -> Pair(start, start + Vectors.d4[1])
+            ']' -> Pair(start + Vectors.d4[3], start)
             else -> error("Not a box cell")
         }
 
@@ -111,10 +108,10 @@ private fun PuzzleInput.part2(): Any? {
 
     for (insn in insns) {
         val dir = when (insn) {
-            '^' -> dirs[0]
-            '>' -> dirs[1]
-            'v' -> dirs[2]
-            '<' -> dirs[3]
+            '^' -> Vectors.d4[0]
+            '>' -> Vectors.d4[1]
+            'v' -> Vectors.d4[2]
+            '<' -> Vectors.d4[3]
             else -> error("Invalid instruction: $insn")
         }
         val next = robot + dir

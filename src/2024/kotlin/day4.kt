@@ -1,14 +1,10 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val dirs = listOf(
-        v(0, 1), v(1, 0), v(1, 1), v(1, -1),
-        v(0, -1), v(-1, 0), v(-1, -1), v(-1, 1)
-    )
 
     return grid.indices.sumOf { r ->
         grid[r].indices.sumOf { c ->
-            dirs.count { (dr, dc) ->
+            Vectors.d8.count { (dr, dc) ->
                 "XMAS".indices.all { i ->
                     val nr = r + i * dr
                     val nc = c + i * dc

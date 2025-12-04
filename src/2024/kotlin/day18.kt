@@ -21,7 +21,6 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 private fun solve(grid: Array<BooleanArray>): Int? {
-    val directions = listOf(v(0, 1), v(1, 0), v(0, -1), v(-1, 0))
     val pq = PriorityQueue<Triple<Int, Int, Int>>(compareBy { it.third })
     pq.add(Triple(0, 0, 0))
     val visited = Array(71) { BooleanArray(71) }
@@ -33,7 +32,7 @@ private fun solve(grid: Array<BooleanArray>): Int? {
         if (visited[x][y]) continue
         visited[x][y] = true
 
-        for ((dx, dy) in directions) {
+        for ((dx, dy) in Vectors.d4) {
             val nx = x + dx
             val ny = y + dy
 

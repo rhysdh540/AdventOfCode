@@ -20,19 +20,16 @@ private fun PuzzleInput.part2(): Any? {
 
 private fun reachable(grid: List<List<Char>>): Set<Pair<Int, Int>> {
     val reachable = mutableSetOf<Pair<Int, Int>>()
-    val directions = listOf(
-        v(-1, -1), v(0, -1), v(1, -1),
-        v(-1, 0),            v(1, 0),
-        v(-1, 1),  v(0, 1),  v(1, 1)
-    )
     for (y in grid.indices) {
         for (x in grid[y].indices) {
             if (grid[y][x] != '@') continue
-            val around = directions.map { it + v(x, y) }
-            val atCount = around.count { (ax, ay) ->
+            val around = Vectors.d8.map { it + v(x, y) }
+
+            val nrolls = around.count { (ax, ay) ->
                 ay in grid.indices && ax in grid[ay].indices && grid[ay][ax] == '@'
             }
-            if (atCount < 4) {
+
+            if (nrolls < 4) {
                 reachable += v(x, y)
             }
         }

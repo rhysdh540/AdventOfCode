@@ -45,3 +45,20 @@ operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.y][pos.x]
 operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
     this[pos.y][pos.x] = value
 }
+
+object Vectors {
+    val ZERO = v(0, 0)
+
+    val d4 = listOf(
+        v(0, -1),
+        v(1, 0),
+        v(0, 1),
+        v(-1, 0)
+    )
+
+    val d8 = listOf(
+        v(-1, -1), v(0, -1), v(1, -1),
+        v(-1, 0),            v(1, 0),
+        v(-1, 1),  v(0, 1),  v(1, 1)
+    )
+}

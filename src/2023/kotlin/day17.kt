@@ -3,9 +3,9 @@ import java.util.*
 
 private fun PuzzleInput.part1(): Any? {
     return run(intGrid) { states ->
-        val forward = dirs[dir]
-        val left = dirs[(dir + 3) % 4]
-        val right = dirs[(dir + 1) % 4]
+        val forward = Vectors.d4[dir]
+        val left = Vectors.d4[(dir + 3) % 4]
+        val right = Vectors.d4[(dir + 1) % 4]
 
         // always can go left or right
         val leftCost = intGrid.getOrNull(pos.y + left.y)?.getOrNull(pos.x + left.x)
@@ -30,9 +30,9 @@ private fun PuzzleInput.part1(): Any? {
 
 private fun PuzzleInput.part2(): Any? {
     return run(intGrid) { states ->
-        val forward = dirs[dir]
-        val left = dirs[(dir + 3) % 4]
-        val right = dirs[(dir + 1) % 4]
+        val forward = Vectors.d4[dir]
+        val left = Vectors.d4[(dir + 3) % 4]
+        val right = Vectors.d4[(dir + 1) % 4]
 
         // go left or right if >4 moves in this direction
         if (movesInDir >= 4) {
@@ -55,13 +55,6 @@ private fun PuzzleInput.part2(): Any? {
         }
     }
 }
-
-private val dirs = listOf(
-    v(1, 0), // right
-    v(0, 1), // down
-    v(-1, 0), // left
-    v(0, -1) // up
-)
 
 data class State(val pos: Pair<Int, Int>, val dir: Int, val movesInDir: Int, val cost: Int)
 

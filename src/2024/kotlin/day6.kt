@@ -225,4 +225,4 @@ private class JumpMap(map: Map) {
     }
 }
 
-fun main() = PuzzleInput(2024, 6).withSolutions({ part1() }, { part2() }).benchmark()
+fun main() = PuzzleInput(2024, 6).withSolutions({ part1() }, { part2() }).run()

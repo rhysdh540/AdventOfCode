@@ -93,7 +93,7 @@ class Solution(val input: PuzzleInput,
         }
 
         println("Benchmark results for ${input.year}/${input.day} over $iterations iterations:")
-        println("    Part 1: %.2fms".format((time1 / iterations) / 1e6))
-        println("    Part 2: %.2fms".format((time2 / iterations) / 1e6))
+        println("    Part 1: %.3fms".format((time1 / iterations) / 1e6))
+        println("    Part 2: %.3fms".format((time2 / iterations) / 1e6))
     }
 }

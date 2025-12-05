@@ -30,4 +30,4 @@ private fun PuzzleInput.getMergedRanges(): List<LongRange> {
     return merged
 }
 
-fun main() = PuzzleInput(2025, 5).withSolutions({ part1() }, { part2() }).benchmark()
+fun main() = PuzzleInput(2025, 5).withSolutions({ part1() }, { part2() }).run()

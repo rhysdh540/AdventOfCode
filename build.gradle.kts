@@ -21,6 +21,10 @@ kotlin {
     jvmToolchain(25)
 }
 
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs = listOf("-Xmx2G", "-XX:+UseZGC", "-XX:+UseCompactObjectHeaders")
+}
+
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
 }

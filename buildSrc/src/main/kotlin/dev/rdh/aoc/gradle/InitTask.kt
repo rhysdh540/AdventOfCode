@@ -69,10 +69,11 @@ abstract class InitTask : DefaultTask() {
             logger.warn("Input file already exists: $inFile")
             return
         }
-        if (now < LocalDate.of(year, 12, day).atStartOfDay(ZoneId.of("EST", ZoneId.SHORT_IDS)).toLocalDate()) {
-            logger.warn("Input for $year/$day is not available yet")
-            return
-        }
+        // TODO: idk whats going on here
+//        if (now < LocalDate.of(year, 12, day).atStartOfDay(ZoneId.of("EST", ZoneId.SHORT_IDS)).toLocalDate()) {
+//            logger.warn("Input for $year/$day is not available yet")
+//            return
+//        }
         inFile.parentFile.mkdirs()
         val url = URI.create("https://adventofcode.com/$year/day/$day/input").toURL()
         val conn = url.openConnection() as HttpURLConnection

@@ -61,19 +61,19 @@ class Solution internal constructor(val input: PuzzleInput,
     }
 
     fun benchmark(targetTimeMs: Long = 500, maxIterations: Int = 1_000_000, p2TargetTimeMs: Long = targetTimeMs) {
-        val p1 = Benchmark(
+        val p1 = bench(
             name = "Part 1",
             targetTimeNs = targetTimeMs * 1_000_000,
             maxIterations = maxIterations,
             fn = { input.part1() }
-        ).bench()
+        )
 
-        val p2 = Benchmark(
+        val p2 = bench(
             name = "Part 2",
             targetTimeNs = p2TargetTimeMs * 1_000_000,
             maxIterations = maxIterations,
             fn = { input.part2() }
-        ).bench()
+        )
 
         println("Benchmark results for ${input.year}/${input.day}:\n    $p1\n    $p2" )
     }

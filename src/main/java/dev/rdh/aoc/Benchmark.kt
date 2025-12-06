@@ -33,11 +33,18 @@ internal inline fun bench(
 }
 
 private fun filterOutliers(times: LongArray): LongArray {
-    val stats = computeStats(times)
-    val lowerBound = stats.meanNs - 3 * stats.stddevNs
-    val upperBound = stats.meanNs + 3 * stats.stddevNs
+    var times = times
+    while (true) {
+        val stats = computeStats(times)
+        val lowerBound = stats.meanNs - 3 * stats.stddevNs
+        val upperBound = stats.meanNs + 3 * stats.stddevNs
 
-    return times.filter { it.toDouble() in lowerBound..upperBound }.toLongArray()
+        val oldSize = times.size
+        times = times.filter { it.toDouble() in lowerBound..upperBound }.toLongArray()
+        if (times.size == oldSize) {
+            return times
+        }
+    }
 }
 
 private fun computeStats(times: LongArray): Stats {
@@ -86,7 +93,7 @@ data class Stats(
         append("mean=${ftime(meanNs)} ")
         append("min=${ftime(minNs)} ")
         append("max=${ftime(maxNs)} ")
-        append("stddev=${ftime(stddevNs)} ")
+        append("stddev=${ftime(stddevNs)}")
     }
 }
 

@@ -24,7 +24,7 @@ private fun PuzzleInput.getMergedRanges(): List<LongRange> {
             merged.add(range)
         } else {
             val last = merged.last()
-            merged[merged.size - 1] = last.first..maxOf(last.last, range.last)
+            merged[merged.lastIndex] = last.first..maxOf(last.last, range.last)
         }
     }
     return merged

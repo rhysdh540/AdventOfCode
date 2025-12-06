@@ -21,4 +21,4 @@ private fun PuzzleInput.run(k: Int): Any? {
     }
 }
 
-fun main() = PuzzleInput(2025, 3).withSolutions({ part1() }, { part2() }).run()
+fun main() = PuzzleInput(2025, 3).withSolutions({ part1() }, { part2() }).benchmark()

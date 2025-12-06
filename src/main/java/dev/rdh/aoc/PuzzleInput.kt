@@ -77,23 +77,25 @@ class Solution(val input: PuzzleInput,
         println("----------------------")
     }
 
-    fun benchmark(iterations: Int = 1000) {
-        repeat(iterations) { part1(); part2() }
+    fun benchmark(
+        targetTimeMs: Long = 500,
+        maxIterations: Int = 1_000_000,
+        p2TargetTimeMs: Long = targetTimeMs
+    ) {
+        val p1 = Benchmark(
+            name = "Part 1",
+            targetTimeNs = targetTimeMs * 1_000_000,
+            maxIterations = maxIterations,
+            fn = { part1() }
+        ).bench()
 
-        val time1 = (1..iterations).sumOf {
-            val start = System.nanoTime()
-            this.part1()
-            System.nanoTime() - start
-        }
+        val p2 = Benchmark(
+            name = "Part 2",
+            targetTimeNs = p2TargetTimeMs * 1_000_000,
+            maxIterations = maxIterations,
+            fn = { part2() }
+        ).bench()
 
-        val time2 = (1..iterations).sumOf {
-            val start = System.nanoTime()
-            this.part2()
-            System.nanoTime() - start
-        }
-
-        println("Benchmark results for ${input.year}/${input.day} over $iterations iterations:")
-        println("    Part 1: %.3fms".format((time1 / iterations) / 1e6))
-        println("    Part 2: %.3fms".format((time2 / iterations) / 1e6))
+        println("Benchmark results for ${input.year}/${input.day}:\n    $p1\n    $p2" )
     }
 }

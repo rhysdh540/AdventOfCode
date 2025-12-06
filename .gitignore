@@ -12,6 +12,9 @@ build/
 .gradle/
 .kotlin/
 
+# zig junk
+.zig-cache/
+
 # aoc inputs
 src/**/resources/*.txt
 

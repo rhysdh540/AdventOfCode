@@ -20,15 +20,11 @@ private fun PuzzleInput.part2(): Any? {
     var sum = 0L
 
     var base = 0
-    while(true) {
+    while(base < len) {
         val op = ops[base]
         var i = base + 1
-        while(i < len && (ops.getOrNull(i) ?: ' ') == ' ') {
+        while(i < len && (ops.getOrNull(i) ?: ' ') == ' ') { // because editors will remove trailing spaces :(
             i++
-        }
-
-        if (i >= ops.length) {
-            i = vs.maxOf { it.length } + 1
         }
 
         val v = (0 until (i - base - 1)).map { j ->
@@ -43,7 +39,6 @@ private fun PuzzleInput.part2(): Any? {
         }
 
         base = i
-        if (base >= ops.length) break
     }
 
     return sum

@@ -9,6 +9,8 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.net.HttpURLConnection
 import java.net.URI
+import java.time.LocalDate
+import java.time.ZoneId
 import javax.inject.Inject
 
 abstract class InitTask : DefaultTask() {
@@ -22,6 +24,10 @@ abstract class InitTask : DefaultTask() {
 
     @get:Inject
     abstract val layout: ProjectLayout
+
+    init {
+        year.convention(now.year)
+    }
 
     @TaskAction
     fun init() {
@@ -61,6 +67,10 @@ abstract class InitTask : DefaultTask() {
         val inFile = layout.projectDirectory.file("src/$year/resources/$day.txt").asFile
         if(inFile.exists() && inFile.length() != 0L) {
             logger.warn("Input file already exists: $inFile")
+            return
+        }
+        if (now < LocalDate.of(year, 12, day).atStartOfDay(ZoneId.of("EST", ZoneId.SHORT_IDS)).toLocalDate()) {
+            logger.warn("Input for $year/$day is not available yet")
             return
         }
         inFile.parentFile.mkdirs()

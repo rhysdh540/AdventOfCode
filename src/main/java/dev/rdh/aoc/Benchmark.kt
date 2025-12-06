@@ -79,15 +79,13 @@ class Benchmark(
         val meanNs: Double,
         val stddevNs: Double
     ) {
-        override fun toString(): String {
-            return buildString {
-                append("$name: ")
-                append("n=${iterations} ")
-                append("mean=${ftime(meanNs)} ")
-                append("min=${ftime(minNs)} ")
-                append("max=${ftime(maxNs)} ")
-                append("stddev=${ftime(stddevNs)} ")
-            }
+        override fun toString() = buildString {
+            append("$name: ")
+            append("n=${iterations} ")
+            append("mean=${ftime(meanNs)} ")
+            append("min=${ftime(minNs)} ")
+            append("max=${ftime(maxNs)} ")
+            append("stddev=${ftime(stddevNs)} ")
         }
     }
 }

@@ -11,89 +11,68 @@ class PuzzleInput private constructor(val year: Int, val day: Int, val input: St
 
     constructor(input: String) : this(-1, -1, input)
 
-    val lines: List<String> by lazy {
-        splitBy("\n")
-    }
+    val lines: List<String> get() = splitBy("\n")
 
     fun splitBy(delimiter: String): List<String> {
         return input.split(delimiter)
     }
 
-    val sections by lazy { splitBy(blankLines) }
+    val sections: List<String> get() = splitBy(blankLines)
 
-    val charGrid: List<List<Char>> by lazy {
-        lines.map { it.toList() }
-    }
+    val charGrid: List<List<Char>> get() = lines.map { it.toList() }
 
-    val grid by lazy { charGrid }
+    val grid get() = charGrid
 
     fun boolGrid(trueChar: Char = '#'): List<List<Boolean>> {
         return charGrid.map { row -> row.map { it == trueChar } }
     }
 
-    val boolGrid: List<List<Boolean>> by lazy {
-        boolGrid()
-    }
+    val boolGrid: List<List<Boolean>> get() = boolGrid()
 
-    val intGrid: List<List<Int>> by lazy {
-        charGrid.map { row -> row.map { it.digitToInt() } }
-    }
+    val intGrid: List<List<Int>> get() = charGrid.map { row -> row.map { it.digitToInt() } }
 
     fun intGridOr(default: Int): List<List<Int>> {
         return charGrid.map { row -> row.map { it.digitToIntOrNull() ?: default } }
     }
 
-    val chars: List<Char> by lazy {
-        input.toList()
-    }
+    val chars: List<Char> get() = input.toList()
 
-    fun withSolutions(
-        part1: PuzzleInput.() -> Any?,
-        part2: PuzzleInput.() -> Any?
-    ): Solution {
-        return Solution(this, part1, part2)
-    }
+    fun withSolutions(part1: PuzzleInput.() -> Any?, part2: PuzzleInput.() -> Any?)
+        = Solution(this, part1, part2)
 }
 
-class Solution(val input: PuzzleInput,
+class Solution internal constructor(val input: PuzzleInput,
                private val part1: PuzzleInput.() -> Any?,
                private val part2: PuzzleInput.() -> Any?) {
-    fun part1() = input.part1()
-    fun part2() = input.part2()
-
     fun run() {
         var start = System.nanoTime()
-        var result = part1()
+        var result = input.part1()
         var end = System.nanoTime()
         println("Advent of Code ${input.year}/${input.day}")
         println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
         println(result)
 
         start = System.nanoTime()
-        result = part2()
+        result = input.part2()
         end = System.nanoTime()
         println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
         println(result)
         println("----------------------")
     }
 
-    fun benchmark(
-        targetTimeMs: Long = 500,
-        maxIterations: Int = 1_000_000,
-        p2TargetTimeMs: Long = targetTimeMs
-    ) {
+    fun benchmark(targetTimeMs: Long = 500, maxIterations: Int = 1_000_000, p2TargetTimeMs: Long = targetTimeMs) {
         val p1 = Benchmark(
             name = "Part 1",
             targetTimeNs = targetTimeMs * 1_000_000,
             maxIterations = maxIterations,
-            fn = { part1() }
+            fn = { input.part1() }
         ).bench()
 
         val p2 = Benchmark(
             name = "Part 2",
             targetTimeNs = p2TargetTimeMs * 1_000_000,
             maxIterations = maxIterations,
-            fn = { part2() }
+            fn = { input.part2() }
         ).bench()
 
         println("Benchmark results for ${input.year}/${input.day}:\n    $p1\n    $p2" )

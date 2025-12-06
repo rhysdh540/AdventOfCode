@@ -36,13 +36,13 @@ operator fun Pair<Long, Long>.unaryMinus() = v(-this.x, -this.y)
 @JvmName("longDot")
 infix fun Pair<Long, Long>.dot(other: Pair<Long, Long>) = this.x * other.x + this.y * other.y
 
-operator fun <T> List<List<T>>.get(x: Int, y: Int) = this[y][x]
-operator fun <T> MutableList<MutableList<T>>.set(x: Int, y: Int, value: T) {
+operator fun <T> List2d<T>.get(x: Int, y: Int) = this[y][x]
+operator fun <T> MutableList2d<T>.set(x: Int, y: Int, value: T) {
     this[y][x] = value
 }
 
-operator fun <T> List<List<T>>.get(pos: Pair<Int, Int>) = this[pos.y][pos.x]
-operator fun <T> MutableList<MutableList<T>>.set(pos: Pair<Int, Int>, value: T) {
+operator fun <T> List2d<T>.get(pos: Pair<Int, Int>) = this[pos.y][pos.x]
+operator fun <T> MutableList2d<T>.set(pos: Pair<Int, Int>, value: T) {
     this[pos.y][pos.x] = value
 }
 

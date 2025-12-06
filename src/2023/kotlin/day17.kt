@@ -58,7 +58,7 @@ private fun PuzzleInput.part2(): Any? {
 
 data class State(val pos: Pair<Int, Int>, val dir: Int, val movesInDir: Int, val cost: Int)
 
-private fun run(grid: List<List<Int>>, nextStates: State.(states: MutableList<State>) -> Unit): Int? {
+private fun run(grid: List2d<Int>, nextStates: State.(states: MutableList<State>) -> Unit): Int? {
     val target = v(grid[0].size - 1, grid.size - 1)
     val start = State(v(0, 0), 0, 0, 0)
 

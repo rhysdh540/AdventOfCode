@@ -19,19 +19,19 @@ class PuzzleInput private constructor(val year: Int, val day: Int, val input: St
 
     val sections: List<String> get() = splitBy(blankLines)
 
-    val charGrid: List<List<Char>> get() = lines.map { it.toList() }
+    val charGrid: List2d<Char> get() = lines.map { it.toList() }
 
     val grid get() = charGrid
 
-    fun boolGrid(trueChar: Char = '#'): List<List<Boolean>> {
+    fun boolGrid(trueChar: Char = '#'): List2d<Boolean> {
         return charGrid.map { row -> row.map { it == trueChar } }
     }
 
-    val boolGrid: List<List<Boolean>> get() = boolGrid()
+    val boolGrid: List2d<Boolean> get() = boolGrid()
 
-    val intGrid: List<List<Int>> get() = charGrid.map { row -> row.map { it.digitToInt() } }
+    val intGrid: List2d<Int> get() = charGrid.map { row -> row.map { it.digitToInt() } }
 
-    fun intGridOr(default: Int): List<List<Int>> {
+    fun intGridOr(default: Int): List2d<Int> {
         return charGrid.map { row -> row.map { it.digitToIntOrNull() ?: default } }
     }
 

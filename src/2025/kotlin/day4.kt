@@ -18,7 +18,7 @@ private fun PuzzleInput.part2(): Any? {
     return removed
 }
 
-private fun reachable(grid: List<List<Boolean>>): Set<Pair<Int, Int>> {
+private fun reachable(grid: List2d<Boolean>): Set<Pair<Int, Int>> {
     val reachable = mutableSetOf<Pair<Int, Int>>()
     for (y in grid.indices) {
         for (x in grid[y].indices) {

@@ -22,7 +22,7 @@ private data class Symbol(val symbol: Char, val x: Int, val y: Int) {
     }
 }
 
-private fun List<List<Char>>.symbols(): List<Symbol> {
+private fun List2d<Char>.symbols(): List<Symbol> {
     val symbols = mutableListOf<Symbol>()
     for (y in indices) {
         for (x in this[y].indices) {
@@ -35,7 +35,7 @@ private fun List<List<Char>>.symbols(): List<Symbol> {
     return symbols
 }
 
-private fun List<List<Char>>.numbers(sym: Symbol): MutableSet<Int> {
+private fun List2d<Char>.numbers(sym: Symbol): MutableSet<Int> {
     val numbers = mutableSetOf<Int>()
     for ((x, y) in sym.getSurrounding()) {
         var (x, y) = x to y

@@ -2,14 +2,14 @@ import dev.rdh.aoc.*
 import dev.rdh.aoc.permutations
 
 private fun PuzzleInput.part1(): Any? {
-    return run(Iterable<Iterable<String>>::minOf)
+    return run(Iterable2d<String>::minOf)
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run(Iterable<Iterable<String>>::maxOf)
+    return run(Iterable2d<String>::maxOf)
 }
 
-private inline fun PuzzleInput.run(finder: Iterable<Iterable<String>>.((Iterable<String>) -> Int) -> Int): Int {
+private inline fun PuzzleInput.run(finder: Iterable2d<String>.((Iterable<String>) -> Int) -> Int): Int {
     val distances = mutableMapOf<Pair<String, String>, Int>()
     lines.forEach {
         val (from, _, to, _, distance) = it.split(" ")

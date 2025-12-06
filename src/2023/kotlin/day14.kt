@@ -6,7 +6,7 @@ private fun PuzzleInput.part1(): Any? {
 
 private fun PuzzleInput.part2(): Any? {
     var grid = grid
-    val cache = mutableMapOf<List<List<Char>>, Int>()
+    val cache = mutableMapOf<List2d<Char>, Int>()
 
     var cycle = 0
     while (cycle < 1_000_000_000) {
@@ -26,13 +26,13 @@ private fun PuzzleInput.part2(): Any? {
     return countWeight(grid)
 }
 
-private fun countWeight(grid: List<List<Char>>): Int {
+private fun countWeight(grid: List2d<Char>): Int {
     return grid.indices.sumOf { i ->
         grid[i].count { it == 'O' } * (grid.size - i)
     }
 }
 
-private fun moveRocksNorth(grid: List<List<Char>>): MutableList<MutableList<Char>> {
+private fun moveRocksNorth(grid: List2d<Char>): MutableList<MutableList<Char>> {
     val mut = grid.deepToMutableList()
     for ((i, row) in mut.withIndex()) {
         for ((j, c) in row.withIndex()) {

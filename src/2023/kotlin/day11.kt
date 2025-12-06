@@ -17,7 +17,7 @@ private fun PuzzleInput.part2(): Any? {
     return m * 1_000_000L + b
 }
 
-private fun run(grid: List<List<Boolean>>): Int {
+private fun run(grid: List2d<Boolean>): Int {
     val galaxies = grid.mapIndexed { i, row ->
         row.mapIndexed { j, b -> if (b) v(i, j) else null }.filterNotNull()
     }.flatten()
@@ -30,7 +30,7 @@ private fun run(grid: List<List<Boolean>>): Int {
     }
 }
 
-private fun Iterable<Iterable<Boolean>>.expandRows(): List<List<Boolean>> {
+private fun Iterable2d<Boolean>.expandRows(): List2d<Boolean> {
     return this.flatMap {
         if (it.anyTrue()) {
             listOf(it.toList())

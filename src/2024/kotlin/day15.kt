@@ -136,7 +136,7 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 @Suppress("unused")
-private fun pg(grid: List<List<Char>>, robot: Pair<Int, Int>) =
+private fun pg(grid: List2d<Char>, robot: Pair<Int, Int>) =
     println(grid.mapIndexed { y, row ->
         row.mapIndexed { x, c ->
             if (v(x, y) == robot) '@' else c

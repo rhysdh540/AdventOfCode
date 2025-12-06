@@ -6,7 +6,11 @@ package dev.rdh.aoc
 import java.util.BitSet
 import kotlin.experimental.ExperimentalTypeInference
 
-fun <T> Iterable<Iterable<T>>.rotateClockwise(): List<List<T>> {
+typealias Iterable2d<T> = Iterable<Iterable<T>>
+typealias List2d<T> = List<List<T>>
+typealias MutableList2d<T> = MutableList<MutableList<T>>
+
+fun <T> Iterable2d<T>.rotateClockwise(): List2d<T> {
     return List(this.first().count()) { i ->
         List(this.count()) { j ->
             this.elementAt(this.count() - 1 - j).elementAt(i)
@@ -14,7 +18,7 @@ fun <T> Iterable<Iterable<T>>.rotateClockwise(): List<List<T>> {
     }
 }
 
-fun <T> Iterable<Iterable<T>>.rotateCounterClockwise(): List<List<T>> {
+fun <T> Iterable2d<T>.rotateCounterClockwise(): List2d<T> {
     return List(this.first().count()) { i ->
         List(this.count()) { j ->
             this.elementAt(j).elementAt(this.first().count() - 1 - i)
@@ -40,7 +44,7 @@ fun Iterable<String>.rotateCounterClockwise(): List<String> {
     }
 }
 
-fun <T> Iterable<Iterable<T>>.deepToMutableList(): MutableList<MutableList<T>> {
+fun <T> Iterable2d<T>.deepToMutableList(): MutableList2d<T> {
     return map { it.toMutableList() }.toMutableList()
 }
 

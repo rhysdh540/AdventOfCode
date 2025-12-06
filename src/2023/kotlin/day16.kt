@@ -36,7 +36,7 @@ private fun PuzzleInput.part2(): Any? {
 
 private data class Beam(var r: Int, var c: Int, var dr: Int, var dc: Int)
 
-private fun shoot(grid: List<List<Char>>, start: Beam): Int {
+private fun shoot(grid: List2d<Char>, start: Beam): Int {
     val beams = ArrayDeque<Beam>()
     beams.add(start)
     val visitedStates = mutableSetOf<Triple<Int, Int, Pair<Int, Int>>>()

@@ -74,11 +74,6 @@ enum class Direction4(val vec: Vec2i) {
         DOWN -> LEFT
         LEFT -> UP
     }
-
-    companion object {
-        @Deprecated("use entries", ReplaceWith("Direction4.entries"))
-        val d4 = listOf(UP, RIGHT, DOWN, LEFT)
-    }
 }
 
 enum class Direction8(val vec: Vec2i) {
@@ -90,8 +85,4 @@ enum class Direction8(val vec: Vec2i) {
     DOWN_LEFT(v(-1, 1)),
     LEFT(v(-1, 0)),
     UP_LEFT(v(-1, -1));
-
-    companion object {
-        val d8 = listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
-    }
 }

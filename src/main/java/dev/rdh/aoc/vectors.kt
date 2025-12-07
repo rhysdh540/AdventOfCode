@@ -2,63 +2,96 @@
 
 package dev.rdh.aoc
 
-val Pair<Int, Int>.x get() = first
-val Pair<Int, Int>.y get() = second
-val Pair<Long, Long>.x get() = first
-val Pair<Long, Long>.y get() = second
+data class Vec2i(val x: Int, val y: Int) {
+    operator fun plus(other: Vec2i) = Vec2i(this.x + other.x, this.y + other.y)
+    operator fun minus(other: Vec2i) = Vec2i(this.x - other.x, this.y - other.y)
+    operator fun times(scalar: Int) = Vec2i(this.x * scalar, this.y * scalar)
+    operator fun div(scalar: Int) = Vec2i(this.x / scalar, this.y / scalar)
+    operator fun unaryMinus() = Vec2i(-this.x, -this.y)
+    infix fun dot(other: Vec2i) = this.x * other.x + this.y * other.y
 
-fun v(x: Int, y: Int) = Pair(x, y)
-fun v(x: Long, y: Long) = Pair(x, y)
+    companion object {
+        val ZERO = v(0, 0)
+    }
+}
 
-@JvmName("intPlus")
-operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = v(this.x + other.x, this.y + other.y)
-@JvmName("intMinus")
-operator fun Pair<Int, Int>.minus(other: Pair<Int, Int>) = v(this.x - other.x, this.y - other.y)
-@JvmName("intTimes")
-operator fun Pair<Int, Int>.times(scalar: Int) = v(this.x * scalar, this.y * scalar)
-@JvmName("intDiv")
-operator fun Pair<Int, Int>.div(scalar: Int) = v(this.x / scalar, this.y / scalar)
-@JvmName("intUnaryMinus")
-operator fun Pair<Int, Int>.unaryMinus() = v(-this.x, -this.y)
-@JvmName("intDot")
-infix fun Pair<Int, Int>.dot(other: Pair<Int, Int>) = this.x * other.x + this.y * other.y
+data class Vec2l(val x: Long, val y: Long) {
+    operator fun plus(other: Vec2l) = Vec2l(this.x + other.x, this.y + other.y)
+    operator fun minus(other: Vec2l) = Vec2l(this.x - other.x, this.y - other.y)
+    operator fun times(scalar: Long) = Vec2l(this.x * scalar, this.y * scalar)
+    operator fun div(scalar: Long) = Vec2l(this.x / scalar, this.y / scalar)
+    operator fun unaryMinus() = Vec2l(-this.x, -this.y)
+    infix fun dot(other: Vec2l) = this.x * other.x + this.y * other.y
 
-@JvmName("longPlus")
-operator fun Pair<Long, Long>.plus(other: Pair<Long, Long>) = v(this.x + other.x, this.y + other.y)
-@JvmName("longMinus")
-operator fun Pair<Long, Long>.minus(other: Pair<Long, Long>) = v(this.x - other.x, this.y - other.y)
-@JvmName("longTimes")
-operator fun Pair<Long, Long>.times(scalar: Long) = v(this.x * scalar, this.y * scalar)
-@JvmName("longDiv")
-operator fun Pair<Long, Long>.div(scalar: Long) = v(this.x / scalar, this.y / scalar)
-@JvmName("longUnaryMinus")
-operator fun Pair<Long, Long>.unaryMinus() = v(-this.x, -this.y)
-@JvmName("longDot")
-infix fun Pair<Long, Long>.dot(other: Pair<Long, Long>) = this.x * other.x + this.y * other.y
+    companion object {
+        val ZERO = v(0L, 0L)
+    }
+}
+
+data class Vec2d(val x: Double, val y: Double) {
+    operator fun plus(other: Vec2d) = Vec2d(this.x + other.x, this.y + other.y)
+    operator fun minus(other: Vec2d) = Vec2d(this.x - other.x, this.y - other.y)
+    operator fun times(scalar: Double) = Vec2d(this.x * scalar, this.y * scalar)
+    operator fun div(scalar: Double) = Vec2d(this.x / scalar, this.y / scalar)
+    operator fun unaryMinus() = Vec2d(-this.x, -this.y)
+    infix fun dot(other: Vec2d) = this.x * other.x + this.y * other.y
+
+    companion object {
+        val ZERO = v(0.0, 0.0)
+    }
+}
+
+fun v(x: Int, y: Int) = Vec2i(x, y)
+fun v(x: Long, y: Long) = Vec2l(x, y)
+fun v(x: Double, y: Double) = Vec2d(x, y)
 
 operator fun <T> List2d<T>.get(x: Int, y: Int) = this[y][x]
 operator fun <T> MutableList2d<T>.set(x: Int, y: Int, value: T) {
     this[y][x] = value
 }
 
-operator fun <T> List2d<T>.get(pos: Pair<Int, Int>) = this[pos.y][pos.x]
-operator fun <T> MutableList2d<T>.set(pos: Pair<Int, Int>, value: T) {
+operator fun <T> List2d<T>.get(pos: Vec2i) = this[pos.y][pos.x]
+operator fun <T> MutableList2d<T>.set(pos: Vec2i, value: T) {
     this[pos.y][pos.x] = value
 }
 
-object Vectors {
-    val ZERO = v(0, 0)
+enum class Direction4(val vec: Vec2i) {
+    UP(v(0, -1)),
+    RIGHT(v(1, 0)),
+    DOWN(v(0, 1)),
+    LEFT(v(-1, 0));
 
-    val d4 = listOf(
-        v(0, -1),
-        v(1, 0),
-        v(0, 1),
-        v(-1, 0)
-    )
+    fun turnLeft() = when (this) {
+        UP -> LEFT
+        LEFT -> DOWN
+        DOWN -> RIGHT
+        RIGHT -> UP
+    }
 
-    val d8 = listOf(
-        v(-1, -1), v(0, -1), v(1, -1),
-        v(-1, 0),            v(1, 0),
-        v(-1, 1),  v(0, 1),  v(1, 1)
-    )
+    fun turnRight() = when (this) {
+        UP -> RIGHT
+        RIGHT -> DOWN
+        DOWN -> LEFT
+        LEFT -> UP
+    }
+
+    companion object {
+        @Deprecated("use entries", ReplaceWith("Direction4.entries"))
+        val d4 = listOf(UP, RIGHT, DOWN, LEFT)
+    }
+}
+
+enum class Direction8(val vec: Vec2i) {
+    UP(v(0, -1)),
+    UP_RIGHT(v(1, -1)),
+    RIGHT(v(1, 0)),
+    DOWN_RIGHT(v(1, 1)),
+    DOWN(v(0, 1)),
+    DOWN_LEFT(v(-1, 1)),
+    LEFT(v(-1, 0)),
+    UP_LEFT(v(-1, -1));
+
+    companion object {
+        val d8 = listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
+    }
 }

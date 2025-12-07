@@ -18,12 +18,12 @@ private fun PuzzleInput.part2(): Any? {
     return removed
 }
 
-private fun reachable(grid: List2d<Boolean>): Set<Pair<Int, Int>> {
-    val reachable = mutableSetOf<Pair<Int, Int>>()
+private fun reachable(grid: List2d<Boolean>): Set<Vec2i> {
+    val reachable = mutableSetOf<Vec2i>()
     for (y in grid.indices) {
         for (x in grid[y].indices) {
             if (!grid[x, y]) continue
-            val around = Vectors.d8.map { it + v(x, y) }
+            val around = Direction8.entries.map { v(x, y) + it.vec }
 
             val nrolls = around.count { (ax, ay) ->
                 ay in grid.indices && ax in grid[ay].indices && grid[ax, ay]

@@ -9,17 +9,17 @@ private fun PuzzleInput.part2(): Any? {
     return getPaths().map { it.first }.flatten().distinct().count()
 }
 
-private fun PuzzleInput.getPaths(): Sequence<Pair<Set<Pair<Int, Int>>, Int>> {
+private fun PuzzleInput.getPaths(): Sequence<Pair<Set<Vec2i>, Int>> {
     val mazeLines = charGrid
     val maze = Array(mazeLines.size) { BooleanArray(mazeLines[0].size) }
 
-    var start = Pair(0, 0)
-    var end = Pair(0, 0)
+    var start = v(0, 0)
+    var end = v(0, 0)
     for (i in maze.indices) {
         for (j in maze[i].indices) {
             when (mazeLines[i][j]) {
-                'S' -> start = Pair(i, j)
-                'E' -> end = Pair(i, j)
+                'S' -> start = v(i, j)
+                'E' -> end = v(i, j)
                 '#' -> maze[i][j] = true
             }
         }
@@ -32,12 +32,12 @@ private fun PuzzleInput.getPaths(): Sequence<Pair<Set<Pair<Int, Int>>, Int>> {
         Pair(0, -1)
     )
 
-    data class State(val path: List<Pair<Int, Int>>, val dir: Int, val cost: Int)
+    data class State(val path: List<Vec2i>, val dir: Int, val cost: Int)
 
     val pq = PriorityQueue<State>(compareBy { it.cost })
     pq.add(State(listOf(start), 1, 0))
 
-    val visited = mutableMapOf<Pair<Pair<Int, Int>, Int>, Int>()
+    val visited = mutableMapOf<Pair<Vec2i, Int>, Int>()
     var minCost: Int = Int.MAX_VALUE
 
     return generateSequence {
@@ -59,7 +59,7 @@ private fun PuzzleInput.getPaths(): Sequence<Pair<Set<Pair<Int, Int>>, Int>> {
             val nj = j + dj
 
             if (ni in maze.indices && nj in maze[0].indices && !maze[ni][nj]) {
-                pq.add(State(path + Pair(ni, nj), dir, cost + 1))
+                pq.add(State(path + v(ni, nj), dir, cost + 1))
             }
 
             val leftDir = (dir + 3) % 4

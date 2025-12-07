@@ -156,6 +156,24 @@ fun <T> Iterable<T>.toPair(forceTwo: Boolean = false): Pair<T, T> {
     return Pair(first, second)
 }
 
+@JvmName("toVec2i")
+fun Iterable<Int>.toVec(): Vec2i {
+    val (x, y) = this.toPair(true)
+    return Vec2i(x, y)
+}
+
+@JvmName("toVec2l")
+fun Iterable<Long>.toVec(): Vec2l {
+    val (x, y) = this.toPair(true)
+    return Vec2l(x, y)
+}
+
+@JvmName("toVec2d")
+fun Iterable<Double>.toVec(): Vec2d {
+    val (x, y) = this.toPair(true)
+    return Vec2d(x, y)
+}
+
 fun <T> Iterable<T>.toTriple(forceThree: Boolean = false): Triple<T, T, T> {
     val iter = this.iterator()
     val first = iter.next()

@@ -2,14 +2,14 @@ import dev.rdh.aoc.*
 import kotlin.math.abs
 
 private fun PuzzleInput.part1(): Any? {
-    return run(boolGrid.expandRows().rotateClockwise().expandRows().rotateCounterClockwise())
+    return run(boolGrid('#').expandRows().rotateClockwise().expandRows().rotateCounterClockwise())
 }
 
 private fun PuzzleInput.part2(): Any? {
     // f(x) = mx + b
     // x1 = 1, x2 = 2
     val y2 = part1() as Int
-    val y1 = run(boolGrid)
+    val y1 = run(boolGrid('#'))
 
     // calculate f(1,000,000)
     val m = y2 - y1 // m = (y2 - y1) / (x2 - x1), but x2 - x1 = 1 so we can ignore it

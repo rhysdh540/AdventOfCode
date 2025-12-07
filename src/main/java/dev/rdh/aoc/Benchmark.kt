@@ -7,7 +7,8 @@ internal inline fun bench(
     name: String,
     targetTimeNs: Long,
     maxIterations: Int,
-    fn: () -> Any?
+    fn: () -> Any?,
+    reset: () -> Unit = {}
 ): Stats {
     var iter = 1
     var elapsed = measureNs(iter, fn)
@@ -27,6 +28,7 @@ internal inline fun bench(
         val start = System.nanoTime()
         fn()
         times[i] = System.nanoTime() - start
+        reset()
     }
 
     return computeStats(filterOutliers(times)).copy(name = name)

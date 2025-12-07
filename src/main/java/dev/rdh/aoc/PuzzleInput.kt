@@ -2,6 +2,9 @@
 
 package dev.rdh.aoc
 
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.jvm.isAccessible
+
 class PuzzleInput private constructor(val year: Int, val day: Int, val input: String) {
     constructor(year: Int, day: Int) : this(year, day, Unit.run {
         val callerClass = Class.forName(Thread.currentThread().stackTrace[2].className)
@@ -11,34 +14,73 @@ class PuzzleInput private constructor(val year: Int, val day: Int, val input: St
 
     constructor(input: String) : this(-1, -1, input)
 
-    val lines: List<String> get() = splitBy("\n")
+    val lines by ResettableLazy { splitBy("\n") }
 
     fun splitBy(delimiter: String): List<String> {
         return input.split(delimiter)
     }
 
-    val sections: List<String> get() = splitBy(blankLines)
+    val sections by ResettableLazy { splitBy(blankLines) }
 
-    val charGrid: List2d<Char> get() = lines.map { it.toList() }
+    val charGrid: List2d<Char> by ResettableLazy {
+        lines.map { it.toList() }
+    }
 
-    val grid get() = charGrid
+    inline val grid get() = charGrid
 
-    fun boolGrid(trueChar: Char = '#'): List2d<Boolean> {
+    fun boolGrid(trueChar: Char): List2d<Boolean> {
         return charGrid.map { row -> row.map { it == trueChar } }
     }
 
-    val boolGrid: List2d<Boolean> get() = boolGrid()
-
-    val intGrid: List2d<Int> get() = charGrid.map { row -> row.map { it.digitToInt() } }
+    val intGrid: List2d<Int> by ResettableLazy {
+        charGrid.map { row -> row.map { it.digitToInt() } }
+    }
 
     fun intGridOr(default: Int): List2d<Int> {
         return charGrid.map { row -> row.map { it.digitToIntOrNull() ?: default } }
     }
 
-    val chars: List<Char> get() = input.toList()
+    val chars: List<Char> by ResettableLazy {
+        input.toList()
+    }
+
+    internal fun resetLazyProperties() {
+        val props = listOf(
+            ::lines,
+            ::sections,
+            ::charGrid,
+            ::intGrid,
+            ::chars
+        )
+
+        for (prop in props) {
+            prop.isAccessible = true
+            (prop.getDelegate() as ResettableLazy<*>).reset()
+        }
+    }
 
     fun withSolutions(part1: PuzzleInput.() -> Any?, part2: PuzzleInput.() -> Any?)
         = Solution(this, part1, part2)
+}
+
+private class ResettableLazy<T>(private val initializer: () -> T) : ReadOnlyProperty<Any?, T> {
+    private var _value: Any? = UNINITIALIZED_VALUE
+
+    override fun getValue(thisRef: Any?, property: kotlin.reflect.KProperty<*>): T {
+        if (_value === UNINITIALIZED_VALUE) {
+            _value = initializer()
+        }
+        @Suppress("UNCHECKED_CAST")
+        return _value as T
+    }
+
+    fun reset() {
+        _value = UNINITIALIZED_VALUE
+    }
+
+    companion object {
+        private val UNINITIALIZED_VALUE = Any()
+    }
 }
 
 class Solution internal constructor(val input: PuzzleInput,
@@ -51,6 +93,8 @@ class Solution internal constructor(val input: PuzzleInput,
         println("Advent of Code ${input.year}/${input.day}")
         println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
         println(result)
+
+        input.resetLazyProperties()
 
         start = System.nanoTime()
         result = input.part2()
@@ -65,14 +109,16 @@ class Solution internal constructor(val input: PuzzleInput,
             name = "Part 1",
             targetTimeNs = targetTimeMs * 1_000_000,
             maxIterations = maxIterations,
-            fn = { input.part1() }
+            fn = { input.part1() },
+            reset = { input.resetLazyProperties() }
         )
 
         val p2 = bench(
             name = "Part 2",
             targetTimeNs = p2TargetTimeMs * 1_000_000,
             maxIterations = maxIterations,
-            fn = { input.part2() }
+            fn = { input.part2() },
+            reset = { input.resetLazyProperties() }
         )
 
         println("Benchmark results for ${input.year}/${input.day}:\n    $p1\n    $p2" )

@@ -55,19 +55,19 @@ private fun walk(map: Map): IntArray {
 
     var row = startIndex / width
     var col = startIndex % width
-    var dir = 0 // 0 = up, 1 = right, 2 = down, 3 = left
+    var dir = Direction4.UP
 
     visited[startIndex] = true
 
     while (true) {
-        val (nc, nr) = v(col, row) + Vectors.d4[dir]
+        val (nc, nr) = v(col, row) + dir.vec
         if (nr !in 0..<height || nc !in 0..<width) {
             break
         }
 
         val nextIndex = nr * width + nc
         if (walls[nextIndex]) {
-            dir = (dir + 1) and 3
+            dir = dir.turnRight()
             continue
         }
 

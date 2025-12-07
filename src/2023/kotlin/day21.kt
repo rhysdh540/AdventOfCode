@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
     val startPos = charGrid.indexOfFirst { 'S' in it }.let { charGrid[it].indexOf('S') to it }
-    val grid = boolGrid
+    val grid = boolGrid('#')
 
     var current = setOf(startPos)
     repeat(64) {

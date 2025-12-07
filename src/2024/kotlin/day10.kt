@@ -11,17 +11,16 @@ private fun PuzzleInput.part1(): Any? {
         val queue = ArrayDeque(listOf(it))
         var count = 0
         while (queue.isNotEmpty()) {
-            val (x, y) = queue.removeFirst()
-            if (grid[y][x] == 9) {
+            val pos = queue.removeFirst()
+            if (grid[pos] == 9) {
                 count++
             }
-            for ((dx, dy) in Vectors.d4) {
-                val nx = x + dx
-                val ny = y + dy
-                val next = grid.getOrNull(ny)?.getOrNull(nx) ?: continue
-                if (next - grid[y][x] == 1 && v(nx, ny) !in visited) {
-                    visited.add(v(nx, ny))
-                    queue.add(v(nx, ny))
+            for (dir in Direction4.entries) {
+                val n = pos + dir.vec
+                val next = grid.getOrNull(n.y)?.getOrNull(n.x) ?: continue
+                if (next - grid[pos] == 1 && n !in visited) {
+                    visited.add(n)
+                    queue.add(n)
                 }
             }
         }
@@ -40,16 +39,15 @@ private fun PuzzleInput.part2(): Any? {
         val queue = ArrayDeque(listOf(it))
         var count = 0
         while (queue.isNotEmpty()) {
-            val (x, y) = queue.removeFirst()
-            if (grid[y][x] == 9) {
+            val pos = queue.removeFirst()
+            if (grid[pos] == 9) {
                 count++
             }
-            for ((dx, dy) in Vectors.d4) {
-                val nx = x + dx
-                val ny = y + dy
-                val next = grid.getOrNull(ny)?.getOrNull(nx) ?: continue
-                if (next - grid[y][x] == 1) {
-                    queue.add(v(nx, ny))
+            for (dir in Direction4.entries) {
+                val n = pos + dir.vec
+                val next = grid.getOrNull(n.y)?.getOrNull(n.x) ?: continue
+                if (next - grid[pos] == 1) {
+                    queue.add(n)
                 }
             }
         }

@@ -4,7 +4,7 @@ private fun PuzzleInput.part1(): Any? {
 
     return grid.indices.sumOf { r ->
         grid[r].indices.sumOf { c ->
-            Vectors.d8.count { (dr, dc) ->
+            Direction8.entries.map { it.vec }.count { (dr, dc) ->
                 "XMAS".indices.all { i ->
                     val nr = r + i * dr
                     val nc = c + i * dc

@@ -3,19 +3,19 @@ import java.util.*
 
 private fun PuzzleInput.part1(): Any? {
     return run(intGrid) { states ->
-        val forward = Vectors.d4[dir]
-        val left = Vectors.d4[(dir + 3) % 4]
-        val right = Vectors.d4[(dir + 1) % 4]
+        val forward = dir.vec
+        val left = dir.turnLeft().vec
+        val right = dir.turnRight().vec
 
         // always can go left or right
         val leftCost = intGrid.getOrNull(pos.y + left.y)?.getOrNull(pos.x + left.x)
         if (leftCost != null) {
-            states += State(pos + left, (dir + 3) % 4, 1, leftCost)
+            states += State(pos + left, dir.turnLeft(), 1, leftCost)
         }
 
         val rightCost = intGrid.getOrNull(pos.y + right.y)?.getOrNull(pos.x + right.x)
         if (rightCost != null) {
-            states += State(pos + right, (dir + 1) % 4, 1, rightCost)
+            states += State(pos + right, dir.turnRight(), 1, rightCost)
         }
 
         // can go forward if we haven't moved 3 times in this direction
@@ -30,20 +30,20 @@ private fun PuzzleInput.part1(): Any? {
 
 private fun PuzzleInput.part2(): Any? {
     return run(intGrid) { states ->
-        val forward = Vectors.d4[dir]
-        val left = Vectors.d4[(dir + 3) % 4]
-        val right = Vectors.d4[(dir + 1) % 4]
+        val forward = dir.vec
+        val left = dir.turnLeft().vec
+        val right = dir.turnRight().vec
 
         // go left or right if >4 moves in this direction
         if (movesInDir >= 4) {
             val leftCost = intGrid.getOrNull(pos.y + left.y)?.getOrNull(pos.x + left.x)
             if (leftCost != null) {
-                states += State(pos + left, (dir + 3) % 4, 1, leftCost)
+                states += State(pos + left, dir.turnLeft(), 1, leftCost)
             }
 
             val rightCost = intGrid.getOrNull(pos.y + right.y)?.getOrNull(pos.x + right.x)
             if (rightCost != null) {
-                states += State(pos + right, (dir + 1) % 4, 1, rightCost)
+                states += State(pos + right, dir.turnRight(), 1, rightCost)
             }
         }
 
@@ -56,13 +56,13 @@ private fun PuzzleInput.part2(): Any? {
     }
 }
 
-data class State(val pos: Pair<Int, Int>, val dir: Int, val movesInDir: Int, val cost: Int)
+data class State(val pos: Vec2i, val dir: Direction4, val movesInDir: Int, val cost: Int)
 
-private fun run(grid: List2d<Int>, nextStates: State.(states: MutableList<State>) -> Unit): Int? {
+private fun run(grid: List<List<Int>>, nextStates: State.(states: MutableList<State>) -> Unit): Int? {
     val target = v(grid[0].size - 1, grid.size - 1)
-    val start = State(v(0, 0), 0, 0, 0)
+    val start = State(v(0, 0), Direction4.RIGHT, 0, 0)
 
-    data class Key(val pos: Pair<Int, Int>, val dir: Int, val moves: Int)
+    data class Key(val pos: Vec2i, val dir: Direction4, val moves: Int)
 
     val queue = PriorityQueue<State>(compareBy { it.cost })
     val bestCost = mutableMapOf<Key, Int>()
@@ -95,7 +95,7 @@ private fun run(grid: List2d<Int>, nextStates: State.(states: MutableList<State>
         }
     }
 
-    return null
+    error("No path found")
 }
 
 fun main() = PuzzleInput(2023, 17).withSolutions({ part1() }, { part2() }).run()

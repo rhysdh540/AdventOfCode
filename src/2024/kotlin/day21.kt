@@ -56,7 +56,7 @@ private fun findShortestPaths(vararg buttons: String): Map<Char, Map<Char, Strin
 
     // Map each button to its (row, column) position
     val buttonPositions = buttons.flatMapIndexed { i, row ->
-        row.withIndex().filter { it.value != ' ' }.map { (j, value) -> value to Pair(i, j) }
+        row.withIndex().filter { it.value != ' ' }.map { (j, value) -> value to v(i, j) }
     }.toMap()
 
     for ((start, startPos) in buttonPositions) {
@@ -73,8 +73,8 @@ private fun findShortestPaths(vararg buttons: String): Map<Char, Map<Char, Strin
 // also taking into account how "compressible" it will be when it's run through makePath
 private fun findPath(
     buttons: Array<out String>,
-    start: Pair<Int, Int>,
-    end: Pair<Int, Int>
+    start: Vec2i,
+    end: Vec2i
 ): String {
     val commands = StringBuilder()
 

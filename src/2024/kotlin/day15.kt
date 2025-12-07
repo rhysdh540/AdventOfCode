@@ -9,14 +9,14 @@ private fun PuzzleInput.part1(): Any? {
         .filterNotNull().first()
     grid[robot] = '.'
 
-    fun canMoveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>): Boolean {
+    fun canMoveBoxes(start: Vec2i, dir: Vec2i): Boolean {
         val next = start + dir
         if (grid[next] == '#') return false
         if (grid[next] == 'O') return canMoveBoxes(next, dir)
         return true
     }
 
-    fun moveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>) {
+    fun moveBoxes(start: Vec2i, dir: Vec2i) {
         val next = start + dir
         if (grid[next] == 'O') moveBoxes(next, dir)
         grid[next] = 'O'
@@ -25,10 +25,10 @@ private fun PuzzleInput.part1(): Any? {
 
     for (insn in insns) {
         val dir = when (insn) {
-            '^' -> Vectors.d4[0]
-            '>' -> Vectors.d4[1]
-            'v' -> Vectors.d4[2]
-            '<' -> Vectors.d4[3]
+            '^' -> Direction4.UP.vec
+            '>' -> Direction4.RIGHT.vec
+            'v' -> Direction4.DOWN.vec
+            '<' -> Direction4.LEFT.vec
             else -> error("Invalid instruction: $insn")
         }
         val next = robot + dir
@@ -71,10 +71,10 @@ private fun PuzzleInput.part2(): Any? {
         .filterNotNull().first()
     grid[robot] = '.'
 
-    fun canMoveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>): Boolean {
+    fun canMoveBoxes(start: Vec2i, dir: Vec2i): Boolean {
         val (left, right) = when (grid[start]) {
-            '[' -> Pair(start, start + Vectors.d4[1])
-            ']' -> Pair(start + Vectors.d4[3], start)
+            '[' -> Pair(start, start + Direction4.RIGHT.vec)
+            ']' -> Pair(start + Direction4.LEFT.vec, start)
             else -> error("Not a box cell")
         }
 
@@ -87,10 +87,10 @@ private fun PuzzleInput.part2(): Any? {
         return true
     }
 
-    fun moveBoxes(start: Pair<Int, Int>, dir: Pair<Int, Int>) {
+    fun moveBoxes(start: Vec2i, dir: Vec2i) {
         val (left, right) = when (grid[start]) {
-            '[' -> Pair(start, start + Vectors.d4[1])
-            ']' -> Pair(start + Vectors.d4[3], start)
+            '[' -> Pair(start, start + Direction4.RIGHT.vec)
+            ']' -> Pair(start + Direction4.LEFT.vec, start)
             else -> error("Not a box cell")
         }
 
@@ -108,10 +108,10 @@ private fun PuzzleInput.part2(): Any? {
 
     for (insn in insns) {
         val dir = when (insn) {
-            '^' -> Vectors.d4[0]
-            '>' -> Vectors.d4[1]
-            'v' -> Vectors.d4[2]
-            '<' -> Vectors.d4[3]
+            '^' -> Direction4.UP.vec
+            '>' -> Direction4.RIGHT.vec
+            'v' -> Direction4.DOWN.vec
+            '<' -> Direction4.LEFT.vec
             else -> error("Invalid instruction: $insn")
         }
         val next = robot + dir
@@ -136,7 +136,7 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 @Suppress("unused")
-private fun pg(grid: List2d<Char>, robot: Pair<Int, Int>) =
+private fun pg(grid: List2d<Char>, robot: Vec2i) =
     println(grid.mapIndexed { y, row ->
         row.mapIndexed { x, c ->
             if (v(x, y) == robot) '@' else c

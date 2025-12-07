@@ -39,7 +39,7 @@ private data class Beam(var r: Int, var c: Int, var dr: Int, var dc: Int)
 private fun shoot(grid: List2d<Char>, start: Beam): Int {
     val beams = ArrayDeque<Beam>()
     beams.add(start)
-    val visitedStates = mutableSetOf<Triple<Int, Int, Pair<Int, Int>>>()
+    val visitedStates = mutableSetOf<Triple<Int, Int, Vec2i>>()
     val rows = grid.size
     val cols = grid[0].size
     var count = 0
@@ -53,7 +53,7 @@ private fun shoot(grid: List2d<Char>, start: Beam): Int {
         if (beam.r < 0 || beam.r >= rows || beam.c < 0 || beam.c >= cols) continue
 
         // If we've visited this state already, skip
-        val state = Triple(beam.r, beam.c, Pair(beam.dr, beam.dc))
+        val state = Triple(beam.r, beam.c, v(beam.dr, beam.dc))
         if (!visitedStates.add(state)) continue
 
         val c = grid[beam.r][beam.c]

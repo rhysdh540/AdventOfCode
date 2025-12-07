@@ -14,9 +14,9 @@ private fun PuzzleInput.part1(): Any? {
         s
     }
 
-    val queue = ArrayDeque<Pair<Int, Int>>()
-    val found = mutableSetOf<Pair<Int, Int>>()
-    val visited = mutableSetOf<Pair<Int, Int>>()
+    val queue = ArrayDeque<Vec2i>()
+    val found = mutableSetOf<Vec2i>()
+    val visited = mutableSetOf<Vec2i>()
     queue += start + v(0, 1)
     while (queue.isNotEmpty()) {
         val pos = queue.removeFirst()
@@ -59,8 +59,8 @@ private fun PuzzleInput.part2(): Any {
         s
     }
 
-    val cache = mutableMapOf<Pair<Int, Int>, Long>()
-    fun timelines(pos: Pair<Int, Int>): Long {
+    val cache = mutableMapOf<Vec2i, Long>()
+    fun timelines(pos: Vec2i): Long {
         if (pos in cache) return cache[pos]!!
 
         if (pos.y !in grid.indices || pos.x !in grid[pos.y].indices) {

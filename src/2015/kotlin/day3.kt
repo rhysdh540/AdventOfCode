@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
     var santa = v(0, 0)
-    val visited = mutableSetOf<Pair<Int, Int>>()
+    val visited = mutableSetOf<Vec2i>()
     for (c in input) {
         visited.add(santa)
         santa += move(c)
@@ -14,7 +14,7 @@ private fun PuzzleInput.part1(): Any? {
 private fun PuzzleInput.part2(): Any? {
     var santa = v(0, 0)
     var roboSanta = v(0, 0)
-    val visited = mutableSetOf<Pair<Int, Int>>()
+    val visited = mutableSetOf<Vec2i>()
     for (instructions in input.chunked(2)) {
         visited.add(santa)
         visited.add(roboSanta)
@@ -27,7 +27,7 @@ private fun PuzzleInput.part2(): Any? {
     return visited.size
 }
 
-private fun move(c: Char): Pair<Int, Int> {
+private fun move(c: Char): Vec2i {
     return when (c) {
         'v' -> v(0, 1)
         '>' -> v(1, 0)

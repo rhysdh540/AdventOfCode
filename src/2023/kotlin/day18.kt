@@ -29,7 +29,7 @@ private fun PuzzleInput.part2(): Any? {
 
 private fun run(insns: List<Pair<String, Long>>): Long {
     var pos = v(0L, 0L)
-    val vertices = mutableListOf<Pair<Long, Long>>()
+    val vertices = mutableListOf<Vec2l>()
     vertices += pos
 
     var boundary = 0L // number of points on the perimeter

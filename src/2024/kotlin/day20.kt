@@ -10,18 +10,18 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 private fun PuzzleInput.run(cheatLen: Int): Int {
-    fun manhattan(a: Pair<Int, Int>, b: Pair<Int, Int>): Int {
+    fun manhattan(a: Vec2i, b: Vec2i): Int {
         return abs(a.x - b.x) + abs(a.y - b.y)
     }
 
-    lateinit var start: Pair<Int, Int>
-    lateinit var end: Pair<Int, Int>
-    val points = mutableSetOf<Pair<Int, Int>>()
+    lateinit var start: Vec2i
+    lateinit var end: Vec2i
+    val points = mutableSetOf<Vec2i>()
     lines.forEachIndexed { i, line ->
         line.forEachIndexed { j, c ->
-            if (c == 'S') start = Pair(i, j)
-            if (c == 'E') end = Pair(i, j)
-            if (c != '#') points.add(Pair(i, j))
+            if (c == 'S') start = v(i, j)
+            if (c == 'E') end = v(i, j)
+            if (c != '#') points.add(v(i, j))
         }
     }
 
@@ -29,9 +29,9 @@ private fun PuzzleInput.run(cheatLen: Int): Int {
         var current = start
         var prev = start
 
-        val result = mutableListOf<Pair<Int, Int>>()
+        val result = mutableListOf<Vec2i>()
         while (current != end) {
-            val next = Vectors.d4.map { it + current }.first { it != prev && it in points }
+            val next = Direction4.entries.map { it.vec + current }.first { it != prev && it in points }
             result.add(current)
             prev = current
             current = next

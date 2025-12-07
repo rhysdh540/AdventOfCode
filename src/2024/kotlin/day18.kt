@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 import java.util.PriorityQueue
 
 private fun PuzzleInput.part1(): Any? {
-    val nums = lines.map { it.split(",").ints.toPair() }
+    val nums = lines.map { it.split(",").ints.toVec() }
     val grid = Array(71) { BooleanArray(71) }
     for (i in nums.slice(0..1024)) {
         grid[i.x][i.y] = true
@@ -12,8 +12,11 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val nums = lines.map { it.split(",").ints.toPair() }
+    val nums = lines.map { it.split(",").ints.toVec() }
     val grid = Array(71) { BooleanArray(71) }
+    for (i in nums.slice(0..1024)) {
+        grid[i.x][i.y] = true
+    }
     return nums.drop(1024).first {
         grid[it.x][it.y] = true
         solve(grid) == null
@@ -21,23 +24,22 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 private fun solve(grid: Array<BooleanArray>): Int? {
-    val pq = PriorityQueue<Triple<Int, Int, Int>>(compareBy { it.third })
-    pq.add(Triple(0, 0, 0))
+    val pq = PriorityQueue<Pair<Vec2i, Int>>(compareBy { it.second })
+    pq.add(Pair(Vec2i.ZERO, 0))
     val visited = Array(71) { BooleanArray(71) }
 
     while (pq.isNotEmpty()) {
-        val (x, y, steps) = pq.poll()
+        val (pos, steps) = pq.poll()
 
-        if (x == 70 && y == 70) return steps
-        if (visited[x][y]) continue
-        visited[x][y] = true
+        if (pos.x == 70 && pos.y == 70) return steps
+        if (visited[pos.y][pos.x]) continue
+        visited[pos.y][pos.x] = true
 
-        for ((dx, dy) in Vectors.d4) {
-            val nx = x + dx
-            val ny = y + dy
+        for (dir in Direction4.entries) {
+            val n = pos + dir.vec
 
-            if (nx in 0..70 && ny in 0..70 && !grid[nx][ny] && !visited[nx][ny]) {
-                pq.add(Triple(nx, ny, steps + 1))
+            if (n.x in 0..70 && n.y in 0..70 && !grid[n.x][n.y] && !visited[n.y][n.x]) {
+                pq.add(Pair(n, steps + 1))
             }
         }
     }

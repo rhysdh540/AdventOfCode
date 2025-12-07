@@ -9,7 +9,7 @@ private fun PuzzleInput.part2(): Any? {
 }
 
 private fun PuzzleInput.run(stuckCorners: Boolean): Int {
-    val grid = boolGrid.deepToMutableList()
+    val grid = boolGrid('#').deepToMutableList()
     val size = grid.size
 
     if (stuckCorners) {
@@ -23,8 +23,8 @@ private fun PuzzleInput.run(stuckCorners: Boolean): Int {
         val newGrid = Array(size) { BooleanArray(size) }
         for (i in 0 until size) {
             for (j in 0 until size) {
-                val count = Vectors.d8.count {
-                    val (x, y) = it + v(i, j)
+                val count = Direction8.entries.count {
+                    val (x, y) = v(i, j) + it.vec
                     x in 0 until size && y in 0 until size && grid[x][y]
                 }
                 newGrid[i][j] = when {

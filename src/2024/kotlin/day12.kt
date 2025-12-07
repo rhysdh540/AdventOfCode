@@ -1,11 +1,11 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val visited = mutableSetOf<Pair<Int, Int>>()
+    val visited = mutableSetOf<Vec2i>()
 
-    fun ff(x: Int, y: Int, char: Char): Set<Pair<Int, Int>> {
-        val blob = mutableSetOf<Pair<Int, Int>>()
-        val q = ArrayDeque<Pair<Int, Int>>()
+    fun ff(x: Int, y: Int, char: Char): Set<Vec2i> {
+        val blob = mutableSetOf<Vec2i>()
+        val q = ArrayDeque<Vec2i>()
         q.add(v(x, y))
         visited.add(v(x, y))
 
@@ -55,11 +55,11 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val visited = mutableSetOf<Pair<Int, Int>>()
+    val visited = mutableSetOf<Vec2i>()
 
-    fun ff(x: Int, y: Int, char: Char): Set<Pair<Int, Int>> {
-        val blob = mutableSetOf<Pair<Int, Int>>()
-        val q = ArrayDeque<Pair<Int, Int>>()
+    fun ff(x: Int, y: Int, char: Char): Set<Vec2i> {
+        val blob = mutableSetOf<Vec2i>()
+        val q = ArrayDeque<Vec2i>()
         q.add(v(x, y))
         visited.add(v(x, y))
 
@@ -88,7 +88,7 @@ private fun PuzzleInput.part2(): Any? {
         return blob
     }
 
-    fun calculatePerimeter(blob: Set<Pair<Int, Int>>): Int {
+    fun calculatePerimeter(blob: Set<Vec2i>): Int {
         val vert = mutableSetOf<Triple<Int, Int, Int>>()
         val hor = mutableSetOf<Triple<Int, Int, Int>>()
 

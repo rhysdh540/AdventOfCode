@@ -2,9 +2,8 @@ import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
     return lines.map { it.spaced }.rotateCounterClockwise().sumOf {
-        val op = it.last()
         val operands = it.dropLast(1).longs
-        when (op) {
+        when (val op = it.last()) {
             "+" -> operands.sum()
             "*" -> operands.product()
             else -> error(op)

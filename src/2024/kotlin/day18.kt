@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 import java.util.PriorityQueue
 
 private fun PuzzleInput.part1(): Any? {
-    val nums = lines.map { it.split(",").ints.toVec() }
+    val nums = lines.map { it.split(",").ints.toVec2() }
     val grid = Array(71) { BooleanArray(71) }
     for (i in nums.slice(0..1024)) {
         grid[i.x][i.y] = true
@@ -12,7 +12,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val nums = lines.map { it.split(",").ints.toVec() }
+    val nums = lines.map { it.split(",").ints.toVec2() }
     val grid = Array(71) { BooleanArray(71) }
     for (i in nums.slice(0..1024)) {
         grid[i.x][i.y] = true

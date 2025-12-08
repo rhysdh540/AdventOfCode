@@ -45,6 +45,56 @@ fun v(x: Int, y: Int) = Vec2i(x, y)
 fun v(x: Long, y: Long) = Vec2l(x, y)
 fun v(x: Double, y: Double) = Vec2d(x, y)
 
+data class Vec3i(val x: Int, val y: Int, val z: Int) {
+    operator fun plus(other: Vec3i) = Vec3i(this.x + other.x, this.y + other.y, this.z + other.z)
+    operator fun minus(other: Vec3i) = Vec3i(this.x - other.x, this.y - other.y, this.z - other.z)
+    operator fun times(scalar: Int) = Vec3i(this.x * scalar, this.y * scalar, this.z * scalar)
+    operator fun div(scalar: Int) = Vec3i(this.x / scalar, this.y / scalar, this.z / scalar)
+    operator fun unaryMinus() = Vec3i(-this.x, -this.y, -this.z)
+    infix fun dot(other: Vec3i) = this.x * other.x + this.y * other.y + this.z * other.z
+
+    val xy by lazy { v(x, y) }
+
+    companion object {
+        val ZERO = v(0, 0, 0)
+    }
+}
+
+
+data class Vec3l(val x: Long, val y: Long, val z: Long) {
+    operator fun plus(other: Vec3l) = Vec3l(this.x + other.x, this.y + other.y, this.z + other.z)
+    operator fun minus(other: Vec3l) = Vec3l(this.x - other.x, this.y - other.y, this.z - other.z)
+    operator fun times(scalar: Long) = Vec3l(this.x * scalar, this.y * scalar, this.z * scalar)
+    operator fun div(scalar: Long) = Vec3l(this.x / scalar, this.y / scalar, this.z / scalar)
+    operator fun unaryMinus() = Vec3l(-this.x, -this.y, -this.z)
+    infix fun dot(other: Vec3l) = this.x * other.x + this.y * other.y + this.z * other.z
+
+    val xy by lazy { v(x, y) }
+
+    companion object {
+        val ZERO = v(0L, 0L, 0L)
+    }
+}
+
+data class Vec3d(val x: Double, val y: Double, val z: Double) {
+    operator fun plus(other: Vec3d) = Vec3d(this.x + other.x, this.y + other.y, this.z + other.z)
+    operator fun minus(other: Vec3d) = Vec3d(this.x - other.x, this.y - other.y, this.z - other.z)
+    operator fun times(scalar: Double) = Vec3d(this.x * scalar, this.y * scalar, this.z * scalar)
+    operator fun div(scalar: Double) = Vec3d(this.x / scalar, this.y / scalar, this.z / scalar)
+    operator fun unaryMinus() = Vec3d(-this.x, -this.y, -this.z)
+    infix fun dot(other: Vec3d) = this.x * other.x + this.y * other.y + this.z * other.z
+
+    val xy by lazy { v(x, y) }
+
+    companion object {
+        val ZERO = v(0.0, 0.0, 0.0)
+    }
+}
+
+fun v(x: Int, y: Int, z: Int) = Vec3i(x, y, z)
+fun v(x: Long, y: Long, z: Long) = Vec3l(x, y, z)
+fun v(x: Double, y: Double, z: Double) = Vec3d(x, y, z)
+
 operator fun <T> List2d<T>.get(x: Int, y: Int) = this[y][x]
 operator fun <T> MutableList2d<T>.set(x: Int, y: Int, value: T) {
     this[y][x] = value

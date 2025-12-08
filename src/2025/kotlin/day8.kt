@@ -8,16 +8,12 @@ private fun PuzzleInput.part1(): Any? {
         union(e.a, e.b)
     }
 
-    val counts = mutableMapOf<Int, Int>()
+    val counts = IntArray(coords.size)
     for (i in coords.indices) {
-        val root = find(i)
-        counts[root] = (counts[root] ?: 0) + 1
+        counts[find(i)]++
     }
 
-    return counts.values
-        .sortedDescending()
-        .take(3)
-        .fold(1) { acc, v -> acc * v }
+    return counts.sortedDescending().take(3).product()
 }
 
 private fun PuzzleInput.part2(): Any? {
@@ -93,4 +89,4 @@ private fun PuzzleInput.parse(): Parsed {
     return Parsed(coords, edges, ::find, ::union)
 }
 
-fun main() = PuzzleInput(2025, 8).withSolutions({ part1() }, { part2() }).benchmark()
+fun main() = PuzzleInput(2025, 8).withSolutions({ part1() }, { part2() }).run()

@@ -57,6 +57,8 @@ private fun PuzzleInput.part2(): Any? {
                 val b = range.last.floorDiv(c).coerceAtMost(hiK)
 
                 if (a <= b) {
+                    // TODO: find some way to avoid checking every number here
+                    //  according to my math professor some form of inclusion-exclusion could work
                     for (k in a..b) {
                         seen.add(c * k)
                     }

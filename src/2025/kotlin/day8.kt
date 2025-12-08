@@ -1,30 +1,30 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val (coords, edges, find, union) = parse()
+    val (coords, edges, uf) = parse()
 
     repeat(1000) {
         val e = edges[it]
-        union(e.a, e.b)
+        uf.union(e.a, e.b)
     }
 
     val counts = IntArray(coords.size)
     for (i in coords.indices) {
-        counts[find(i)]++
+        counts[uf.find(i)]++
     }
 
     return counts.sortedDescending().take(3).product()
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val (coords, edges, find, union) = parse()
+    val (coords, edges, uf) = parse()
     var numCircuits = coords.size
     lateinit var lastEdge: Edge
 
     for (e in edges) {
-        if (find(e.a) != find(e.b)) {
+        if (uf.find(e.a) != uf.find(e.b)) {
             lastEdge = e
-            union(e.a, e.b)
+            uf.union(e.a, e.b)
             numCircuits--
 
             if (numCircuits == 1) break
@@ -38,41 +38,9 @@ private fun PuzzleInput.part2(): Any? {
 
 private data class Edge(val a: Int, val b: Int, val dist2: Long)
 
-private data class Parsed(
-    val coords: List<Vec3i>,
-    val edges: List<Edge>,
-    val find: (Int) -> Int,
-    val union: (Int, Int) -> Unit
-)
-
-private fun PuzzleInput.parse(): Parsed {
+private fun PuzzleInput.parse(): Triple<List<Vec3i>, List<Edge>, UnionFind> {
     val coords = lines.map {
         it.split(',').ints.toVec3()
-    }
-
-    val parent = IntArray(coords.size) { it }
-    val rank = IntArray(coords.size)
-
-    fun find(x: Int): Int {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x])
-        }
-        return parent[x]
-    }
-
-    fun union(a: Int, b: Int) {
-        val pa = find(a)
-        val pb = find(b)
-        if (pa == pb) return
-
-        if (rank[pa] < rank[pb]) {
-            parent[pa] = pb
-        } else if (rank[pb] < rank[pa]) {
-            parent[pb] = pa
-        } else {
-            parent[pb] = pa
-            rank[pa]++
-        }
     }
 
     val edges = mutableListOf<Edge>()
@@ -86,7 +54,7 @@ private fun PuzzleInput.parse(): Parsed {
     }
 
     edges.sortBy { it.dist2 }
-    return Parsed(coords, edges, ::find, ::union)
+    return Triple(coords, edges, UnionFind(coords.size))
 }
 
 fun main() = PuzzleInput(2025, 8).withSolutions({ part1() }, { part2() }).run()

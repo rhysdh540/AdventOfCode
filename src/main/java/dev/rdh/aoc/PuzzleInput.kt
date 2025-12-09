@@ -4,6 +4,8 @@ package dev.rdh.aoc
 
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.jvm.isAccessible
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 class PuzzleInput private constructor(val year: Int, val day: Int, val input: String) {
     constructor(year: Int, day: Int) : this(year, day, Unit.run {
@@ -104,10 +106,10 @@ class Solution internal constructor(val input: PuzzleInput,
         println("----------------------")
     }
 
-    fun benchmark(targetTimeMs: Long = 500, maxIterations: Int = 1_000_000, p2TargetTimeMs: Long = targetTimeMs) {
+    fun benchmark(targetTime: Duration = 500.milliseconds, maxIterations: Int = 1_000_000, p2TargetTime: Duration = targetTime) {
         val p1 = bench(
             name = "Part 1",
-            targetTimeNs = targetTimeMs * 1_000_000,
+            targetTimeNs = targetTime.inWholeNanoseconds,
             maxIterations = maxIterations,
             fn = { input.part1() },
             reset = { input.resetLazyProperties() }
@@ -115,7 +117,7 @@ class Solution internal constructor(val input: PuzzleInput,
 
         val p2 = bench(
             name = "Part 2",
-            targetTimeNs = p2TargetTimeMs * 1_000_000,
+            targetTimeNs = p2TargetTime.inWholeNanoseconds,
             maxIterations = maxIterations,
             fn = { input.part2() },
             reset = { input.resetLazyProperties() }

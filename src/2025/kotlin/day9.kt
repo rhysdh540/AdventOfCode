@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 import kotlin.math.abs
 
 private fun PuzzleInput.part1(): Any? {
-    val tiles = lines.map { it.split(',').longs.toVec2() }
+    val tiles = lines.map { it.split(',').ints.toVec2() }
     return tiles.flatMapIndexed { i, p1 ->
         tiles.asSequence().drop(i + 1).map { p2 ->
             area(p1, p2)
@@ -11,10 +11,10 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val tiles = lines.map { it.split(',').longs.toVec2() }
+    val tiles = lines.map { it.split(',').ints.toVec2() }
 
-    val h = mutableListOf<Pair<Vec2l, Vec2l>>()
-    val v = mutableListOf<Pair<Vec2l, Vec2l>>()
+    val h = mutableListOf<Pair<Vec2i, Vec2i>>()
+    val v = mutableListOf<Pair<Vec2i, Vec2i>>()
     for ((a, b) in tiles.zipWithNext() + Pair(tiles.last(), tiles.first())) {
         if (a.y == b.y) {
             h.add(Pair(
@@ -42,14 +42,14 @@ private fun PuzzleInput.part2(): Any? {
     return max
 }
 
-private fun area(p1: Vec2l, p2: Vec2l): Long {
-    return (abs(p2.x - p1.x) + 1) * (abs(p2.y - p1.y) + 1)
+private fun area(p1: Vec2i, p2: Vec2i): Long {
+    return (abs(p2.x - p1.x).toLong() + 1) * (abs(p2.y - p1.y).toLong() + 1)
 }
 
 private fun rectInside(
-    p1: Vec2l, p2: Vec2l,
-    tiles: List<Vec2l>,
-    h: List<Pair<Vec2l, Vec2l>>, v: List<Pair<Vec2l, Vec2l>>
+    p1: Vec2i, p2: Vec2i,
+    tiles: List<Vec2i>,
+    h: List<Pair<Vec2i, Vec2i>>, v: List<Pair<Vec2i, Vec2i>>
 ): Boolean {
     val minX = minOf(p1.x, p2.x)
     val maxX = maxOf(p1.x, p2.x)
@@ -79,7 +79,7 @@ private fun rectInside(
     return true
 }
 
-private fun pointInside(x: Long, y: Long, polygon: List<Vec2l>): Boolean {
+private fun pointInside(x: Int, y: Int, polygon: List<Vec2i>): Boolean {
     var inside = false
     var j = polygon.lastIndex
 

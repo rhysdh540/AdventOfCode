@@ -105,7 +105,7 @@ private inline fun measureNs(iterations: Int, fn: () -> Any?): Long {
     return System.nanoTime() - start
 }
 
-private fun ftime(timeNs: Double): String {
+internal fun ftime(timeNs: Number): String {
     val times = mapOf(
         "h" to 3.6e12, // if this ever gets used i will have concerns
         "m" to 6e10,
@@ -113,6 +113,8 @@ private fun ftime(timeNs: Double): String {
         "ms" to 1e6,
         "µs" to 1e3
     )
+    val timeNs = timeNs.toDouble()
+    if (timeNs < 0) return "-${ftime(-timeNs)}"
 
     for ((unit, factor) in times) {
         val t = timeNs / factor

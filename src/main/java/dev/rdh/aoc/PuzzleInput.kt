@@ -93,7 +93,7 @@ class Solution internal constructor(val input: PuzzleInput,
         var result = input.part1()
         var end = System.nanoTime()
         println("Advent of Code ${input.year}/${input.day}")
-        println("--- Part 1: %.2fms ---".format((end - start) / 1e6))
+        println("--- Part 1: ${ftime(end - start)} ---")
         println(result)
 
         input.resetLazyProperties()
@@ -101,7 +101,7 @@ class Solution internal constructor(val input: PuzzleInput,
         start = System.nanoTime()
         result = input.part2()
         end = System.nanoTime()
-        println("--- Part 2: %.2fms ---".format((end - start) / 1e6))
+        println("--- Part 2: ${ftime(end - start)} ---")
         println(result)
         println("----------------------")
     }

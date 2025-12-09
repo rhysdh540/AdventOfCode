@@ -19,7 +19,7 @@ private fun PuzzleInput.part1(): Any? {
 private fun PuzzleInput.part2(): Any? {
     val (coords, edges, uf) = parse()
     var numCircuits = coords.size
-    lateinit var lastEdge: Connection
+    lateinit var lastEdge: Edge
 
     for (e in edges) {
         if (uf.find(e.a) != uf.find(e.b)) {
@@ -36,20 +36,20 @@ private fun PuzzleInput.part2(): Any? {
     return a.x.toLong() * b.x.toLong()
 }
 
-private data class Connection(val a: Int, val b: Int, val dist2: Long)
+private data class Edge(val a: Int, val b: Int, val dist2: Long)
 
-private fun PuzzleInput.parse(): Triple<List<Vec3i>, List<Connection>, UnionFind> {
+private fun PuzzleInput.parse(): Triple<List<Vec3i>, List<Edge>, UnionFind> {
     val coords = lines.map {
         it.split(',').ints.toVec3()
     }
 
-    val edges = mutableListOf<Connection>()
+    val edges = mutableListOf<Edge>()
 
     for (i in coords.indices) {
         val a = coords[i]
         for (j in i + 1 until coords.size) {
             val b = coords[j]
-            edges += Connection(i, j, a.dist2(b))
+            edges += Edge(i, j, a.dist2(b))
         }
     }
 

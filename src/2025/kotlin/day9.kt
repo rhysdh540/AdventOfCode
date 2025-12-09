@@ -1,0 +1,106 @@
+import dev.rdh.aoc.*
+import kotlin.math.abs
+
+private fun PuzzleInput.part1(): Any? {
+    val tiles = lines.map { it.split(',').longs.toVec2() }
+    return tiles.flatMapIndexed { i, p1 ->
+        tiles.asSequence().drop(i + 1).map { p2 ->
+            area(p1, p2)
+        }
+    }.max()
+}
+
+private fun PuzzleInput.part2(): Any? {
+    val tiles = lines.map { it.split(',').longs.toVec2() }
+
+    val h = mutableListOf<Pair<Vec2l, Vec2l>>()
+    val v = mutableListOf<Pair<Vec2l, Vec2l>>()
+    for ((a, b) in tiles.zipWithNext() + Pair(tiles.last(), tiles.first())) {
+        if (a.y == b.y) {
+            h.add(Pair(
+                v(minOf(a.x, b.x), a.y),
+                v(maxOf(a.x, b.x), a.y)
+            ))
+        } else {
+            v.add(Pair(
+                v(a.x, minOf(a.y, b.y)),
+                v(a.x, maxOf(a.y, b.y))
+            ))
+        }
+    }
+
+    var max = 0L
+    for (i in tiles.indices) {
+        val p1 = tiles[i]
+        for (p2 in tiles.asSequence().drop(i + 1)) {
+            val area = area(p1, p2)
+            if (area > max && rectInside(p1, p2, tiles, h, v)) { // only check if we have to
+                max = area
+            }
+        }
+    }
+    return max
+}
+
+private fun area(p1: Vec2l, p2: Vec2l): Long {
+    return (abs(p2.x - p1.x) + 1) * (abs(p2.y - p1.y) + 1)
+}
+
+private fun rectInside(
+    p1: Vec2l, p2: Vec2l,
+    tiles: List<Vec2l>,
+    h: List<Pair<Vec2l, Vec2l>>, v: List<Pair<Vec2l, Vec2l>>
+): Boolean {
+    val minX = minOf(p1.x, p2.x)
+    val maxX = maxOf(p1.x, p2.x)
+    val minY = minOf(p1.y, p2.y)
+    val maxY = maxOf(p1.y, p2.y)
+
+    // if one of polygon edges cuts through the rectangle, then one side of that edge is outside
+    for (e in h) {
+        if (e.first.y in (minY + 1)..<maxY) {
+            val r = (e.first.x + 1)..<e.second.x
+            if (maxX in r || minX in r) return false
+        }
+    }
+
+    for (e in v) {
+        if (e.first.x in (minX + 1)..<maxX) {
+            val r = (e.first.y + 1)..<e.second.y
+            if (minY in r || maxY in r) return false
+        }
+    }
+
+    // if one of the corners is outside the polygon, then obviously the rectangle is not fully inside
+    for (corner in listOf(v(minX, minY), v(minX, maxY), v(maxX, minY), v(maxX, maxY))) {
+        if (!pointInside(corner.x, corner.y, tiles)) return false
+    }
+
+    return true
+}
+
+private fun pointInside(x: Long, y: Long, polygon: List<Vec2l>): Boolean {
+    var inside = false
+    var j = polygon.lastIndex
+
+    for (i in polygon.indices) {
+        val a = polygon[i]
+        val b = polygon[j]
+
+        // if our point is exactly on a polygon edge, consider it inside
+        if (x in minOf(a.x, b.x)..maxOf(a.x, b.x) && y in minOf(a.y, b.y)..maxOf(a.y, b.y)) {
+            return true
+        }
+
+        // shoot in imaginary ray to the right, if it crosses a..b, toggle inside/outside
+        if ((a.y > y) != (b.y > y) && x < a.x + (b.x - a.x) * (y - a.y) / (b.y - a.y)) {
+            inside = !inside
+        }
+
+        j = i
+    }
+
+    return inside
+}
+
+fun main() = PuzzleInput(2025, 9).withSolutions({ part1() }, { part2() }).run()

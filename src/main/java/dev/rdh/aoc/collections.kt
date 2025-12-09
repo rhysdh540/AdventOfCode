@@ -266,6 +266,7 @@ fun BitSet.toIntArray(): IntArray {
     return arr
 }
 
+@JvmName("productOfInts")
 fun Iterable<Int>.product(): Long {
     var prod = 1L
     for (v in this) {
@@ -274,6 +275,7 @@ fun Iterable<Int>.product(): Long {
     return prod
 }
 
+@JvmName("productOfLongs")
 fun Iterable<Long>.product(): Long {
     var prod = 1L
     for (v in this) {

@@ -19,4 +19,8 @@ class AABB(
 
     val min: Vec3i by lazy { v(minX, minY, minZ) }
     val max: Vec3i by lazy { v(maxX, maxY, maxZ) }
+
+    override fun toString(): String {
+        return "AABB(min=($minX,$minY,$minZ), max=($maxX,$maxY,$maxZ))"
+    }
 }

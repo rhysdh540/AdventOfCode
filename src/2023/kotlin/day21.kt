@@ -1,14 +1,14 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val startPos = charGrid.indexOfFirst { 'S' in it }.let { charGrid[it].indexOf('S') to it }
+    val startPos = charGrid.indexOfFirst { 'S' in it }.let { v(charGrid[it].indexOf('S'), it) }
     val grid = boolGrid('#')
 
     var current = setOf(startPos)
     repeat(64) {
-        current = current.flatMap { (x, y) ->
-            listOf(x - 1 to y, x + 1 to y, x to y - 1, x to y + 1).filter { (xx, yy) ->
-                xx in grid[0].indices && yy in grid.indices && !grid[yy][xx]
+        current = current.flatMap { pos ->
+            Direction4.entries.map { pos + it.vec }.filter { (x, y) ->
+                x in grid[0].indices && y in grid.indices && !grid[y][x]
             }
         }.toSet()
     }

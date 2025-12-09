@@ -1,14 +1,14 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return run(40)
+    return solve(40)
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run(50)
+    return solve(50)
 }
 
-private fun PuzzleInput.run(n: Int): Int {
+private fun PuzzleInput.solve(n: Int): Int {
     val regex = Regex("""(\d)\1*""")
     var result = input
     repeat(n) {

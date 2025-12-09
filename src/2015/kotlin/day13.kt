@@ -1,11 +1,11 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return run {}
+    return solve {}
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run { happinesses ->
+    return solve { happinesses ->
         happinesses["Me"] = mutableMapOf()
         happinesses.keys.forEach {
             if (it != "Me") {
@@ -16,7 +16,7 @@ private fun PuzzleInput.part2(): Any? {
     }
 }
 
-private inline fun PuzzleInput.run(addMe: (MutableMap<String, MutableMap<String, Int>>) -> Unit): Any? {
+private inline fun PuzzleInput.solve(addMe: (MutableMap<String, MutableMap<String, Int>>) -> Unit): Any? {
     val happinesses = mutableMapOf<String, MutableMap<String, Int>>()
     val regex = Regex("""(\w+) would (gain|lose) (\d+) happiness units by sitting next to (\w+).""")
 

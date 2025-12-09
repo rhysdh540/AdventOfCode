@@ -7,7 +7,7 @@ private fun PuzzleInput.part1(): Any? {
         dir to num.toLong()
     }
 
-    return run(insns)
+    return solve(insns)
 }
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -24,10 +24,10 @@ private fun PuzzleInput.part2(): Any? {
         dir to num
     }
 
-    return run(insns)
+    return solve(insns)
 }
 
-private fun run(insns: List<Pair<String, Long>>): Long {
+private fun solve(insns: List<Pair<String, Long>>): Long {
     var pos = v(0L, 0L)
     val vertices = mutableListOf<Vec2l>()
     vertices += pos

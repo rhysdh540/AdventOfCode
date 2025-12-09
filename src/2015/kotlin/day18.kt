@@ -1,14 +1,14 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return run(stuckCorners = false)
+    return solve(stuckCorners = false)
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run(stuckCorners = true)
+    return solve(stuckCorners = true)
 }
 
-private fun PuzzleInput.run(stuckCorners: Boolean): Int {
+private fun PuzzleInput.solve(stuckCorners: Boolean): Int {
     val grid = boolGrid('#').deepToMutableList()
     val size = grid.size
 

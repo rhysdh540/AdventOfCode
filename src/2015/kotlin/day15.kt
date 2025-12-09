@@ -1,11 +1,11 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return run()
+    return solve()
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run(calorieCount = 500)
+    return solve(calorieCount = 500)
 }
 
 private data class Ingredient(
@@ -17,7 +17,7 @@ private data class Ingredient(
     val calories: Int
 )
 
-private fun PuzzleInput.run(calorieCount: Int? = null): Int {
+private fun PuzzleInput.solve(calorieCount: Int? = null): Int {
     val ingredients = lines.map {
         val (name, capacity, durability, flavor, texture, calories) = Regex("""(\w+): capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (-?\d+)""").find(
             it

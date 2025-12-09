@@ -1,14 +1,14 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return run(false)
+    return solve(false)
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run(true)
+    return solve(true)
 }
 
-private fun PuzzleInput.run(fixSmudge: Boolean): Int {
+private fun PuzzleInput.solve(fixSmudge: Boolean): Int {
     val grids = sections.map { it.lines() }
     return grids.sumOf {
         val found = findReflection(it, fixSmudge)

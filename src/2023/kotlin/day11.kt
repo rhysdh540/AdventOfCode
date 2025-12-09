@@ -2,14 +2,14 @@ import dev.rdh.aoc.*
 import kotlin.math.abs
 
 private fun PuzzleInput.part1(): Any? {
-    return run(boolGrid('#').expandRows().rotateClockwise().expandRows().rotateCounterClockwise())
+    return solve(boolGrid('#').expandRows().rotateClockwise().expandRows().rotateCounterClockwise())
 }
 
 private fun PuzzleInput.part2(): Any? {
     // f(x) = mx + b
     // x1 = 1, x2 = 2
     val y2 = part1() as Int
-    val y1 = run(boolGrid('#'))
+    val y1 = solve(boolGrid('#'))
 
     // calculate f(1,000,000)
     val m = y2 - y1 // m = (y2 - y1) / (x2 - x1), but x2 - x1 = 1 so we can ignore it
@@ -17,7 +17,7 @@ private fun PuzzleInput.part2(): Any? {
     return m * 1_000_000L + b
 }
 
-private fun run(grid: List2d<Boolean>): Int {
+private fun solve(grid: List2d<Boolean>): Int {
     val galaxies = grid.mapIndexed { i, row ->
         row.mapIndexed { j, b -> if (b) v(i, j) else null }.filterNotNull()
     }.flatten()

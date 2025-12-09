@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 import java.util.*
 
 private fun PuzzleInput.part1(): Any? {
-    return run(intGrid) { states ->
+    return solve(intGrid) { states ->
         val forward = dir.vec
         val left = dir.turnLeft().vec
         val right = dir.turnRight().vec
@@ -29,7 +29,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run(intGrid) { states ->
+    return solve(intGrid) { states ->
         val forward = dir.vec
         val left = dir.turnLeft().vec
         val right = dir.turnRight().vec
@@ -58,7 +58,7 @@ private fun PuzzleInput.part2(): Any? {
 
 data class State(val pos: Vec2i, val dir: Direction4, val movesInDir: Int, val cost: Int)
 
-private fun run(grid: List<List<Int>>, nextStates: State.(states: MutableList<State>) -> Unit): Int? {
+private fun solve(grid: List<List<Int>>, nextStates: State.(states: MutableList<State>) -> Unit): Int? {
     val target = v(grid[0].size - 1, grid.size - 1)
     val start = State(v(0, 0), Direction4.RIGHT, 0, 0)
 

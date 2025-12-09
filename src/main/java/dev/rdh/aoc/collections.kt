@@ -266,8 +266,8 @@ fun BitSet.toIntArray(): IntArray {
     return arr
 }
 
-fun Iterable<Int>.product(): Int {
-    var prod = 1
+fun Iterable<Int>.product(): Long {
+    var prod = 1L
     for (v in this) {
         prod *= v
     }
@@ -290,8 +290,8 @@ fun Iterable<Double>.product(): Double {
     return prod
 }
 
-fun IntArray.product(): Int {
-    var prod = 1
+fun IntArray.product(): Long {
+    var prod = 1L
     for (v in this) {
         prod *= v
     }

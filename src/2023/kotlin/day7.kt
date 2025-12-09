@@ -2,14 +2,14 @@ import dev.rdh.aoc.*
 import java.util.Arrays
 
 private fun PuzzleInput.part1(): Any? {
-    return run(jokers = false)
+    return solve(jokers = false)
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run(jokers = true)
+    return solve(jokers = true)
 }
 
-private fun PuzzleInput.run(jokers: Boolean): Int {
+private fun PuzzleInput.solve(jokers: Boolean): Int {
     return lines.map {
         val parts = it.split(" ")
         Hand(parts[0], getHandType(parts[0], jokers), parts[1].toInt())

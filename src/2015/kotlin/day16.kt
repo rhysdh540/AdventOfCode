@@ -2,7 +2,7 @@ import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
     val properties = getProperties()
-    return run { sue ->
+    return solve { sue ->
         sue.properties.all { (key, value) ->
             properties[key] == value
         }
@@ -11,7 +11,7 @@ private fun PuzzleInput.part1(): Any? {
 
 private fun PuzzleInput.part2(): Any? {
     val properties = getProperties()
-    return run { sue ->
+    return solve { sue ->
         sue.properties.all { (key, value) ->
             when (key) {
                 "cats", "trees" -> properties[key]!! < value
@@ -22,7 +22,7 @@ private fun PuzzleInput.part2(): Any? {
     }
 }
 
-private inline fun PuzzleInput.run(selector: (Sue) -> Boolean): Any? {
+private inline fun PuzzleInput.solve(selector: (Sue) -> Boolean): Any? {
     val aunts = lines.map {
         val (num, things) = Regex("Sue (\\d+): (.+)").find(it)!!.destructured
         val properties = things.split(", ").associate {

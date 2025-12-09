@@ -1,14 +1,14 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return mutableMapOf("a" to 0u, "b" to 0u).also { run(it) }["b"]
+    return mutableMapOf("a" to 0u, "b" to 0u).also { solve(it) }["b"]
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return mutableMapOf("a" to 1u, "b" to 0u).also { run(it) }["b"]
+    return mutableMapOf("a" to 1u, "b" to 0u).also { solve(it) }["b"]
 }
 
-private fun PuzzleInput.run(regs: MutableMap<String, UInt>) {
+private fun PuzzleInput.solve(regs: MutableMap<String, UInt>) {
     val insns = lines.map {
         val parts = it.split(' ')
         Triple(parts[0], parts[1].removeSuffix(","), parts.drop(2))

@@ -1,18 +1,16 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return lines.ints.let {
-        run(it, it.sum() / 3)
-    }
+    return solve(3)
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return lines.ints.let {
-        run(it, it.sum() / 4)
-    }
+    return solve(4)
 }
 
-private fun PuzzleInput.run(nums: List<Int>, target: Int): Long {
+private fun PuzzleInput.solve(groups: Int): Long {
+    val weights = lines.ints
+    val targetWeight = weights.sum() / groups
     var minSize = Int.MAX_VALUE
     var minQuantumEntanglement = Long.MAX_VALUE
 
@@ -21,9 +19,9 @@ private fun PuzzleInput.run(nums: List<Int>, target: Int): Long {
             // found a combination
             if (current.size < minSize) {
                 minSize = current.size
-                minQuantumEntanglement = current.fold(1L) { acc, i -> acc * i }
+                minQuantumEntanglement = current.product()
             } else if (current.size == minSize) {
-                minQuantumEntanglement = minOf(minQuantumEntanglement, current.fold(1L) { acc, i -> acc * i })
+                minQuantumEntanglement = minOf(minQuantumEntanglement, current.product())
             }
         } else if (target < 0 || start >= nums.size || current.size > minSize) {
             // stop searching if the target is negative or too large
@@ -35,7 +33,7 @@ private fun PuzzleInput.run(nums: List<Int>, target: Int): Long {
         }
     }
 
-    findCombinations(nums, target)
+    findCombinations(weights, targetWeight)
     return minQuantumEntanglement
 }
 

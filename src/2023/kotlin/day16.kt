@@ -1,7 +1,6 @@
 import dev.rdh.aoc.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.stream.IntStream
 
 private fun PuzzleInput.part1(): Any? {
     return shoot(grid, Beam(0, 0, 0, 1))
@@ -19,14 +18,14 @@ private fun PuzzleInput.part2(): Any? {
         max.updateAndGet { current -> maxOf(current, run) }
     }
 
-    IntStream.range(0, len).forEach { i ->
-        futures.add(CompletableFuture.runAsync(run(Beam(i, 0, 0, 1))))
-        futures.add(CompletableFuture.runAsync(run(Beam(i, wid - 1, 0, -1))))
+    repeat(len) {
+        futures.add(CompletableFuture.runAsync(run(Beam(it, 0, 0, 1))))
+        futures.add(CompletableFuture.runAsync(run(Beam(it, wid - 1, 0, -1))))
     }
 
-    IntStream.range(0, wid).forEach { i ->
-        futures.add(CompletableFuture.runAsync(run(Beam(0, i, 1, 0))))
-        futures.add(CompletableFuture.runAsync(run(Beam(len - 1, i, -1, 0))))
+    repeat(wid) {
+        futures.add(CompletableFuture.runAsync(run(Beam(0, it, 1, 0))))
+        futures.add(CompletableFuture.runAsync(run(Beam(len - 1, it, -1, 0))))
     }
 
     CompletableFuture.allOf(*futures.toTypedArray()).join()

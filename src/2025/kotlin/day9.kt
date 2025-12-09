@@ -1,4 +1,5 @@
 import dev.rdh.aoc.*
+import java.util.SortedMap
 import kotlin.math.abs
 
 private fun PuzzleInput.part1(): Any? {
@@ -13,19 +14,20 @@ private fun PuzzleInput.part1(): Any? {
 private fun PuzzleInput.part2(): Any? {
     val tiles = lines.map { it.split(',').ints.toVec2() }
 
-    val h = mutableListOf<Pair<Vec2i, Vec2i>>()
-    val v = mutableListOf<Pair<Vec2i, Vec2i>>()
+    val h = sortedMapOf<Int, MutableList<Vec2i>>()
+    val v = sortedMapOf<Int, MutableList<Vec2i>>()
+
     for ((a, b) in tiles.zipWithNext() + Pair(tiles.last(), tiles.first())) {
         if (a.y == b.y) {
-            h.add(Pair(
-                v(minOf(a.x, b.x), a.y),
-                v(maxOf(a.x, b.x), a.y)
-            ))
+            val y = a.y
+            val start = minOf(a.x, b.x) + 1
+            val end = maxOf(a.x, b.x) - 1
+            if (start <= end) h.computeIfAbsent(y) { mutableListOf() }.add(v(start, end))
         } else {
-            v.add(Pair(
-                v(a.x, minOf(a.y, b.y)),
-                v(a.x, maxOf(a.y, b.y))
-            ))
+            val x = a.x
+            val start = minOf(a.y, b.y) + 1
+            val end = maxOf(a.y, b.y) - 1
+            if (start <= end) v.computeIfAbsent(x) { mutableListOf() }.add(v(start, end))
         }
     }
 
@@ -49,7 +51,8 @@ private fun area(p1: Vec2i, p2: Vec2i): Long {
 private fun rectInside(
     p1: Vec2i, p2: Vec2i,
     tiles: List<Vec2i>,
-    h: List<Pair<Vec2i, Vec2i>>, v: List<Pair<Vec2i, Vec2i>>
+    h: SortedMap<Int, MutableList<Vec2i>>,
+    v: SortedMap<Int, MutableList<Vec2i>>
 ): Boolean {
     val minX = minOf(p1.x, p2.x)
     val maxX = maxOf(p1.x, p2.x)
@@ -57,17 +60,19 @@ private fun rectInside(
     val maxY = maxOf(p1.y, p2.y)
 
     // if one of polygon edges cuts through the rectangle, then one side of that edge is outside
-    for (e in h) {
-        if (e.first.y in (minY + 1)..<maxY) {
-            val r = (e.first.x + 1)..<e.second.x
-            if (maxX in r || minX in r) return false
+    if (minY + 1 <= maxY - 1) {
+        for (intervals in h.subMap(minY + 1, maxY).values) {
+            for ((s, e) in intervals) {
+                if (s <= maxX && e >= minX) return false
+            }
         }
     }
 
-    for (e in v) {
-        if (e.first.x in (minX + 1)..<maxX) {
-            val r = (e.first.y + 1)..<e.second.y
-            if (minY in r || maxY in r) return false
+    if (minX + 1 <= maxX - 1) {
+        for (intervals in v.subMap(minX + 1, maxX).values) {
+            for ((s, e) in intervals) {
+                if (s <= maxY && e >= minY) return false
+            }
         }
     }
 

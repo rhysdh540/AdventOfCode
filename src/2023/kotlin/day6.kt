@@ -7,7 +7,7 @@ private fun PuzzleInput.part1(): Any? {
     }
 
     return (times zip distances).map { (time, distance) -> calculate(time.toLong(), distance.toLong()) }
-        .fold(1L) { acc, i -> acc * i }
+        .product()
 }
 
 private fun PuzzleInput.part2(): Any? {

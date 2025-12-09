@@ -122,5 +122,5 @@ internal fun ftime(timeNs: Number): String {
             return "%.3f%s".format(t, unit)
         }
     }
-    return "%.3fns".format(timeNs)
+    return "${timeNs.toLong()}ns"
 }

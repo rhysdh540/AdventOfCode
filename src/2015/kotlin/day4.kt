@@ -27,4 +27,4 @@ private inline fun PuzzleInput.solve(parallel: Boolean = false, crossinline cond
     }.findFirst().asInt
 }
 
-fun main() = PuzzleInput(2015, 4).withSolutions({ part1() }, { part2() }).benchmark()
+fun main() = PuzzleInput(2015, 4).withSolutions({ part1() }, { part2() }).run()

@@ -10,6 +10,14 @@ data class Vec2i(val x: Int, val y: Int) {
     operator fun unaryMinus() = Vec2i(-this.x, -this.y)
     infix fun dot(other: Vec2i) = this.x * other.x + this.y * other.y
 
+    override fun toString() = "($x, $y)i"
+    override fun hashCode(): Int = (x shl 16) or (y and 0xFFFF)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Vec2i) return false
+        return this.x == other.x && this.y == other.y
+    }
+
     companion object {
         val ZERO = v(0, 0)
     }
@@ -23,6 +31,18 @@ data class Vec2l(val x: Long, val y: Long) {
     operator fun unaryMinus() = Vec2l(-this.x, -this.y)
     infix fun dot(other: Vec2l) = this.x * other.x + this.y * other.y
 
+    override fun toString() = "($x, $y)l"
+    override fun hashCode(): Int {
+        val hx = (x xor (x ushr 32)).toInt()
+        val hy = (y xor (y ushr 32)).toInt()
+        return 31 * hx + hy
+    }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Vec2l) return false
+        return this.x == other.x && this.y == other.y
+    }
+
     companion object {
         val ZERO = v(0L, 0L)
     }
@@ -35,6 +55,18 @@ data class Vec2d(val x: Double, val y: Double) {
     operator fun div(scalar: Double) = Vec2d(this.x / scalar, this.y / scalar)
     operator fun unaryMinus() = Vec2d(-this.x, -this.y)
     infix fun dot(other: Vec2d) = this.x * other.x + this.y * other.y
+
+    override fun toString() = "($x, $y)d"
+    override fun hashCode(): Int {
+        val hx = x.toBits().xor(x.toBits().ushr(32)).toInt()
+        val hy = y.toBits().xor(y.toBits().ushr(32)).toInt()
+        return 31 * hx + hy
+    }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Vec2d) return false
+        return this.x == other.x && this.y == other.y
+    }
 
     companion object {
         val ZERO = v(0.0, 0.0)
@@ -53,6 +85,19 @@ data class Vec3i(val x: Int, val y: Int, val z: Int) {
     operator fun unaryMinus() = Vec3i(-this.x, -this.y, -this.z)
     infix fun dot(other: Vec3i) = this.x * other.x + this.y * other.y + this.z * other.z
 
+    override fun toString() = "($x, $y, $z)i"
+    override fun hashCode(): Int {
+        var result = x
+        result = 31 * result + y
+        result = 31 * result + z
+        return result
+    }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Vec3i) return false
+        return this.x == other.x && this.y == other.y && this.z == other.z
+    }
+
     val xy by lazy { v(x, y) }
 
     companion object {
@@ -69,6 +114,19 @@ data class Vec3l(val x: Long, val y: Long, val z: Long) {
     operator fun unaryMinus() = Vec3l(-this.x, -this.y, -this.z)
     infix fun dot(other: Vec3l) = this.x * other.x + this.y * other.y + this.z * other.z
 
+    override fun toString() = "($x, $y, $z)l"
+    override fun hashCode(): Int {
+        var result = (x xor (x ushr 32)).toInt()
+        result = 31 * result + (y xor (y ushr 32)).toInt()
+        result = 31 * result + (z xor (z ushr 32)).toInt()
+        return result
+    }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Vec3l) return false
+        return this.x == other.x && this.y == other.y && this.z == other.z
+    }
+
     val xy by lazy { v(x, y) }
 
     companion object {
@@ -83,6 +141,19 @@ data class Vec3d(val x: Double, val y: Double, val z: Double) {
     operator fun div(scalar: Double) = Vec3d(this.x / scalar, this.y / scalar, this.z / scalar)
     operator fun unaryMinus() = Vec3d(-this.x, -this.y, -this.z)
     infix fun dot(other: Vec3d) = this.x * other.x + this.y * other.y + this.z * other.z
+
+    override fun toString() = "($x, $y, $z)d"
+    override fun hashCode(): Int {
+        var result = x.toBits().xor(x.toBits().ushr(32)).toInt()
+        result = 31 * result + y.toBits().xor(y.toBits().ushr(32)).toInt()
+        result = 31 * result + z.toBits().xor(z.toBits().ushr(32)).toInt()
+        return result
+    }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Vec3d) return false
+        return this.x == other.x && this.y == other.y && this.z == other.z
+    }
 
     val xy by lazy { v(x, y) }
 

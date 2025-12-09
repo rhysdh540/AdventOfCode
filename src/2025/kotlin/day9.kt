@@ -14,22 +14,26 @@ private fun PuzzleInput.part1(): Any? {
 private fun PuzzleInput.part2(): Any? {
     val tiles = lines.map { it.split(',').ints.toVec2() }
 
-    val h = sortedMapOf<Int, MutableList<Vec2i>>()
-    val v = sortedMapOf<Int, MutableList<Vec2i>>()
+    val hBuilder = sortedMapOf<Int, MutableList<Vec2i>>()
+    val vBuilder = sortedMapOf<Int, MutableList<Vec2i>>()
 
     for ((a, b) in tiles.zipWithNext() + Pair(tiles.last(), tiles.first())) {
         if (a.y == b.y) {
             val y = a.y
             val start = minOf(a.x, b.x) + 1
             val end = maxOf(a.x, b.x) - 1
-            if (start <= end) h.computeIfAbsent(y) { mutableListOf() }.add(v(start, end))
-        } else {
+            if (start <= end) hBuilder.computeIfAbsent(y) { mutableListOf() }.add(v(start, end))
+        } else if (a.x == b.x) {
             val x = a.x
             val start = minOf(a.y, b.y) + 1
             val end = maxOf(a.y, b.y) - 1
-            if (start <= end) v.computeIfAbsent(x) { mutableListOf() }.add(v(start, end))
+            if (start <= end) vBuilder.computeIfAbsent(x) { mutableListOf() }.add(v(start, end))
+        } else {
+            error("Non-axis-aligned edge from $a to $b")
         }
     }
+
+    val (h, v) = Intervals(hBuilder) to Intervals(vBuilder)
 
     var max = 0L
     for (i in tiles.indices) {
@@ -48,33 +52,42 @@ private fun area(p1: Vec2i, p2: Vec2i): Long {
     return (abs(p2.x - p1.x).toLong() + 1) * (abs(p2.y - p1.y).toLong() + 1)
 }
 
-private fun rectInside(
-    p1: Vec2i, p2: Vec2i,
-    tiles: List<Vec2i>,
-    h: SortedMap<Int, MutableList<Vec2i>>,
-    v: SortedMap<Int, MutableList<Vec2i>>
-): Boolean {
+private class Intervals(
+    private val coords: IntArray,
+    private val intervals: Array<Array<Vec2i>>
+) {
+    constructor(m: SortedMap<Int, MutableList<Vec2i>>) : this(
+        m.keys.toIntArray(),
+        m.values.map { it.toTypedArray() }.toTypedArray()
+    )
+
+    fun blocks(minCoord: Int, maxCoord: Int, minOther: Int, maxOther: Int): Boolean {
+        if (minCoord > maxCoord) return false
+        // find first index with coord >= minCoord
+        var from = coords.binarySearch(minCoord)
+        if (from < 0) from = -from - 1
+
+        // find first index with coord > maxCoord
+        var to = coords.binarySearch(maxCoord + 1)
+        if (to < 0) to = -to - 1
+
+        for (i in from until to) {
+            for ((s, e) in intervals[i]) {
+                if (s <= maxOther && e >= minOther) return true
+            }
+        }
+        return false
+    }
+}
+
+private fun rectInside(p1: Vec2i, p2: Vec2i, tiles: List<Vec2i>, h: Intervals, v: Intervals): Boolean {
     val minX = minOf(p1.x, p2.x)
     val maxX = maxOf(p1.x, p2.x)
     val minY = minOf(p1.y, p2.y)
     val maxY = maxOf(p1.y, p2.y)
 
     // if one of polygon edges cuts through the rectangle, then one side of that edge is outside
-    if (minY + 1 <= maxY - 1) {
-        for (intervals in h.subMap(minY + 1, maxY).values) {
-            for ((s, e) in intervals) {
-                if (s <= maxX && e >= minX) return false
-            }
-        }
-    }
-
-    if (minX + 1 <= maxX - 1) {
-        for (intervals in v.subMap(minX + 1, maxX).values) {
-            for ((s, e) in intervals) {
-                if (s <= maxY && e >= minY) return false
-            }
-        }
-    }
+    if (h.blocks(minY + 1, maxY - 1, minX, maxX) || v.blocks(minX + 1, maxX - 1, minY, maxY)) return false
 
     // if one of the corners is outside the polygon, then obviously the rectangle is not fully inside
     for (corner in listOf(v(minX, minY), v(minX, maxY), v(maxX, minY), v(maxX, maxY))) {

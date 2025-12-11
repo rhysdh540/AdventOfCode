@@ -3,20 +3,6 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    val inputs = lines.map { line ->
-        val parts = line.split(' ')
-        val pattern = parts[0].let {
-            it.substring(1, it.length - 1).map { it == '#' }
-        }
-        val reqs = parts.last().let {
-            it.substring(1, it.length - 1).split(',').ints
-        }
-        val buttons = parts.subList(1, parts.size - 1).map {
-            it.substring(1, it.length - 1).split(',').ints
-        }
-        Triple(pattern, buttons, reqs)
-    }
-
     val field = object : NumericField<Boolean, BooleanArray>(false, true) {
         override fun Boolean.plus(b: Boolean): Boolean = this xor b
         override fun Boolean.minus(b: Boolean): Boolean = this xor b
@@ -34,7 +20,15 @@ private fun PuzzleInput.part1(): Any? {
         override val BooleanArray.size: Int get() = this.size
     }
 
-    return inputs.sumOf { (pattern, buttons, _) ->
+    return lines.sumOf { line ->
+        val parts = line.split(' ')
+        val pattern = parts[0].let {
+            it.substring(1, it.length - 1).map { it == '#' }
+        }
+        val buttons = parts.subList(1, parts.size - 1).map {
+            it.substring(1, it.length - 1).split(',').ints
+        }
+
         field.minimize(
             field.makeSystem(
                 buttons,
@@ -46,20 +40,6 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val inputs = lines.map { line ->
-        val parts = line.split(' ')
-        val pattern = parts[0].let {
-            it.substring(1, it.length - 1).map { ch -> ch == '#' }
-        }
-        val reqs = parts.last().let {
-            it.substring(1, it.length - 1).split(',').ints
-        }
-        val buttons = parts.subList(1, parts.size - 1).map {
-            it.substring(1, it.length - 1).split(',').ints
-        }
-        Triple(pattern, buttons, reqs)
-    }
-
     val field = object : NumericField<Double, DoubleArray>(0.0, 1.0) {
 
         override fun Double.plus(b: Double): Double = this + b
@@ -78,7 +58,15 @@ private fun PuzzleInput.part2(): Any? {
         override val DoubleArray.size: Int get() = this.size
     }
 
-    return inputs.sumOf { (_, buttons, reqs) ->
+    return lines.sumOf { line ->
+        val parts = line.split(' ')
+        val reqs = parts.last().let {
+            it.substring(1, it.length - 1).split(',').ints
+        }
+        val buttons = parts.subList(1, parts.size - 1).map {
+            it.substring(1, it.length - 1).split(',').ints
+        }
+
         field.minimize(
             field.makeSystem(
                 buttons,

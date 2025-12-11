@@ -22,12 +22,12 @@ private fun PuzzleInput.part2(): Any? {
             val y = a.y
             val start = minOf(a.x, b.x) + 1
             val end = maxOf(a.x, b.x) - 1
-            if (start <= end) hBuilder.computeIfAbsent(y) { mutableListOf() }.add(v(start, end))
+            if (start <= end) hBuilder.getOrPut(y, ::mutableListOf).add(v(start, end))
         } else if (a.x == b.x) {
             val x = a.x
             val start = minOf(a.y, b.y) + 1
             val end = maxOf(a.y, b.y) - 1
-            if (start <= end) vBuilder.computeIfAbsent(x) { mutableListOf() }.add(v(start, end))
+            if (start <= end) vBuilder.getOrPut(x, ::mutableListOf).add(v(start, end))
         } else {
             error("Non-axis-aligned edge from $a to $b")
         }
@@ -46,6 +46,78 @@ private fun PuzzleInput.part2(): Any? {
         }
     }
     return max
+}
+
+// this is not a general solution, but works for all aoc inputs i've tried so far
+// if it doesn't work please lmk
+private fun PuzzleInput.part2Fast(): Any? {
+    val tiles = lines.map { it.split(',').ints.toVec2() }
+    val topI = tiles.size / 2
+    val bottomI = topI + 1
+    val top = tiles[topI]
+    val bottom = tiles[bottomI]
+
+    var topMaxY = top.y
+    for ((a, b) in tiles[0..topI + 1].zipWithNext()) {
+        if (a.x == b.x && a.x == top.x) {
+            // vertical edge on notch line
+            topMaxY = maxOf(a.y, b.y)
+            break
+        } else if (top.x in minOf(a.x, b.x)..maxOf(a.x, b.x)) {
+            // edge crossing notch line
+            topMaxY = a.y
+            break
+        }
+    }
+
+    var bottomMinY = bottom.y
+    for ((a, b) in tiles[bottomI..tiles.size].asReversed().zipWithNext()) {
+        if (a.x == b.x && a.x == bottom.x) {
+            // vertical edge on notch line
+            bottomMinY = maxOf(a.y, b.y)
+            break
+        } else if (bottom.x in minOf(a.x, b.x)..maxOf(a.x, b.x)) {
+            // edge crossing notch line
+            bottomMinY = a.y
+            break
+        }
+    }
+
+    // now go backwards from notchTop and forwards from notchBottom and find the leftmost point that's not >topMaxY or <bottomMinY
+    var topLeft = top
+    var maxX = 0
+    for (i in (topI - 1) downTo 0) {
+        val p = tiles[i]
+        if (p.y <= topMaxY) {
+            if (p.x > maxX) maxX = p.x
+            // higher Y or same Y but more left
+            // either way, there can't be a point before this with a greater X, or the rectangle will go out
+            if ((p.y > topLeft.y || p.x < topLeft.x) && p.x >= maxX) {
+                topLeft = p
+            }
+        } else {
+            break
+        }
+    }
+
+    var bottomLeft = bottom
+    maxX = 0
+    for (i in (bottomI + 1) until tiles.size) {
+        val p = tiles[i]
+        if (p.y >= bottomMinY) {
+            if (p.x > maxX) maxX = p.x
+            if ((p.y < bottomLeft.y || p.x < bottomLeft.x) && p.x >= maxX) {
+                bottomLeft = p
+            }
+        } else {
+            break
+        }
+    }
+
+    return maxOf(
+        area(topLeft, top),
+        area(bottomLeft, bottom)
+    )
 }
 
 private fun area(p1: Vec2i, p2: Vec2i): Long {
@@ -89,12 +161,9 @@ private fun rectInside(p1: Vec2i, p2: Vec2i, tiles: List<Vec2i>, h: Intervals, v
     // if one of polygon edges cuts through the rectangle, then one side of that edge is outside
     if (h.blocks(minY + 1, maxY - 1, minX, maxX) || v.blocks(minX + 1, maxX - 1, minY, maxY)) return false
 
-    // if one of the corners is outside the polygon, then obviously the rectangle is not fully inside
-    for (corner in listOf(v(minX, minY), v(minX, maxY), v(maxX, minY), v(maxX, maxY))) {
-        if (!pointInside(corner.x, corner.y, tiles)) return false
-    }
-
-    return true
+    // if there's no edges inside the rectangle, it's either fully inside or fully outside
+    // so check one point
+    return pointInside(minX + 1, minY + 1, tiles)
 }
 
 private fun pointInside(x: Int, y: Int, polygon: List<Vec2i>): Boolean {

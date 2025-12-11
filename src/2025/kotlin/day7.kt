@@ -1,14 +1,14 @@
 import dev.rdh.aoc.*
 
 private fun PuzzleInput.part1(): Any? {
-    return run().first
+    return solve().first
 }
 
 private fun PuzzleInput.part2(): Any? {
-    return run().second
+    return solve().second
 }
 
-fun PuzzleInput.run(): Pair<Int, Long> {
+fun PuzzleInput.solve(): Pair<Int, Long> {
     var state = LongArray(grid[0].size)
     state[grid[0].indexOf('S')] = 1
     var splits = 0

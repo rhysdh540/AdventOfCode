@@ -1,10 +1,10 @@
 import dev.rdh.aoc.*
 import kotlin.math.min
 
-private fun PuzzleInput.part1() = run(2)
-private fun PuzzleInput.part2() = run(12)
+private fun PuzzleInput.part1() = solve(2)
+private fun PuzzleInput.part2() = solve(12)
 
-private fun PuzzleInput.run(k: Int): Any? {
+private fun PuzzleInput.solve(k: Int): Any? {
     val size = lines[0].length
     val stack = IntArray(size)
     return lines.sumOf { line ->

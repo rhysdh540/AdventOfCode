@@ -151,7 +151,7 @@ private object Day17 {
         }
 
         @OptIn(ExperimentalStdlibApi::class)
-        val name = "$\$Program$$${program.hashCode().toHexString()}"
+        val name = $$$"$$Program$$" + program.hashCode().toHexString()
 
         val w = ClassWriter(ClassWriter.COMPUTE_MAXS)
         w.visit(opts.bytecodeVersion, ACC_PUBLIC, name, null, "java/lang/Object", null)

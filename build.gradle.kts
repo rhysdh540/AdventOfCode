@@ -15,7 +15,6 @@ dependencies {
     "2024Implementation"("org.ow2.asm:asm-util:9.9")
 
     implementation(kotlin("reflect"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }
 
 kotlin {

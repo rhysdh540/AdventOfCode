@@ -20,7 +20,7 @@ private fun PuzzleInput.part1(): Any? {
         override val BooleanArray.size: Int get() = this.size
     }
 
-    return lines.sumOf { line ->
+    return lines.parallelStream().mapToInt { line ->
         val parts = line.split(' ')
         val pattern = parts[0].let {
             it.substring(1, it.length - 1).map { it == '#' }
@@ -36,7 +36,7 @@ private fun PuzzleInput.part1(): Any? {
             ),
             IntArray(buttons.size) { 1 } // doesn't really make sense to push a button more than once
         )
-    }
+    }.sum()
 }
 
 private fun PuzzleInput.part2(): Any? {
@@ -58,7 +58,7 @@ private fun PuzzleInput.part2(): Any? {
         override val DoubleArray.size: Int get() = this.size
     }
 
-    return lines.sumOf { line ->
+    return lines.parallelStream().mapToInt { line ->
         val parts = line.split(' ')
         val reqs = parts.last().let {
             it.substring(1, it.length - 1).split(',').ints
@@ -74,7 +74,7 @@ private fun PuzzleInput.part2(): Any? {
             ),
             buttons.map { b -> b.minOf { reqs[it] } }.toIntArray()
         )
-    }
+    }.sum()
 }
 
 private abstract class NumericField<N : Comparable<N>, V>(val zero: N, val one: N) {

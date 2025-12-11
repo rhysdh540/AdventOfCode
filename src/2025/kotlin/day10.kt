@@ -22,10 +22,9 @@ private fun PuzzleInput.part1(): Any? {
         override fun Boolean.minus(b: Boolean): Boolean = this xor b
         override fun Boolean.times(b: Boolean): Boolean = this && b
         override fun Boolean.div(b: Boolean): Boolean = if (b) this else error("division by zero in GF(2)")
-
         override fun abs(n: Boolean): Boolean = n
-
         override fun Boolean.eq(o: Boolean): Boolean = this == o
+        
         override fun Boolean.toInt(): Int = if (this) 1 else 0
         override fun fromInt(k: Int): Boolean = (k % 2) != 0
 
@@ -67,10 +66,9 @@ private fun PuzzleInput.part2(): Any? {
         override fun Double.minus(b: Double): Double = this - b
         override fun Double.times(b: Double): Double = this * b
         override fun Double.div(b: Double): Double = this / b
-
         override fun abs(n: Double): Double = kotlin.math.abs(n)
-
         override fun Double.eq(o: Double): Boolean = abs(this - o) < 1e-9
+
         override fun Double.toInt(): Int = kotlin.math.round(this).toInt()
         override fun fromInt(k: Int): Double = k.toDouble()
 
@@ -97,8 +95,8 @@ private abstract class NumericField<N : Comparable<N>, V>(val zero: N, val one: 
     abstract operator fun N.times(b: N): N
     abstract operator fun N.div(b: N): N
     abstract fun abs(n: N): N
-
     abstract infix fun N.eq(o: N): Boolean
+
     abstract fun N.toInt(): Int
     abstract fun fromInt(k: Int): N
 
@@ -157,18 +155,22 @@ private fun <N : Comparable<N>, V> ref(mat: Array<V>): IntArray = with(f) {
         val pivotRow = (row until m).firstOrNull { r -> !(mat[r][col] eq zero) } ?: continue
 
         // swap best row into position
-        val tmp = mat[row]
-        mat[row] = mat[pivotRow]
-        mat[pivotRow] = tmp
+        if (pivotRow != row) {
+            val tmp = mat[row]
+            mat[row] = mat[pivotRow]
+            mat[pivotRow] = tmp
+        }
 
         // normalize pivot row, so pivot element is 1
         val pivot = mat[row][col]
-        for (c in col until n + 1) {
-            mat[row][c] /= pivot
+        if (!(pivot eq one)) {
+            for (c in col until n + 1) {
+                mat[row][c] /= pivot
+            }
         }
 
-        // eliminate this column from all other rows
-        for (r in 0 until m) {
+        // eliminate this column from all other rows below, creating an upper triangular matrix
+        for (r in (row + 1) until m) {
             if (r == row) continue
             val factor = mat[r][col]
             if (factor eq zero) continue
@@ -205,18 +207,17 @@ private fun <N : Comparable<N>, V> reconstructSolution(system: LinearSystem<N, V
     // for each variable with a pivot, compute its value from the rest of the row
     // the row has the form: x_pivot + sum(coeff_i * x_free_i) = rhs
     // so x_pivot = rhs - sum(coeff_i * x_free_i)
-    for (col in 0 until n) {
+    for (col in n - 1 downTo 0) {
         val r = pivots[col] // row for this pivot column
         if (r == -1) continue // if free variable, skip
 
         var value = mat[r][lastCol] // rhs
 
         // subtract (coeff * x_free) for each free variable in this row
-        for (i in 0 until freeCols.size) {
-            val fcol = freeCols[i]
-            val coeff = mat[r][fcol]
+        for (c in col + 1 until n) {
+            val coeff = mat[r][c]
             if (!(coeff eq zero)) {
-                value -= coeff * x[fcol]
+                value -= coeff * x[c]
             }
         }
         x[col] = value
@@ -244,7 +245,8 @@ private fun <N : Comparable<N>, V> validateAndSum(x: V, maxPress: IntArray): Int
 private fun <N : Comparable<N>, V> NumericField<N, V>.minimize(system: LinearSystem<N, V>, maxPress: IntArray): Int {
     var best: Int? = null
 
-    fun dfs(idx: Int, freeValues: V) {
+    fun dfs(idx: Int, freeValues: V, currentSum: Int = 0) {
+        if (best != null && currentSum >= best!!) return // prune search if already worse than best
         if (idx == system.freeCols.size) {
             val x = reconstructSolution(system, freeValues)
             validateAndSum(x, maxPress)?.let {
@@ -258,7 +260,7 @@ private fun <N : Comparable<N>, V> NumericField<N, V>.minimize(system: LinearSys
         // literally just try every possible combination of free variable assignments
         for (press in 0..maxPress[system.freeCols[idx]]) {
             freeValues[idx] = fromInt(press)
-            dfs(idx + 1, freeValues)
+            dfs(idx + 1, freeValues, currentSum + press)
         }
     }
 

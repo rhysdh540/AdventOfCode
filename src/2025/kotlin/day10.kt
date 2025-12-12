@@ -1,7 +1,6 @@
 @file:Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 
 import dev.rdh.aoc.*
-import kotlin.time.Duration.Companion.seconds
 
 private fun PuzzleInput.part1(): Any? {
     val field = object : NumericField<Boolean>(false, true) {
@@ -14,6 +13,7 @@ private fun PuzzleInput.part1(): Any? {
 
         override fun Boolean.toInt(): Int = if (this) 1 else 0
         override fun fromInt(k: Int): Boolean = (k % 2) != 0
+        override fun Boolean.isExactInt(): Boolean = true
 
         override fun newarr(n: Int) = Array(n) { false }
         override fun newmat(n: Int, m: Int) = Array(n) { Array(m) { false } }
@@ -49,6 +49,7 @@ private fun PuzzleInput.part2(): Any? {
 
         override fun Double.toInt(): Int = kotlin.math.round(this).toInt()
         override fun fromInt(k: Int): Double = k.toDouble()
+        override fun Double.isExactInt(): Boolean = this eq kotlin.math.round(this)
 
         override fun newarr(n: Int) = Array(n) { 0.0 }
         override fun newmat(n: Int, m: Int) = Array(n) { Array(m) { 0.0 } }
@@ -66,9 +67,9 @@ private fun PuzzleInput.part2(): Any? {
         field.minimize(
             field.makeSystem(
                 buttons,
-                reqs.map { it.toDouble() }
+                reqs.map { field.fromInt(it) }
             ),
-            buttons.map { b -> b.minOf { reqs[it] } }.toIntArray()
+            IntArray(buttons.size) { i -> buttons[i].minOf { reqs[it] } }
         )
     }.sum()
 }
@@ -83,6 +84,7 @@ private abstract class NumericField<N : Comparable<N>>(val zero: N, val one: N) 
 
     abstract fun N.toInt(): Int
     abstract fun fromInt(k: Int): N
+    abstract fun N.isExactInt(): Boolean
 
     abstract fun newarr(n: Int): Array<N>
     abstract fun newmat(n: Int, m: Int): Array<Array<N>>
@@ -210,18 +212,12 @@ private fun <N : Comparable<N>> reconstructSolution(system: LinearSystem<N>, fre
 
 context(f: NumericField<N>)
 private fun <N : Comparable<N>> validateAndSum(x: Array<N>, maxPress: IntArray): Int? = with(f) {
-    var sumPress = 0
-    val n = x.size
-    for (col in 0 until n) {
-        val v = x[col]
-        if (v eq zero) continue
-        if (v < zero) return null // negative
-        val intV = v.toInt()
-        if (!(v eq fromInt(intV))) return null // not integer
-        if (intV > maxPress[col]) return null // exceeds max
-        sumPress += intV
+    return x.withIndex().sumOf { (i, v) ->
+        if (v eq zero) return@sumOf 0
+        if (v < zero) return null
+        if (!v.isExactInt()) return null
+        v.toInt().takeIf { it <= maxPress[i] } ?: return null
     }
-    return sumPress
 }
 
 private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntArray): Int {
@@ -251,4 +247,4 @@ private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>
     return best ?: error("no valid solution for line, uh oh!")
 }
 
-fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).benchmark(10.seconds)
+fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).run()

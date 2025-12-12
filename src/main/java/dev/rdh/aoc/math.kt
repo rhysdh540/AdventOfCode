@@ -5,8 +5,8 @@ package dev.rdh.aoc
 import java.math.BigInteger
 import kotlin.math.abs
 
-infix fun Int.gcd(other: Int): Int = if (other == 0) abs(this) else other gcd (this % other)
-infix fun Long.gcd(other: Long): Long = if (other == 0L) abs(this) else other gcd (this % other)
+tailrec infix fun Int.gcd(other: Int): Int = if (other == 0) abs(this) else other gcd (this % other)
+tailrec infix fun Long.gcd(other: Long): Long = if (other == 0L) abs(this) else other gcd (this % other)
 infix fun Int.lcm(other: Int): Int = (this / (this gcd other)) * other
 infix fun Long.lcm(other: Long): Long = (this / (this gcd other)) * other
 

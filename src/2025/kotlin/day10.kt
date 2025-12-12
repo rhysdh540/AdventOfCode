@@ -1,23 +1,22 @@
-@file:Suppress("UNCHECKED_CAST", "EXTENSION_SHADOWED_BY_MEMBER")
+@file:Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 
 import dev.rdh.aoc.*
+import kotlin.time.Duration.Companion.seconds
 
 private fun PuzzleInput.part1(): Any? {
-    val field = object : NumericField<Boolean, BooleanArray>(false, true) {
+    val field = object : NumericField<Boolean>(false, true) {
         override fun Boolean.plus(b: Boolean): Boolean = this xor b
         override fun Boolean.minus(b: Boolean): Boolean = this xor b
         override fun Boolean.times(b: Boolean): Boolean = this && b
         override fun Boolean.div(b: Boolean): Boolean = if (b) this else error("division by zero in GF(2)")
         override fun abs(n: Boolean): Boolean = n
         override fun Boolean.eq(o: Boolean): Boolean = this == o
-        
+
         override fun Boolean.toInt(): Int = if (this) 1 else 0
         override fun fromInt(k: Int): Boolean = (k % 2) != 0
 
-        override fun newarr(vararg n: Int): Any = java.lang.reflect.Array.newInstance(Boolean::class.java, *n)
-        override fun BooleanArray.get(i: Int): Boolean = this[i]
-        override fun BooleanArray.set(i: Int, value: Boolean) { this[i] = value }
-        override val BooleanArray.size: Int get() = this.size
+        override fun newarr(n: Int) = Array(n) { false }
+        override fun newmat(n: Int, m: Int) = Array(n) { Array(m) { false } }
     }
 
     return lines.parallelStream().mapToInt { line ->
@@ -40,8 +39,7 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
-    val field = object : NumericField<Double, DoubleArray>(0.0, 1.0) {
-
+    val field = object : NumericField<Double>(0.0, 1.0) {
         override fun Double.plus(b: Double): Double = this + b
         override fun Double.minus(b: Double): Double = this - b
         override fun Double.times(b: Double): Double = this * b
@@ -52,10 +50,8 @@ private fun PuzzleInput.part2(): Any? {
         override fun Double.toInt(): Int = kotlin.math.round(this).toInt()
         override fun fromInt(k: Int): Double = k.toDouble()
 
-        override fun newarr(vararg n: Int): Any = java.lang.reflect.Array.newInstance(Double::class.java, *n)
-        override fun DoubleArray.get(i: Int): Double = this[i]
-        override fun DoubleArray.set(i: Int, value: Double) { this[i] = value }
-        override val DoubleArray.size: Int get() = this.size
+        override fun newarr(n: Int) = Array(n) { 0.0 }
+        override fun newmat(n: Int, m: Int) = Array(n) { Array(m) { 0.0 } }
     }
 
     return lines.parallelStream().mapToInt { line ->
@@ -77,7 +73,7 @@ private fun PuzzleInput.part2(): Any? {
     }.sum()
 }
 
-private abstract class NumericField<N : Comparable<N>, V>(val zero: N, val one: N) {
+private abstract class NumericField<N : Comparable<N>>(val zero: N, val one: N) {
     abstract operator fun N.plus(b: N): N
     abstract operator fun N.minus(b: N): N
     abstract operator fun N.times(b: N): N
@@ -88,29 +84,27 @@ private abstract class NumericField<N : Comparable<N>, V>(val zero: N, val one: 
     abstract fun N.toInt(): Int
     abstract fun fromInt(k: Int): N
 
-    abstract fun newarr(vararg n: Int): Any
-    abstract operator fun V.get(i: Int): N
-    abstract operator fun V.set(i: Int, value: N)
-    abstract val V.size: Int
+    abstract fun newarr(n: Int): Array<N>
+    abstract fun newmat(n: Int, m: Int): Array<Array<N>>
 }
 
 @Suppress("ArrayInDataClass") // shush im just here for free destructuring
-private data class LinearSystem<N : Comparable<N>, V>(
+private data class LinearSystem<N : Comparable<N>>(
     // the augmented matrix [A | t]
-    val mat: Array<V>,
+    val mat: Array<Array<N>>,
     // row index that has a pivot (leading 1) for each column, or -1 if free
     val pivots: IntArray,
     // indices of free columns (with no pivot)
     val freeCols: IntArray
 )
 
-private fun <N : Comparable<N>, V> NumericField<N, V>.makeSystem(
+private fun <N : Comparable<N>> NumericField<N>.makeSystem(
     values: List<List<Int>>,
     target: List<N>
-): LinearSystem<N, V> {
+): LinearSystem<N> {
     val m = target.size
     val n = values.size
-    val mat = newarr(m, n + 1) as Array<V>
+    val mat = newmat(m, n + 1)
 
     // fill matrix
     for (slot in 0 until m) {
@@ -131,8 +125,8 @@ private fun <N : Comparable<N>, V> NumericField<N, V>.makeSystem(
 }
 
 // convert the augmented matrix to row echelon form, returning the columns that have pivots
-context(f: NumericField<N, V>)
-private fun <N : Comparable<N>, V> ref(mat: Array<V>): IntArray = with(f) {
+context(f: NumericField<N>)
+private fun <N : Comparable<N>> ref(mat: Array<Array<N>>): IntArray = with(f) {
     val m = mat.size
     val n = mat[0].size - 1 // augmented, so last column is rhs
     val pivots = IntArray(n) { -1 }
@@ -179,11 +173,11 @@ private fun <N : Comparable<N>, V> ref(mat: Array<V>): IntArray = with(f) {
 
 // given a linear system in REF form, and values for the free variables,
 // reconstruct the full solution vector
-context(f: NumericField<N, V>)
-private fun <N : Comparable<N>, V> reconstructSolution(system: LinearSystem<N, V>, freeValues: V): V = with(f) {
+context(f: NumericField<N>)
+private fun <N : Comparable<N>> reconstructSolution(system: LinearSystem<N>, freeValues: Array<N>): Array<N> = with(f) {
     val (mat, pivots, freeCols) = system
     val n = pivots.size
-    val x = newarr(n) as V
+    val x = newarr(n)
 
     // fill in free variables in solution
     for (i in 0 until freeCols.size) {
@@ -214,8 +208,8 @@ private fun <N : Comparable<N>, V> reconstructSolution(system: LinearSystem<N, V
     return x
 }
 
-context(f: NumericField<N, V>)
-private fun <N : Comparable<N>, V> validateAndSum(x: V, maxPress: IntArray): Int? = with(f) {
+context(f: NumericField<N>)
+private fun <N : Comparable<N>> validateAndSum(x: Array<N>, maxPress: IntArray): Int? = with(f) {
     var sumPress = 0
     val n = x.size
     for (col in 0 until n) {
@@ -230,10 +224,10 @@ private fun <N : Comparable<N>, V> validateAndSum(x: V, maxPress: IntArray): Int
     return sumPress
 }
 
-private fun <N : Comparable<N>, V> NumericField<N, V>.minimize(system: LinearSystem<N, V>, maxPress: IntArray): Int {
+private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntArray): Int {
     var best: Int? = null
 
-    fun dfs(idx: Int, freeValues: V, currentSum: Int = 0) {
+    fun dfs(idx: Int, freeValues: Array<N>, currentSum: Int = 0) {
         if (best != null && currentSum >= best!!) return // prune search if already worse than best
         if (idx == system.freeCols.size) {
             val x = reconstructSolution(system, freeValues)
@@ -252,9 +246,9 @@ private fun <N : Comparable<N>, V> NumericField<N, V>.minimize(system: LinearSys
         }
     }
 
-    dfs(0, newarr(system.freeCols.size) as V)
+    dfs(0, newarr(system.freeCols.size))
 
     return best ?: error("no valid solution for line, uh oh!")
 }
 
-fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).run()
+fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).benchmark(10.seconds)

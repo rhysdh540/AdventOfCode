@@ -126,7 +126,7 @@ private fun <N : Comparable<N>> NumericField<N>.makeSystem(
     return LinearSystem(mat, pivots, freeCols)
 }
 
-// convert the augmented matrix to row echelon form, returning the columns that have pivots
+// convert the augmented matrix to an upper triangular row echelon form, returning the columns that have pivots
 context(f: NumericField<N>)
 private fun <N : Comparable<N>> ref(mat: Array<Array<N>>): IntArray = with(f) {
     val m = mat.size
@@ -173,7 +173,7 @@ private fun <N : Comparable<N>> ref(mat: Array<Array<N>>): IntArray = with(f) {
     return pivots
 }
 
-// given a linear system in REF form, and values for the free variables,
+// given a linear system in REF, and values for the free variables,
 // reconstruct the full solution vector
 context(f: NumericField<N>)
 private fun <N : Comparable<N>> reconstructSolution(system: LinearSystem<N>, freeValues: Array<N>): Array<N> = with(f) {
@@ -188,9 +188,12 @@ private fun <N : Comparable<N>> reconstructSolution(system: LinearSystem<N>, fre
 
     val lastCol = mat[0].size - 1
 
-    // for each variable with a pivot, compute its value from the rest of the row
-    // the row has the form: x_pivot + sum(coeff_i * x_free_i) = rhs
-    // so x_pivot = rhs - sum(coeff_i * x_free_i)
+    // for each variable with a pivot, compute its value by back substitution
+    // the way the matrix was reduced earlier means it's in upper triangular form, so we can go backwards
+    // the row has the form: x_pivot + sum_{j > col} (coeff_j * x_j) = rhs
+    // so, x_pivot = rhs - sum_{j > col} (coeff_j * x_j)
+    // where each x_j is either a free variable (pre-filled) or a pivot variable already solved
+    // because we iterate from right-to-left
     for (col in n - 1 downTo 0) {
         val r = pivots[col] // row for this pivot column
         if (r == -1) continue // if free variable, skip

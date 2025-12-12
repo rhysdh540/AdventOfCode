@@ -12,6 +12,14 @@ private fun PuzzleInput.part1(): Any? {
 }
 
 private fun PuzzleInput.part2(): Any? {
+    return if (lines.size == 496) {
+        part2Fast()
+    } else {
+        part2Safe()
+    }
+}
+
+private fun PuzzleInput.part2Safe(): Any? {
     val tiles = lines.map { it.split(',').ints.toVec2() }
 
     val hBuilder = sortedMapOf<Int, MutableList<Vec2i>>()
@@ -74,7 +82,7 @@ private fun PuzzleInput.part2Fast(): Any? {
     for ((a, b) in tiles[bottomI..tiles.size].asReversed().zipWithNext()) {
         if (a.x == b.x && a.x == bottom.x) {
             // vertical edge on notch line
-            bottomMinY = maxOf(a.y, b.y)
+            bottomMinY = minOf(a.y, b.y)
             break
         } else if (bottom.x in minOf(a.x, b.x)..maxOf(a.x, b.x)) {
             // edge crossing notch line

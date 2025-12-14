@@ -1,7 +1,8 @@
-@file:Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+@file:Suppress("EXTENSION_SHADOWED_BY_MEMBER", "ArrayInDataClass")
 
 import dev.rdh.aoc.*
 import java.util.PriorityQueue
+import kotlin.time.Duration.Companion.seconds
 
 private fun PuzzleInput.part1(): Any? {
     val field = object : NumericField<Boolean>(false, true) {
@@ -13,7 +14,7 @@ private fun PuzzleInput.part1(): Any? {
         override fun Boolean.eq(o: Boolean): Boolean = this == o
 
         override fun Boolean.toInt(): Int = if (this) 1 else 0
-        override fun fromInt(k: Int): Boolean = (k % 2) != 0
+        override fun fromInt(k: Int): Boolean = (k and 1) == 0
         override fun Boolean.isExactInt(): Boolean = true
     }
 
@@ -86,7 +87,6 @@ private abstract class NumericField<N : Comparable<N>>(val zero: N, val one: N) 
     fun newmat(n: Int, m: Int) = Array(n) { Array<Comparable<N>>(m) { zero } } as Array<Array<N>>
 }
 
-@Suppress("ArrayInDataClass") // shush im just here for free destructuring
 private data class LinearSystem<N : Comparable<N>>(
     // the augmented matrix [A | t]
     val mat: Array<Array<N>>,
@@ -174,11 +174,17 @@ private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>
     val n = pivots.size
     val lastCol = mat[0].size - 1
 
-    @Suppress("ArrayInDataClass") // sybau
-    data class Node(val col: Int, val cost: Int, val x: Array<N>)
+    data class Node(val col: Int, val cost: Int, val x: IntArray)
 
-    val pq = PriorityQueue(compareBy<Node> { it.cost }.thenByDescending { it.col })
-    pq += Node(col = n - 1, cost = 0, x = newarr(n))
+    // manual comparator is measurably faster than lambdas
+    val pq = PriorityQueue(object : Comparator<Node> {
+        override fun compare(a: Node, b: Node): Int {
+            val dc = a.cost - b.cost
+            if (dc != 0) return dc
+            return b.col - a.col
+        }
+    })
+    pq += Node(col = n - 1, cost = 0, x = IntArray(n))
 
     while (pq.isNotEmpty()) {
         val (col, cost, x) = pq.poll()
@@ -188,7 +194,7 @@ private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>
             // literally just try every possible combination of free variable assignments
             for (press in 0..maxPress[col]) {
                 val nx = x.clone()
-                nx[col] = fromInt(press)
+                nx[col] = press
                 pq += Node(col - 1, cost + press, nx)
             }
         } else {
@@ -204,7 +210,7 @@ private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>
             var value = mat[r][lastCol] // rhs
             for (c in col + 1 until n) {
                 val coeff = mat[r][c]
-                if (!(coeff eq zero)) value -= coeff * x[c]
+                if (!(coeff eq zero)) value -= coeff * fromInt(x[c])
             }
 
             if (!(value eq zero) && value < zero) continue
@@ -212,7 +218,7 @@ private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>
             val iv = value.toInt()
             if (iv > maxPress[col]) continue
             val nx = x.clone()
-            nx[col] = value
+            nx[col] = iv
             pq += Node(col - 1, cost + iv, nx)
         }
     }
@@ -220,4 +226,4 @@ private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>
     error("no valid solution for line, uh oh!")
 }
 
-fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).run()
+fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).benchmark(5.seconds)

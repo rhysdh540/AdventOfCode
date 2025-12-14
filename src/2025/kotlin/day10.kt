@@ -14,7 +14,7 @@ private fun PuzzleInput.part1(): Any? {
         override fun Boolean.eq(o: Boolean): Boolean = this == o
 
         override fun Boolean.toInt(): Int = if (this) 1 else 0
-        override fun fromInt(k: Int): Boolean = (k and 1) == 0
+        override fun fromInt(k: Int): Boolean = (k and 1) == 1
         override fun Boolean.isExactInt(): Boolean = true
     }
 

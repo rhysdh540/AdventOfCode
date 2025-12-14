@@ -2,7 +2,6 @@
 
 import dev.rdh.aoc.*
 import java.util.PriorityQueue
-import kotlin.time.Duration.Companion.seconds
 
 private fun PuzzleInput.part1(): Any? {
     val field = object : NumericField<Boolean>(false, true) {
@@ -10,6 +9,7 @@ private fun PuzzleInput.part1(): Any? {
         override fun Boolean.minus(b: Boolean): Boolean = this xor b
         override fun Boolean.times(b: Boolean): Boolean = this && b
         override fun Boolean.div(b: Boolean): Boolean = if (b) this else error("division by zero in GF(2)")
+        override fun Boolean.compareTo(b: Boolean) = this.compareTo(b)
         override fun abs(n: Boolean): Boolean = n
         override fun Boolean.eq(o: Boolean): Boolean = this == o
 
@@ -43,6 +43,7 @@ private fun PuzzleInput.part2(): Any? {
         override fun Double.minus(b: Double): Double = this - b
         override fun Double.times(b: Double): Double = this * b
         override fun Double.div(b: Double): Double = this / b
+        override fun Double.compareTo(b: Double) = this.compareTo(b)
         override fun abs(n: Double): Double = kotlin.math.abs(n)
         override fun Double.eq(o: Double): Boolean = abs(this - o) < 1e-9
 
@@ -70,24 +71,21 @@ private fun PuzzleInput.part2(): Any? {
     }.sum()
 }
 
-@Suppress("UNCHECKED_CAST", "KotlinConstantConditions") // why must the jvm erase generics
-private abstract class NumericField<N : Comparable<N>>(val zero: N, val one: N) {
+private abstract class NumericField<N>(val zero: N, val one: N) {
     abstract operator fun N.plus(b: N): N
     abstract operator fun N.minus(b: N): N
     abstract operator fun N.times(b: N): N
     abstract operator fun N.div(b: N): N
-    abstract fun abs(n: N): N
+    abstract operator fun N.compareTo(b: N): Int
     abstract infix fun N.eq(o: N): Boolean
+    abstract fun abs(n: N): N
 
     abstract fun N.toInt(): Int
     abstract fun fromInt(k: Int): N
     abstract fun N.isExactInt(): Boolean
-
-    fun newarr(n: Int) = Array<Comparable<N>>(n) { zero } as Array<N>
-    fun newmat(n: Int, m: Int) = Array(n) { Array<Comparable<N>>(m) { zero } } as Array<Array<N>>
 }
 
-private data class LinearSystem<N : Comparable<N>>(
+private data class LinearSystem<N>(
     // the augmented matrix [A | t]
     val mat: Array<Array<N>>,
     // row index that has a pivot (leading 1) for each column, or -1 if free
@@ -96,13 +94,14 @@ private data class LinearSystem<N : Comparable<N>>(
     val freeCols: IntArray
 )
 
-private fun <N : Comparable<N>> NumericField<N>.makeSystem(
+private fun <N> NumericField<N>.makeSystem(
     values: List<List<Int>>,
     target: List<N>
 ): LinearSystem<N> {
     val m = target.size
     val n = values.size
-    val mat = newmat(m, n + 1)
+    @Suppress("UNCHECKED_CAST")
+    val mat = Array<Array<Any?>>(m) { Array(n + 1) { zero } } as Array<Array<N>>
 
     // fill matrix
     for (slot in 0 until m) {
@@ -124,7 +123,7 @@ private fun <N : Comparable<N>> NumericField<N>.makeSystem(
 
 // convert the augmented matrix to an upper triangular row echelon form, returning the columns that have pivots
 context(f: NumericField<N>)
-private fun <N : Comparable<N>> ref(mat: Array<Array<N>>): IntArray = with(f) {
+private fun <N> ref(mat: Array<Array<N>>): IntArray = with(f) {
     val m = mat.size
     val n = mat[0].size - 1 // augmented, so last column is rhs
     val pivots = IntArray(n) { -1 }
@@ -169,7 +168,7 @@ private fun <N : Comparable<N>> ref(mat: Array<Array<N>>): IntArray = with(f) {
     return pivots
 }
 
-private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntArray): Int = with(this) {
+private fun <N> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntArray): Int {
     val (mat, pivots, _) = system
     val n = pivots.size
     val lastCol = mat[0].size - 1
@@ -226,4 +225,4 @@ private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>
     error("no valid solution for line, uh oh!")
 }
 
-fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).benchmark(5.seconds)
+fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).run()

@@ -14,9 +14,6 @@ private fun PuzzleInput.part1(): Any? {
         override fun Boolean.toInt(): Int = if (this) 1 else 0
         override fun fromInt(k: Int): Boolean = (k % 2) != 0
         override fun Boolean.isExactInt(): Boolean = true
-
-        override fun newarr(n: Int) = Array(n) { false }
-        override fun newmat(n: Int, m: Int) = Array(n) { Array(m) { false } }
     }
 
     return lines.parallelStream().mapToInt { line ->
@@ -50,9 +47,6 @@ private fun PuzzleInput.part2(): Any? {
         override fun Double.toInt(): Int = kotlin.math.round(this).toInt()
         override fun fromInt(k: Int): Double = k.toDouble()
         override fun Double.isExactInt(): Boolean = this eq kotlin.math.round(this)
-
-        override fun newarr(n: Int) = Array(n) { 0.0 }
-        override fun newmat(n: Int, m: Int) = Array(n) { Array(m) { 0.0 } }
     }
 
     return lines.parallelStream().mapToInt { line ->
@@ -74,6 +68,7 @@ private fun PuzzleInput.part2(): Any? {
     }.sum()
 }
 
+@Suppress("UNCHECKED_CAST", "KotlinConstantConditions") // why must the jvm erase generics
 private abstract class NumericField<N : Comparable<N>>(val zero: N, val one: N) {
     abstract operator fun N.plus(b: N): N
     abstract operator fun N.minus(b: N): N
@@ -86,8 +81,8 @@ private abstract class NumericField<N : Comparable<N>>(val zero: N, val one: N) 
     abstract fun fromInt(k: Int): N
     abstract fun N.isExactInt(): Boolean
 
-    abstract fun newarr(n: Int): Array<N>
-    abstract fun newmat(n: Int, m: Int): Array<Array<N>>
+    fun newarr(n: Int) = Array<Comparable<N>>(n) { zero } as Array<N>
+    fun newmat(n: Int, m: Int) = Array(n) { Array<Comparable<N>>(m) { zero } } as Array<Array<N>>
 }
 
 @Suppress("ArrayInDataClass") // shush im just here for free destructuring

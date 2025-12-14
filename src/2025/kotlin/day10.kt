@@ -1,6 +1,7 @@
 @file:Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 
 import dev.rdh.aoc.*
+import java.util.PriorityQueue
 
 private fun PuzzleInput.part1(): Any? {
     val field = object : NumericField<Boolean>(false, true) {
@@ -168,81 +169,55 @@ private fun <N : Comparable<N>> ref(mat: Array<Array<N>>): IntArray = with(f) {
     return pivots
 }
 
-// given a linear system in REF, and values for the free variables,
-// reconstruct the full solution vector
-context(f: NumericField<N>)
-private fun <N : Comparable<N>> reconstructSolution(system: LinearSystem<N>, freeValues: Array<N>): Array<N> = with(f) {
-    val (mat, pivots, freeCols) = system
+private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntArray): Int = with(this) {
+    val (mat, pivots, _) = system
     val n = pivots.size
-    val x = newarr(n)
-
-    // fill in free variables in solution
-    for (i in 0 until freeCols.size) {
-        x[freeCols[i]] = freeValues[i]
-    }
-
     val lastCol = mat[0].size - 1
 
-    // for each variable with a pivot, compute its value by back substitution
-    // the way the matrix was reduced earlier means it's in upper triangular form, so we can go backwards
-    // the row has the form: x_pivot + sum_{j > col} (coeff_j * x_j) = rhs
-    // so, x_pivot = rhs - sum_{j > col} (coeff_j * x_j)
-    // where each x_j is either a free variable (pre-filled) or a pivot variable already solved
-    // because we iterate from right-to-left
-    for (col in n - 1 downTo 0) {
-        val r = pivots[col] // row for this pivot column
-        if (r == -1) continue // if free variable, skip
+    @Suppress("ArrayInDataClass") // sybau
+    data class Node(val col: Int, val cost: Int, val x: Array<N>)
 
-        var value = mat[r][lastCol] // rhs
+    val pq = PriorityQueue(compareBy<Node> { it.cost }.thenByDescending { it.col })
+    pq += Node(col = n - 1, cost = 0, x = newarr(n))
 
-        // subtract (coeff * x_free) for each free variable in this row
-        for (c in col + 1 until n) {
-            val coeff = mat[r][c]
-            if (!(coeff eq zero)) {
-                value -= coeff * x[c]
+    while (pq.isNotEmpty()) {
+        val (col, cost, x) = pq.poll()
+        if (col < 0) return cost // because we have the priority queue, the first complete solution is the best
+
+        if (pivots[col] == -1) {
+            // literally just try every possible combination of free variable assignments
+            for (press in 0..maxPress[col]) {
+                val nx = x.clone()
+                nx[col] = fromInt(press)
+                pq += Node(col - 1, cost + press, nx)
             }
-        }
-        x[col] = value
-    }
+        } else {
+            // pivot variable: compute it immediately from the pivot row
+            val r = pivots[col]
 
-    return x
-}
-
-context(f: NumericField<N>)
-private fun <N : Comparable<N>> validateAndSum(x: Array<N>, maxPress: IntArray): Int? = with(f) {
-    return x.withIndex().sumOf { (i, v) ->
-        if (v eq zero) return@sumOf 0
-        if (v < zero) return null
-        if (!v.isExactInt()) return null
-        v.toInt().takeIf { it <= maxPress[i] } ?: return null
-    }
-}
-
-private fun <N : Comparable<N>> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntArray): Int {
-    var best: Int? = null
-
-    fun dfs(idx: Int, freeValues: Array<N>, currentSum: Int = 0) {
-        if (best != null && currentSum >= best!!) return // prune search if already worse than best
-        if (idx == system.freeCols.size) {
-            val x = reconstructSolution(system, freeValues)
-            validateAndSum(x, maxPress)?.let {
-                if (best == null || it < best!!) {
-                    best = it
-                }
+            // for each variable with a pivot, compute its value by back substitution
+            // the way the matrix was reduced earlier means it's in upper triangular form, so we can go backwards
+            // the row has the form: x_pivot + sum_{j > col} (coeff_j * x_j) = rhs
+            // so, x_pivot = rhs - sum_{j > col} (coeff_j * x_j)
+            // where each x_j is either a free variable (pre-filled) or a pivot variable already solved
+            // because we iterate from right-to-left
+            var value = mat[r][lastCol] // rhs
+            for (c in col + 1 until n) {
+                val coeff = mat[r][c]
+                if (!(coeff eq zero)) value -= coeff * x[c]
             }
-            return
-        }
 
-        // literally just try every possible combination of free variable assignments
-        for (press in 0..maxPress[system.freeCols[idx]]) {
-            freeValues[idx] = fromInt(press)
-            dfs(idx + 1, freeValues, currentSum + press)
+            if (!(value eq zero) && value < zero) continue
+            if (!value.isExactInt()) continue
+            val iv = value.toInt()
+            if (iv > maxPress[col]) continue
+            val nx = x.clone()
+            nx[col] = value
+            pq += Node(col - 1, cost + iv, nx)
         }
     }
 
-    dfs(0, newarr(system.freeCols.size))
-
-    return best ?: error("no valid solution for line, uh oh!")
+    error("no valid solution for line, uh oh!")
 }
 
 fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).run()

@@ -1,7 +1,7 @@
 @file:Suppress("EXTENSION_SHADOWED_BY_MEMBER", "ArrayInDataClass")
 
 import dev.rdh.aoc.*
-import java.util.PriorityQueue
+import kotlin.time.Duration.Companion.seconds
 
 private fun PuzzleInput.part1(): Any? {
     val field = object : NumericField<Boolean>(false, true) {
@@ -175,26 +175,25 @@ private fun <N> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntA
 
     data class Node(val col: Int, val cost: Int, val x: IntArray)
 
-    // manual comparator is measurably faster than lambdas
-    val pq = PriorityQueue(object : Comparator<Node> {
-        override fun compare(a: Node, b: Node): Int {
-            val dc = a.cost - b.cost
-            if (dc != 0) return dc
-            return b.col - a.col
-        }
-    })
-    pq += Node(col = n - 1, cost = 0, x = IntArray(n))
+    val queue = ArrayDeque<Node>()
+    queue += Node(col = n - 1, cost = 0, x = IntArray(n))
 
-    while (pq.isNotEmpty()) {
-        val (col, cost, x) = pq.poll()
-        if (col < 0) return cost // because we have the priority queue, the first complete solution is the best
+    var best: Int? = null
+
+    while (queue.isNotEmpty()) {
+        val (col, cost, x) = queue.removeFirst()
+        if (best != null && cost >= best) continue
+        if (col < 0) {
+            best = cost
+            continue
+        }
 
         if (pivots[col] == -1) {
             // literally just try every possible combination of free variable assignments
             for (press in 0..maxPress[col]) {
                 val nx = x.clone()
                 nx[col] = press
-                pq += Node(col - 1, cost + press, nx)
+                queue += Node(col - 1, cost + press, nx)
             }
         } else {
             // pivot variable: compute it immediately from the pivot row
@@ -218,11 +217,11 @@ private fun <N> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntA
             if (iv > maxPress[col]) continue
             val nx = x.clone()
             nx[col] = iv
-            pq += Node(col - 1, cost + iv, nx)
+            queue += Node(col - 1, cost + iv, nx)
         }
     }
 
-    error("no valid solution for line, uh oh!")
+    return best ?: error("no valid solution for line, uh oh!")
 }
 
 fun main() = PuzzleInput(2025, 10).withSolutions({ part1() }, { part2() }).run()

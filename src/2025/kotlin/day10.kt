@@ -172,6 +172,13 @@ private fun <N> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntA
     val n = pivots.size
     val lastCol = mat[0].size - 1
 
+    val nonZeroColumns = Array(n) { col ->
+        when(val r = pivots[col]) {
+            -1 -> IntArray(0)
+            else -> (col + 1 until n).filter { c -> !(mat[r][c] eq zero) }.toIntArray()
+        }
+    }
+
     data class Node(val col: Int, val cost: Int, val x: IntArray)
 
     val queue = ArrayDeque<Node>()
@@ -205,9 +212,8 @@ private fun <N> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntA
             // where each x_j is either a free variable (pre-filled) or a pivot variable already solved
             // because we iterate from right-to-left
             var value = mat[r][lastCol] // rhs
-            for (c in col + 1 until n) {
-                val coeff = mat[r][c]
-                if (!(coeff eq zero)) value -= coeff * fromInt(x[c])
+            for (c in nonZeroColumns[col]) {
+                value -= mat[r][c] * fromInt(x[c])
             }
 
             if (!value.isExactInt()) continue

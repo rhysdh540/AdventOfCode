@@ -1,7 +1,6 @@
 @file:Suppress("EXTENSION_SHADOWED_BY_MEMBER", "ArrayInDataClass")
 
 import dev.rdh.aoc.*
-import kotlin.time.Duration.Companion.seconds
 
 private fun PuzzleInput.part1(): Any? {
     val field = object : NumericField<Boolean>(false, true) {
@@ -100,7 +99,7 @@ private fun <N> NumericField<N>.makeSystem(
 ): LinearSystem<N> {
     val m = target.size
     val n = values.size
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST", "KotlinConstantConditions")
     val mat = Array<Array<Any?>>(m) { Array(n + 1) { zero } } as Array<Array<N>>
 
     // fill matrix
@@ -211,10 +210,9 @@ private fun <N> NumericField<N>.minimize(system: LinearSystem<N>, maxPress: IntA
                 if (!(coeff eq zero)) value -= coeff * fromInt(x[c])
             }
 
-            if (!(value eq zero) && value < zero) continue
             if (!value.isExactInt()) continue
             val iv = value.toInt()
-            if (iv > maxPress[col]) continue
+            if (iv < 0 || iv > maxPress[col]) continue
             val nx = x.clone()
             nx[col] = iv
             queue += Node(col - 1, cost + iv, nx)
